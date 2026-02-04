@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="CoffeeStaffManagement.API/CoffeeStaffManagement.API.csproj" />
+  <Project Path="CoffeeStaffManagement.Application/CoffeeStaffManagement.Application.csproj" />
+  <Project Path="CoffeeStaffManagement.Domain/CoffeeStaffManagement.Domain.csproj" />
+  <Project Path="CoffeeStaffManagement.Infrastructure/CoffeeStaffManagement.Infrastructure.csproj" />
+</Solution>

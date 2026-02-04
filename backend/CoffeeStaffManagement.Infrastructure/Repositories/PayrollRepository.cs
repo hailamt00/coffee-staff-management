@@ -1,0 +1,52 @@
+using CoffeeStaffManagement.Application.Common.Interfaces;
+using CoffeeStaffManagement.Domain.Entities;
+using CoffeeStaffManagement.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+
+namespace CoffeeStaffManagement.Infrastructure.Repositories;
+
+public class PayrollRepository : IPayrollRepository
+{
+    private readonly AppDbContext _context;
+
+    public PayrollRepository(AppDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<Payroll?> GetAsync(
+        int employeeId,
+        string month,
+        CancellationToken ct)
+    {
+        return await _context.Payrolls
+            .FirstOrDefaultAsync(p =>
+                p.EmployeeId == employeeId &&
+                p.Month == month,
+                ct);
+    }
+
+    public async Task<Payroll?> GetByIdAsync(
+        int payrollId,
+        CancellationToken ct)
+    {
+        return await _context.Payrolls
+            .FirstOrDefaultAsync(p => p.Id == payrollId, ct);
+    }
+
+    public async Task AddAsync(
+        Payroll payroll,
+        CancellationToken ct)
+    {
+        await _context.Payrolls.AddAsync(payroll, ct);
+        await _context.SaveChangesAsync(ct);
+    }
+
+    public async Task UpdateAsync(
+        Payroll payroll,
+        CancellationToken ct)
+    {
+        _context.Payrolls.Update(payroll);
+        await _context.SaveChangesAsync(ct);
+    }
+}
