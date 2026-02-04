@@ -63,3 +63,4 @@ D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Infrastructure\o
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Infrastructure\obj\Debug\net10.0\CoffeeStaffManagement.Infrastructure.pdb
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Infrastructure\obj\Debug\net10.0\CoffeeStaffManagement.Infrastructure.genruntimeconfig.cache
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Infrastructure\obj\Debug\net10.0\ref\CoffeeStaffManagement.Infrastructure.dll
+D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Infrastructure\obj\Debug\net10.0\CoffeeStaffManagement.Infrastructure.sourcelink.json

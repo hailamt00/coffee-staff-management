@@ -38,7 +38,6 @@ export default function PositionsPage() {
     deletePosition,
   } = usePosition()
 
-  /* ===== STATE ===== */
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
   const pageSize = 10
@@ -67,10 +66,10 @@ export default function PositionsPage() {
     setSort(prev =>
       prev?.key === key
         ? {
-          key,
-          direction:
-            prev.direction === 'asc' ? 'desc' : 'asc',
-        }
+            key,
+            direction:
+              prev.direction === 'asc' ? 'desc' : 'asc',
+          }
         : { key, direction: 'asc' }
     )
   }
@@ -95,8 +94,6 @@ export default function PositionsPage() {
     setDeleteTarget(null)
   }
 
-  /* ================= UI ================= */
-
   return (
     <>
       <motion.div
@@ -105,16 +102,16 @@ export default function PositionsPage() {
         transition={{ duration: 0.25 }}
         className="space-y-6"
       >
-        {/* ===== HEADER ===== */}
         <Header onAdd={() => setFormOpen(true)} />
 
-        {/* ===== CONTENT ===== */}
         <Card>
           <CardContent className="p-6 space-y-4">
             <Toolbar search={search} onSearch={setSearch} />
 
             <div className="overflow-x-auto rounded-lg border">
-              {loading && <EmptyState label="Loading positions..." />}
+              {loading && (
+                <EmptyState label="Loading positions..." />
+              )}
 
               {!loading && paged.length === 0 && (
                 <EmptyState label="No positions found" />
@@ -147,7 +144,6 @@ export default function PositionsPage() {
         </Card>
       </motion.div>
 
-      {/* ===== ADD / EDIT ===== */}
       <PositionFormDialog
         open={formOpen}
         position={editing}
@@ -162,7 +158,6 @@ export default function PositionsPage() {
         }
       />
 
-      {/* ===== DELETE CONFIRM ===== */}
       <DeleteDialog
         target={deleteTarget}
         onCancel={() => setDeleteTarget(null)}
@@ -172,7 +167,7 @@ export default function PositionsPage() {
   )
 }
 
-/* ================= SUB COMPONENTS ================= */
+/* ================= COMPONENTS ================= */
 
 function Header({ onAdd }: { onAdd: () => void }) {
   return (
@@ -183,7 +178,6 @@ function Header({ onAdd }: { onAdd: () => void }) {
           Manage employee positions
         </p>
       </div>
-
       <Button onClick={onAdd}>
         <Plus className="mr-2 h-4 w-4" />
         Add Position
@@ -245,7 +239,7 @@ function PositionTable({
 
       {data.map((p, i) => (
         <div
-          key={p.id} // ✅ FIX warning
+          key={`position-${p.id}`}
           className="grid grid-cols-[80px_100px_1fr_120px] border-b hover:bg-muted/30 transition"
         >
           <Cell muted>
@@ -288,7 +282,7 @@ function Pagination({
         <span className="font-medium text-foreground">
           {(page - 1) * pageSize + 1}
         </span>
-        –
+        –{' '}
         <span className="font-medium text-foreground">
           {Math.min(page * pageSize, total)}
         </span>{' '}
@@ -306,17 +300,18 @@ function Pagination({
           <ChevronLeft size={16} />
         </PageBtn>
 
-        {Array.from({ length: totalPages }).map(
-          (_, i) => (
+        {Array.from({ length: totalPages }, (_, i) => {
+          const pageNum = i + 1
+          return (
             <PageBtn
-              key={i}
-              active={page === i + 1}
-              onClick={() => onPageChange(i + 1)}
+              key={`page-${pageNum}`}
+              active={page === pageNum}
+              onClick={() => onPageChange(pageNum)}
             >
-              {i + 1}
+              {pageNum}
             </PageBtn>
           )
-        )}
+        })}
 
         <PageBtn
           disabled={page === totalPages}
@@ -328,6 +323,8 @@ function Pagination({
     </div>
   )
 }
+
+/* ================= SHARED ================= */
 
 function DeleteDialog({
   target,
@@ -351,7 +348,6 @@ function DeleteDialog({
             ?
           </DialogDescription>
         </DialogHeader>
-
         <DialogFooter>
           <Button variant="outline" onClick={onCancel}>
             Cancel
@@ -364,8 +360,6 @@ function DeleteDialog({
     </Dialog>
   )
 }
-
-/* ================= SHARED UI ================= */
 
 function EmptyState({ label }: { label: string }) {
   return (
@@ -399,7 +393,7 @@ function HeaderCell<T>({
     >
       {label}
       {active &&
-        (sort!.direction === 'asc'
+        (sort.direction === 'asc'
           ? <ArrowUp size={12} />
           : <ArrowDown size={12} />)}
     </div>
@@ -437,9 +431,11 @@ function IconBtn({
     <button
       {...props}
       className={`h-8 w-8 rounded-md border flex items-center justify-center transition
-        ${danger
-          ? 'hover:bg-destructive hover:text-destructive-foreground'
-          : 'hover:bg-primary hover:text-primary-foreground'}`}
+        ${
+          danger
+            ? 'hover:bg-destructive hover:text-destructive-foreground'
+            : 'hover:bg-primary hover:text-primary-foreground'
+        }`}
     >
       {children}
     </button>
@@ -456,11 +452,12 @@ function PageBtn({
   return (
     <button
       {...props}
-      className={`h-8 min-w-[32px] px-2 rounded-md border text-sm
-        transition-colors
-        ${active
-          ? 'bg-primary text-primary-foreground'
-          : 'hover:bg-muted'}
+      className={`h-8 min-w-[32px] px-2 rounded-md border text-sm transition-colors
+        ${
+          active
+            ? 'bg-primary text-primary-foreground'
+            : 'hover:bg-muted'
+        }
         disabled:opacity-40 disabled:pointer-events-none`}
     >
       {children}

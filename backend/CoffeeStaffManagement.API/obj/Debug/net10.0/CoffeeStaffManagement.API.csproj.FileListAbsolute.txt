@@ -103,3 +103,4 @@ D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.API\obj\Debug\ne
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.API\obj\Debug\net10.0\CoffeeStaffManagement.API.genruntimeconfig.cache
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.API\obj\Debug\net10.0\ref\CoffeeStaffManagement.API.dll
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.API\bin\Debug\net10.0\Dapper.dll
+D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.API\obj\Debug\net10.0\CoffeeStaffManagement.API.sourcelink.json

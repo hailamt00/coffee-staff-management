@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import {
+import type {
   Position,
   CreatePositionRequest,
   UpdatePositionRequest,
@@ -66,8 +66,9 @@ export function usePosition() {
   ) => {
     setLoading(true)
     try {
-      const created = await positionApi.create(payload)
-      setPositions(prev => [...prev, created])
+      await positionApi.create(payload)
+
+      await fetchPositions()
 
       dispatch(
         addNotification({
@@ -96,14 +97,12 @@ export function usePosition() {
   ) => {
     setLoading(true)
     try {
-      const updated = await positionApi.update(id, payload)
+      await positionApi.update(id, payload)
 
-      setPositions(prev =>
-        prev.map(p => (p.id === id ? updated : p))
-      )
+      await fetchPositions()
 
       if (selectedPosition?.id === id) {
-        setSelectedPosition(updated)
+        await fetchPositionById(id)
       }
 
       dispatch(

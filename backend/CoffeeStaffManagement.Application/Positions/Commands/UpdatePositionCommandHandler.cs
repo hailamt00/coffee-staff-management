@@ -1,5 +1,6 @@
 using CoffeeStaffManagement.Application.Common.Interfaces;
 using CoffeeStaffManagement.Domain.Entities;
+using CoffeeStaffManagement.Application.Common.Exceptions;
 using MediatR;
 using System;
 using System.Threading;
@@ -22,10 +23,14 @@ public class UpdatePositionCommandHandler
         CancellationToken cancellationToken)
     {
         var position = await _repo.GetByIdAsync(request.Id)
-            ?? throw new Exception("Position not found");
+            ?? throw new NotFoundException("Position not found");
 
-        position.Name = request.Name.Trim();
+        var name = request.Name.Trim();
 
+        if (await _repo.ExistsAsync(name, request.Id))
+            throw new BadRequestException("Position already exists");
+
+        position.Name = name;
         await _repo.UpdateAsync(position);
 
         return Unit.Value;

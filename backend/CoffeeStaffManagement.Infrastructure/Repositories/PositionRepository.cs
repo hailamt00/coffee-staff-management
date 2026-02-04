@@ -27,10 +27,12 @@ public class PositionRepository : IPositionRepository
             .FirstOrDefaultAsync(p => p.Id == id);
     }
 
-    public async Task<bool> ExistsAsync(string name)
+    public async Task<bool> ExistsAsync(string name, int? excludeId = null)
     {
-        return await _context.Positions
-            .AnyAsync(p => p.Name == name);
+        return await _context.Positions.AnyAsync(p =>
+            p.Name == name &&
+            (!excludeId.HasValue || p.Id != excludeId.Value)
+        );
     }
 
     public async Task AddAsync(Position position)

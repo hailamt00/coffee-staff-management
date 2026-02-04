@@ -21,15 +21,7 @@ public class GetPositionByIdQueryHandler
         GetPositionByIdQuery request,
         CancellationToken cancellationToken)
     {
-        var position = await _repo.GetByIdAsync(request.Id);
-
-        if (position is null)
-            return null;
-
-        return new PositionDto
-        (
-            position.Id,
-            position.Name
-        );
+        var p = await _repo.GetByIdAsync(request.Id);
+        return p is null ? null : new PositionDto(p.Id, p.Name);
     }
 }

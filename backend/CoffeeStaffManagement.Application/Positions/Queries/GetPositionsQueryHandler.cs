@@ -18,10 +18,9 @@ public class GetPositionsQueryHandler
         GetPositionsQuery request,
         CancellationToken cancellationToken)
     {
-        var positions = await _repo.GetAllAsync();
-
-        return positions
+        return (await _repo.GetAllAsync())
             .Select(p => new PositionDto(p.Id, p.Name))
             .ToList();
     }
 }
+

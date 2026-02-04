@@ -1,4 +1,5 @@
 using CoffeeStaffManagement.Application.Common.Interfaces;
+using CoffeeStaffManagement.Application.Common.Exceptions;
 using MediatR;
 using System;
 using System.Threading;
@@ -21,10 +22,9 @@ public class DeletePositionCommandHandler
         CancellationToken cancellationToken)
     {
         var position = await _repo.GetByIdAsync(request.Id)
-            ?? throw new Exception("Position not found");
+            ?? throw new NotFoundException("Position not found");
 
         await _repo.DeleteAsync(position);
-
         return Unit.Value;
     }
 }

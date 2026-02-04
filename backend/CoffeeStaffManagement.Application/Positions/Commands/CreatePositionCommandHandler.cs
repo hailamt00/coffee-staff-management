@@ -1,5 +1,6 @@
 using CoffeeStaffManagement.Application.Common.Interfaces;
 using CoffeeStaffManagement.Domain.Entities;
+using CoffeeStaffManagement.Application.Common.Exceptions;
 using MediatR;
 
 namespace CoffeeStaffManagement.Application.Positions.Commands;
@@ -18,14 +19,12 @@ public class CreatePositionCommandHandler
         CreatePositionCommand request,
         CancellationToken cancellationToken)
     {
-        if (await _repo.ExistsAsync(request.Request.Name))
-            throw new Exception("Position already exists");
+        var name = request.Request.Name.Trim();
 
-        var position = new Position
-        {
-            Name = request.Request.Name
-        };
+        if (await _repo.ExistsAsync(name))
+            throw new BadRequestException("Position already exists");
 
+        var position = new Position { Name = name };
         await _repo.AddAsync(position);
 
         return position.Id;
