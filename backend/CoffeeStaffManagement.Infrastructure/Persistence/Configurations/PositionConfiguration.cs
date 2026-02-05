@@ -10,15 +10,24 @@ public class PositionConfiguration : IEntityTypeConfiguration<Position>
     {
         builder.ToTable("positions");
 
-        builder.HasKey(p => p.Id);
+        builder.HasKey(x => x.Id);
 
-        builder.Property(p => p.Id)
-            .HasColumnName("id")
-            .ValueGeneratedOnAdd();
+        builder.Property(x => x.Id)
+            .HasColumnName("id");
 
-        builder.Property(p => p.Name)
+        builder.Property(x => x.Name)
             .HasColumnName("name")
             .HasMaxLength(150)
             .IsRequired();
+
+        builder.Property(x => x.IsActive)
+            .HasColumnName("is_active");
+
+        builder.Property(x => x.CreatedAt)
+            .HasColumnName("created_at");
+
+        builder.HasMany(x => x.Shifts)
+            .WithOne(x => x.Position)
+            .HasForeignKey(x => x.PositionId);
     }
 }

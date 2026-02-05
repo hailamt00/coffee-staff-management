@@ -1,8 +1,5 @@
 using CoffeeStaffManagement.Application.Common.Interfaces;
-using CoffeeStaffManagement.Application.Positions.DTOs;
 using MediatR;
-
-namespace CoffeeStaffManagement.Application.Positions.Queries;
 
 public class GetPositionsQueryHandler
     : IRequestHandler<GetPositionsQuery, List<PositionDto>>
@@ -18,9 +15,24 @@ public class GetPositionsQueryHandler
         GetPositionsQuery request,
         CancellationToken cancellationToken)
     {
-        return (await _repo.GetAllAsync())
-            .Select(p => new PositionDto(p.Id, p.Name))
-            .ToList();
+        var positions = await _repo.GetAllAsync();
+
+        return positions.Select(p => new PositionDto
+        {
+            Id = p.Id,
+            Name = p.Name,
+            IsActive = p.IsActive,
+            Shifts = p.Shifts
+                .OrderBy(s => s.StartTime)
+                .Select(s => new ShiftDto
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    StartTime = s.StartTime.ToString(@"hh\:mm"),
+                    EndTime = s.EndTime.ToString(@"hh\:mm"),
+                    IsEnabled = s.IsEnabled
+                })
+                .ToList()
+        }).ToList();
     }
 }
-

@@ -1,9 +1,5 @@
 using CoffeeStaffManagement.Application.Common.Interfaces;
-using CoffeeStaffManagement.Application.Positions.DTOs;
-using CoffeeStaffManagement.Application.Positions.Queries;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace CoffeeStaffManagement.Application.Positions.Queries;
 
@@ -21,7 +17,24 @@ public class GetPositionByIdQueryHandler
         GetPositionByIdQuery request,
         CancellationToken cancellationToken)
     {
-        var p = await _repo.GetByIdAsync(request.Id);
-        return p is null ? null : new PositionDto(p.Id, p.Name);
+        var position = await _repo.GetByIdAsync(request.Id);
+
+        if (position is null)
+            return null;
+
+        return new PositionDto
+        {
+            Id = position.Id,
+            Name = position.Name,
+            IsActive = position.IsActive,
+            Shifts = position.Shifts.Select(s => new ShiftDto
+            {
+                Id = s.Id,
+                Name = s.Name,
+                StartTime = s.StartTime.ToString(@"hh\:mm"),
+                EndTime = s.EndTime.ToString(@"hh\:mm"),
+                IsEnabled = s.IsEnabled
+            }).ToList()
+        };
     }
 }

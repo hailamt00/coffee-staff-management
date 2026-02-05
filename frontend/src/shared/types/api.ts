@@ -93,31 +93,40 @@ export interface UpdateEmployeeRequest {
 }
 
 /* ======================================================
-   POSITIONS
-====================================================== */
-
-export interface Position {
-  id: number
-  name: string
-}
-
-export interface CreatePositionRequest  {
-  name: string
-}
-
-export interface UpdatePositionRequest  {
-  name: string
-}
-
-/* ======================================================
-   SHIFTS
-====================================================== */
-
+/* ========= SHIFT ========= */
 export interface Shift {
   id: number
   name: string
   startTime: string
   endTime: string
+  isEnabled: boolean
+}
+
+/* ========= POSITION ========= */
+export interface Position {
+  id: number
+  name: string
+  isActive: boolean
+  shifts?: Shift[]
+}
+
+/* ========= REQUEST ========= */
+export interface SaveShiftRequest {
+  id?: number
+  name: string
+  startTime: string
+  endTime: string
+  isEnabled: boolean
+}
+
+export interface CreatePositionRequest {
+  name: string
+  shifts: SaveShiftRequest[]
+}
+
+export interface UpdatePositionRequest {
+  name: string
+  shifts: SaveShiftRequest[]
 }
 
 /* ======================================================

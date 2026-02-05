@@ -1,34 +1,28 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
+import { positionApi } from '../api/position.api'
+import { addNotification } from '@/features/ui/slices/uiSlice'
 import type {
   Position,
   CreatePositionRequest,
   UpdatePositionRequest,
 } from '@/shared/types/api'
-import { positionApi } from '../api/position.api'
-import { addNotification } from '@/features/ui/slices/uiSlice'
 
 export function usePosition() {
   const dispatch = useDispatch()
-
   const [positions, setPositions] = useState<Position[]>([])
-  const [selectedPosition, setSelectedPosition] =
-    useState<Position | null>(null)
   const [loading, setLoading] = useState(false)
 
-  /* ================= QUERY ================= */
-
-  const fetchPositions = useCallback(async () => {
+  const load = useCallback(async () => {
     setLoading(true)
     try {
-      const data = await positionApi.getAll()
-      setPositions(data)
+      setPositions(await positionApi.getAll())
     } catch {
       dispatch(
         addNotification({
           type: 'error',
-          title: 'Load Failed',
-          message: 'Failed to load positions',
+          title: 'Load failed',
+          message: 'Cannot load positions',
         })
       )
     } finally {
@@ -36,142 +30,31 @@ export function usePosition() {
     }
   }, [dispatch])
 
-  const fetchPositionById = useCallback(
-    async (id: number) => {
-      setLoading(true)
-      try {
-        const data = await positionApi.getById(id)
-        setSelectedPosition(data)
-        return data
-      } catch {
-        dispatch(
-          addNotification({
-            type: 'error',
-            title: 'Not Found',
-            message: 'Position not found',
-          })
-        )
-        return null
-      } finally {
-        setLoading(false)
-      }
-    },
-    [dispatch]
-  )
-
-  /* ================= COMMAND ================= */
-
-  const createPosition = async (
-    payload: CreatePositionRequest
-  ) => {
-    setLoading(true)
-    try {
-      await positionApi.create(payload)
-
-      await fetchPositions()
-
-      dispatch(
-        addNotification({
-          type: 'success',
-          title: 'Created',
-          message: 'Position created successfully',
-        })
-      )
-    } catch {
-      dispatch(
-        addNotification({
-          type: 'error',
-          title: 'Create Failed',
-          message: 'Failed to create position',
-        })
-      )
-      throw new Error('Create position failed')
-    } finally {
-      setLoading(false)
-    }
+  const createPosition = async (payload: CreatePositionRequest) => {
+    const created = await positionApi.create(payload)
+    setPositions(p => [...p, created])
   }
 
   const updatePosition = async (
     id: number,
     payload: UpdatePositionRequest
   ) => {
-    setLoading(true)
-    try {
-      await positionApi.update(id, payload)
-
-      await fetchPositions()
-
-      if (selectedPosition?.id === id) {
-        await fetchPositionById(id)
-      }
-
-      dispatch(
-        addNotification({
-          type: 'success',
-          title: 'Updated',
-          message: 'Position updated successfully',
-        })
-      )
-    } catch {
-      dispatch(
-        addNotification({
-          type: 'error',
-          title: 'Update Failed',
-          message: 'Failed to update position',
-        })
-      )
-      throw new Error('Update position failed')
-    } finally {
-      setLoading(false)
-    }
+    const updated = await positionApi.update(id, payload)
+    setPositions(p => p.map(x => (x.id === id ? updated : x)))
   }
 
   const deletePosition = async (id: number) => {
-    setLoading(true)
-    try {
-      await positionApi.delete(id)
-
-      setPositions(prev => prev.filter(p => p.id !== id))
-
-      if (selectedPosition?.id === id) {
-        setSelectedPosition(null)
-      }
-
-      dispatch(
-        addNotification({
-          type: 'success',
-          title: 'Deleted',
-          message: 'Position deleted successfully',
-        })
-      )
-    } catch {
-      dispatch(
-        addNotification({
-          type: 'error',
-          title: 'Delete Failed',
-          message: 'Failed to delete position',
-        })
-      )
-      throw new Error('Delete position failed')
-    } finally {
-      setLoading(false)
-    }
+    await positionApi.delete(id)
+    setPositions(p => p.filter(x => x.id !== id))
   }
 
-  /* ================= INIT ================= */
-
   useEffect(() => {
-    fetchPositions()
-  }, [fetchPositions])
+    load()
+  }, [load])
 
   return {
     positions,
-    selectedPosition,
     loading,
-
-    fetchPositions,
-    fetchPositionById,
-
     createPosition,
     updatePosition,
     deletePosition,

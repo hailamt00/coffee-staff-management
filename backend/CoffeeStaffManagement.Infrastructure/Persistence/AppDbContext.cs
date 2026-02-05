@@ -20,6 +20,8 @@ public class AppDbContext : DbContext
     public DbSet<PayrollAdjustment> PayrollAdjustments => Set<PayrollAdjustment>();
     public DbSet<ActivityLog> ActivityLogs => Set<ActivityLog>();
     public DbSet<AttendanceQrLog> AttendanceQrLogs => Set<AttendanceQrLog>();
+    public DbSet<Schedule> Schedules => Set<Schedule>();
+    public DbSet<EmployeeShiftRequest> EmployeeShiftRequests => Set<EmployeeShiftRequest>();
 
 
 

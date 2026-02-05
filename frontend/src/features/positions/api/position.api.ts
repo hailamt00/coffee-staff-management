@@ -1,42 +1,30 @@
 import axios from '@/shared/api/axios'
-import {
+import type {
   Position,
   CreatePositionRequest,
   UpdatePositionRequest,
 } from '@/shared/types/api'
 
 export const positionApi = {
-  /* ================= QUERY ================= */
-
-  async getAll(): Promise<Position[]> {
-    const res = await axios.get<Position[]>('/positions')
-    return res.data
+  getAll: async (): Promise<Position[]> => {
+    const { data } = await axios.get('/positions')
+    return data
   },
 
-  async getById(id: number): Promise<Position> {
-    const res = await axios.get<Position>(`/positions/${id}`)
-    return res.data
+  create: async (payload: CreatePositionRequest): Promise<Position> => {
+    const { data } = await axios.post('/positions', payload)
+    return data
   },
 
-  /* ================= COMMAND ================= */
-
-  async create(payload: CreatePositionRequest): Promise<Position> {
-    const res = await axios.post<Position>('/positions', payload)
-    return res.data
-  },
-
-  async update(
+  update: async (
     id: number,
     payload: UpdatePositionRequest
-  ): Promise<Position> {
-    const res = await axios.put<Position>(
-      `/positions/${id}`,
-      payload
-    )
-    return res.data
+  ): Promise<Position> => {
+    const { data } = await axios.put(`/positions/${id}`, payload)
+    return data
   },
 
-  async delete(id: number): Promise<void> {
+  delete: async (id: number) => {
     await axios.delete(`/positions/${id}`)
   },
 }

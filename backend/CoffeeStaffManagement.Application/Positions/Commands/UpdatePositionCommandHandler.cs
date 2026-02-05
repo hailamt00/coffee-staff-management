@@ -1,15 +1,8 @@
-using CoffeeStaffManagement.Application.Common.Interfaces;
 using CoffeeStaffManagement.Domain.Entities;
-using CoffeeStaffManagement.Application.Common.Exceptions;
 using MediatR;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace CoffeeStaffManagement.Application.Positions.Commands;
 
 public class UpdatePositionCommandHandler
-    : IRequestHandler<UpdatePositionCommand, Unit>
+    : IRequestHandler<UpdatePositionCommand, PositionDto>
 {
     private readonly IPositionRepository _repo;
 
@@ -18,21 +11,42 @@ public class UpdatePositionCommandHandler
         _repo = repo;
     }
 
-    public async Task<Unit> Handle(
+    public async Task<PositionDto> Handle(
         UpdatePositionCommand request,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
         var position = await _repo.GetByIdAsync(request.Id)
-            ?? throw new NotFoundException("Position not found");
+            ?? throw new Exception("Position not found");
 
-        var name = request.Name.Trim();
+        position.Name = request.Request.Name;
 
-        if (await _repo.ExistsAsync(name, request.Id))
-            throw new BadRequestException("Position already exists");
+        position.Shifts.Clear();
+        foreach (var s in request.Request.Shifts)
+        {
+            position.Shifts.Add(new Shift
+            {
+                Name = s.Name,
+                StartTime = TimeSpan.Parse(s.StartTime),
+                EndTime = TimeSpan.Parse(s.EndTime),
+                IsEnabled = s.IsEnabled
+            });
+        }
 
-        position.Name = name;
         await _repo.UpdateAsync(position);
 
-        return Unit.Value;
+        return new PositionDto
+        {
+            Id = position.Id,
+            Name = position.Name,
+            IsActive = position.IsActive,
+            Shifts = position.Shifts.Select(s => new ShiftDto
+            {
+                Id = s.Id,
+                Name = s.Name,
+                StartTime = s.StartTime.ToString(@"hh\:mm"),
+                EndTime = s.EndTime.ToString(@"hh\:mm"),
+                IsEnabled = s.IsEnabled
+            }).ToList()
+        };
     }
 }

@@ -30,6 +30,8 @@ public static class DependencyInjection
         services.AddScoped<IPayrollRepository, PayrollRepository>();
         services.AddScoped<IAttendanceQrRepository,AttendanceQrRepository>();
         services.AddScoped<IPayrollAdjustmentRepository,PayrollAdjustmentRepository>();
+        services.AddScoped<IEmployeeShiftRequestRepository,EmployeeShiftRequestRepository>();
+        services.AddScoped<IScheduleRepository,ScheduleRepository>();
 
         // ===== SECURITY =====
         services.AddScoped<IPasswordHasher, PasswordHasher>();

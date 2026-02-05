@@ -9,7 +9,7 @@ import {
   LayoutDashboard,
   Users,
   Briefcase,
-  Clock,
+  CalendarDays,
   Fingerprint,
   CalendarOff,
   DollarSign,
@@ -42,7 +42,7 @@ const sections = [
     items: [
       { label: 'Employees', icon: Users, path: '/employees' },
       { label: 'Positions', icon: Briefcase, path: '/positions' },
-      { label: 'Shifts', icon: Clock, path: '/shifts' },
+      { label: 'Schedule', icon: CalendarDays, path: '/schedule' },
     ],
   },
   {

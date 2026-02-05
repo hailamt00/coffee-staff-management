@@ -7,7 +7,6 @@ import ProtectedLayout from '@/shared/components/ProtectedLayout'
 import PublicRoute from '@/shared/components/PublicLayout'
 import EmployeesPage from '@/features/employees/pages/EmployeesPage'
 import PositionsPage from '@/features/positions/pages/PositionsPage'
-import ShiftsPage from '@/features/shifts/pages/ShiftsPage'
 import AttendancePage from '@/features/attendance/pages/AttendancePage'
 import LeaveRequestsPage from '@/features/leave-requests/pages/LeaveRequestsPage'
 import PayrollPage from '@/features/payroll/pages/PayrollPage'
@@ -64,10 +63,6 @@ export const router = createBrowserRouter([
           {
             path: 'positions',
             element: <PositionsPage />,
-          },
-          {
-            path: 'shifts',
-            element: <ShiftsPage />,
           },
           {
             path: 'attendance',
