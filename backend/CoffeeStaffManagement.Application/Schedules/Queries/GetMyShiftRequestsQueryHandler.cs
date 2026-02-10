@@ -3,26 +3,26 @@ using CoffeeStaffManagement.Application.Schedules.DTOs;
 using MediatR;
 
 public class GetMyShiftRequestsQueryHandler
-    : IRequestHandler<GetMyShiftRequestsQuery, List<EmployeeShiftRequestDto>>
+    : IRequestHandler<GetMyShiftRequestsQuery, List<ScheduleRequestDto>>
 {
-    private readonly IEmployeeShiftRequestRepository _repo;
+    private readonly IScheduleRequestRepository _repo;
 
-    public GetMyShiftRequestsQueryHandler(IEmployeeShiftRequestRepository repo)
+    public GetMyShiftRequestsQueryHandler(IScheduleRequestRepository repo)
     {
         _repo = repo;
     }
 
-    public async Task<List<EmployeeShiftRequestDto>> Handle(
+    public async Task<List<ScheduleRequestDto>> Handle(
         GetMyShiftRequestsQuery request,
         CancellationToken cancellationToken)
     {
         var data = await _repo.GetByEmployeeAsync(request.EmployeeId);
 
-        return data.Select(x => new EmployeeShiftRequestDto(
+        return data.Select(x => new ScheduleRequestDto(
             x.Id,
             x.WorkDate,
-            x.Shift.Name,
-            x.Status
+            x.Shift?.Name ?? "",
+            x.Status.ToString().ToLower()
         )).ToList();
     }
 }

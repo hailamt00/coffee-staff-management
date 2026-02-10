@@ -8,9 +8,9 @@ D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Application\obj\
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Application\obj\Debug\net10.0\CoffeeStaffManagement.Application.AssemblyInfoInputs.cache
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Application\obj\Debug\net10.0\CoffeeStaffManagement.Application.AssemblyInfo.cs
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Application\obj\Debug\net10.0\CoffeeStaffManagement.Application.csproj.CoreCompileInputs.cache
+D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Application\obj\Debug\net10.0\CoffeeStaffManagement.Application.sourcelink.json
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Application\obj\Debug\net10.0\CoffeeSt.04719A75.Up2Date
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Application\obj\Debug\net10.0\CoffeeStaffManagement.Application.dll
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Application\obj\Debug\net10.0\refint\CoffeeStaffManagement.Application.dll
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Application\obj\Debug\net10.0\CoffeeStaffManagement.Application.pdb
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Application\obj\Debug\net10.0\ref\CoffeeStaffManagement.Application.dll
-D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Application\obj\Debug\net10.0\CoffeeStaffManagement.Application.sourcelink.json

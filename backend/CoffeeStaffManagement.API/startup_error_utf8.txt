@@ -1,0 +1,148 @@
+﻿Using launch settings from D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.API\Properties\launchSettings.json...
+Building...
+dotnet : Unhandled 
+exception. 
+System.AggregateException: 
+Some services are not able 
+to be constructed (Error 
+while validating the service 
+descriptor 'ServiceType: Medi
+atR.IRequestHandler`1[CoffeeS
+taffManagement.Application.Pa
+yrolls.Commands.CreatePayroll
+AdjustmentCommand] Lifetime: 
+Transient 
+ImplementationType: CoffeeSta
+ffManagement.Application.Payr
+olls.Commands.CreatePayrollAd
+justmentCommandHandler': 
+Unable to resolve service 
+for type 'CoffeeStaffManageme
+nt.Application.Common.Interfa
+ces.IPayrollAdjustmentReposit
+ory' while attempting to 
+activate 'CoffeeStaffManageme
+nt.Application.Payrolls.Comma
+nds.CreatePayrollAdjustmentCo
+mmandHandler'.)
+At line:1 char:1
++ dotnet run 2>&1 | Out-File 
+-Encoding utf8 
+startup_error_utf8.txt
++ ~~~~~~~~~~~~~~~
+    + CategoryInfo           
+   : NotSpecified: (Unhandl  
+  ed excep...mmandHandler'   
+ .):String) [], RemoteExc    
+eption
+    + FullyQualifiedErrorId  
+   : NativeCommandError
+ 
+ ---> System.InvalidOperation
+Exception: Error while 
+validating the service 
+descriptor 'ServiceType: Medi
+atR.IRequestHandler`1[CoffeeS
+taffManagement.Application.Pa
+yrolls.Commands.CreatePayroll
+AdjustmentCommand] Lifetime: 
+Transient 
+ImplementationType: CoffeeSta
+ffManagement.Application.Payr
+olls.Commands.CreatePayrollAd
+justmentCommandHandler': 
+Unable to resolve service 
+for type 'CoffeeStaffManageme
+nt.Application.Common.Interfa
+ces.IPayrollAdjustmentReposit
+ory' while attempting to 
+activate 'CoffeeStaffManageme
+nt.Application.Payrolls.Comma
+nds.CreatePayrollAdjustmentCo
+mmandHandler'.
+ ---> System.InvalidOperation
+Exception: Unable to resolve 
+service for type 'CoffeeStaff
+Management.Application.Common
+.Interfaces.IPayrollAdjustmen
+tRepository' while 
+attempting to activate 'Coffe
+eStaffManagement.Application.
+Payrolls.Commands.CreatePayro
+llAdjustmentCommandHandler'.
+   at Microsoft.Extensions.De
+pendencyInjection.ServiceLook
+up.CallSiteFactory.CreateArgu
+mentCallSites(ServiceIdentifi
+er serviceIdentifier, Type 
+implementationType, 
+CallSiteChain callSiteChain, 
+ParameterInfo[] parameters, 
+Boolean 
+throwIfCallSiteNotFound)
+   at Microsoft.Extensions.De
+pendencyInjection.ServiceLook
+up.CallSiteFactory.CreateCons
+tructorCallSite(ResultCache 
+lifetime, ServiceIdentifier 
+serviceIdentifier, Type 
+implementationType, 
+CallSiteChain callSiteChain)
+   at Microsoft.Extensions.De
+pendencyInjection.ServiceLook
+up.CallSiteFactory.CreateExac
+t(ServiceDescriptor 
+descriptor, 
+ServiceIdentifier 
+serviceIdentifier, 
+CallSiteChain callSiteChain, 
+Int32 slot)
+   at Microsoft.Extensions.De
+pendencyInjection.ServiceLook
+up.CallSiteFactory.GetCallSit
+e(ServiceDescriptor 
+serviceDescriptor, 
+CallSiteChain callSiteChain)
+   at Microsoft.Extensions.De
+pendencyInjection.ServiceProv
+ider.ValidateService(ServiceD
+escriptor descriptor)
+   --- End of inner 
+exception stack trace ---
+   at Microsoft.Extensions.De
+pendencyInjection.ServiceProv
+ider.ValidateService(ServiceD
+escriptor descriptor)
+   at Microsoft.Extensions.De
+pendencyInjection.ServiceProv
+ider..ctor(ICollection`1 
+serviceDescriptors, 
+ServiceProviderOptions 
+options)
+   --- End of inner 
+exception stack trace ---
+   at Microsoft.Extensions.De
+pendencyInjection.ServiceProv
+ider..ctor(ICollection`1 
+serviceDescriptors, 
+ServiceProviderOptions 
+options)
+   at Microsoft.Extensions.De
+pendencyInjection.ServiceColl
+ectionContainerBuilderExtensi
+ons.BuildServiceProvider(ISer
+viceCollection services, 
+ServiceProviderOptions 
+options)
+   at Microsoft.Extensions.Ho
+sting.HostApplicationBuilder.
+Build()
+   at Microsoft.AspNetCore.Bu
+ilder.WebApplicationBuilder.B
+uild()
+   at 
+Program.<Main>$(String[] 
+args) in D:\GitHub\coffee-sta
+ff-management\backend\CoffeeS
+taffManagement.API\Program.cs
+:line 17

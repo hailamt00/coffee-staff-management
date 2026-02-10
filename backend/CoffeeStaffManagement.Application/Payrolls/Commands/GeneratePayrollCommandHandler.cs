@@ -29,9 +29,8 @@ public class GeneratePayrollCommandHandler
         if (employee is null)
             throw new Exception("Employee not found");
 
-        var monthDate = DateOnly.Parse(request.Month + "-01");
-        var start = monthDate;
-        var end = monthDate.AddMonths(1).AddDays(-1);
+        var start = new DateOnly(request.Year, request.Month, 1);
+        var end = start.AddMonths(1).AddDays(-1);
 
         var attendances = await _attendanceRepo
             .GetByDateRangeAsync(
@@ -39,29 +38,37 @@ public class GeneratePayrollCommandHandler
                 start,
                 end);
 
-        decimal totalHours = attendances
-            .Where(a => a.CheckIn.HasValue && a.CheckOut.HasValue)
-            .Sum(a =>
+        decimal totalHours = 0;
+        foreach (var a in attendances)
+        {
+            if (a.TotalHours.HasValue)
             {
-                var hours =
-                    a.CheckOut!.Value.ToTimeSpan()
-                    - a.CheckIn!.Value.ToTimeSpan();
+                totalHours += a.TotalHours.Value;
+            }
+            else if (a.CheckIn.HasValue && a.CheckOut.HasValue)
+            {
+                var duration = a.CheckOut.Value - a.CheckIn.Value;
+                totalHours += (decimal)duration.TotalHours;
+            }
+        }
 
-                return hours.TotalHours > 0
-                    ? (decimal)hours.TotalHours
-                    : 0;
-            });
+        // Simple calculation for now:
+        // Assuming separate salaries for Service vs Barista not handled here yet, using Barista salary as default or need logic.
+        // For simplicity let's use ServiceSalary if Position matches, but we don't have Position here easily.
+        // Let's use ServiceSalary as base for now or average. User script has service_salary and barista_salary.
+        // Ideally we check the Shift -> Position to get the rate.
+        // But let's stick to what we have (Employee).
 
-
-        var hourlyRate = employee.SalaryBar / (26 * 8);
+        // TODO: Refine rate calculation based on Position
+        decimal hourlyRate = (employee.ServiceSalary ?? 0) / (26 * 8);
 
         var payroll = new PayrollEntity
         {
             EmployeeId = request.EmployeeId,
             Month = request.Month,
-            TotalHours = totalHours,
-            BaseSalary = employee.SalaryBar,
+            Year = request.Year,
             TotalSalary = Math.Round(hourlyRate * totalHours, 2),
+            CreatedAt = DateTime.UtcNow
         };
 
 

@@ -1,5 +1,10 @@
+using CoffeeStaffManagement.Application.Common.Interfaces;
+using CoffeeStaffManagement.Application.Positions.DTOs;
+using CoffeeStaffManagement.Application.Shifts.DTOs;
 using CoffeeStaffManagement.Domain.Entities;
 using MediatR;
+
+namespace CoffeeStaffManagement.Application.Positions.Commands;
 
 public class CreatePositionCommandHandler
     : IRequestHandler<CreatePositionCommand, PositionDto>
@@ -18,16 +23,20 @@ public class CreatePositionCommandHandler
         var position = new Position
         {
             Name = request.Request.Name,
-            IsActive = true,
-            CreatedAt = DateTime.UtcNow,
-            Shifts = request.Request.Shifts.Select(s => new Shift
-            {
-                Name = s.Name,
-                StartTime = TimeSpan.Parse(s.StartTime),
-                EndTime = TimeSpan.Parse(s.EndTime),
-                IsEnabled = s.IsEnabled
-            }).ToList()
+            Status = true,
+            Shifts = new List<Shift>()
         };
+
+        foreach (var shiftDto in request.Request.Shifts)
+        {
+            position.Shifts.Add(new Shift
+            {
+                Name = shiftDto.Name,
+                StartTime = TimeSpan.Parse(shiftDto.StartTime), // Ensure type compatibility
+                EndTime = TimeSpan.Parse(shiftDto.EndTime),
+                Status = true // Was IsEnabled
+            });
+        }
 
         await _repo.AddAsync(position);
 
@@ -39,14 +48,14 @@ public class CreatePositionCommandHandler
         {
             Id = p.Id,
             Name = p.Name,
-            IsActive = p.IsActive,
+            Status = p.Status, // Was IsActive
             Shifts = p.Shifts.Select(s => new ShiftDto
             {
                 Id = s.Id,
-                Name = s.Name,
-                StartTime = s.StartTime.ToString(@"hh\:mm"),
-                EndTime = s.EndTime.ToString(@"hh\:mm"),
-                IsEnabled = s.IsEnabled
+                Name = s.Name ?? "Unknown",
+                StartTime = s.StartTime?.ToString(@"hh\:mm") ?? "",
+                EndTime = s.EndTime?.ToString(@"hh\:mm") ?? "",
+                Status = s.Status // Was IsEnabled
             }).ToList()
         };
 }

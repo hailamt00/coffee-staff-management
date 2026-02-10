@@ -24,13 +24,13 @@ public class GetAttendanceByDateQueryHandler
         {
             Id = a.Id,
             EmployeeId = a.EmployeeId,
-            EmployeeName = a.Employee.Name,
-            ShiftId = a.ShiftId,
-            ShiftName = a.Shift.Name,
-            WorkDate = a.WorkDate,
+            EmployeeName = a.Employee?.Name ?? "Unknown",
+            ShiftId = a.Schedule?.ShiftId ?? 0,
+            ShiftName = a.Schedule?.Shift?.Name ?? "Unknown",
+            WorkDate = a.Schedule?.WorkDate ?? default,
             CheckIn = a.CheckIn,
             CheckOut = a.CheckOut,
-            Status = a.Status
+            Status = a.CheckIn != null ? "present" : "absent" // or derived logic
         }).ToList();
     }
 }

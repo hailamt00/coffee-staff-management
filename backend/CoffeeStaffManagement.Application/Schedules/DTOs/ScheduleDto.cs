@@ -1,6 +1,6 @@
 namespace CoffeeStaffManagement.Application.Schedules.DTOs;
 
-public record EmployeeShiftRequestDto(
+public record ScheduleRequestDto(
     int Id,
     DateOnly WorkDate,
     string ShiftName,

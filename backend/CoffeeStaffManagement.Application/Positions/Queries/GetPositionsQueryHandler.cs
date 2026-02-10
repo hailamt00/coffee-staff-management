@@ -1,5 +1,9 @@
 using CoffeeStaffManagement.Application.Common.Interfaces;
+using CoffeeStaffManagement.Application.Positions.DTOs;
+using CoffeeStaffManagement.Application.Shifts.DTOs;
 using MediatR;
+
+namespace CoffeeStaffManagement.Application.Positions.Queries;
 
 public class GetPositionsQueryHandler
     : IRequestHandler<GetPositionsQuery, List<PositionDto>>
@@ -21,16 +25,16 @@ public class GetPositionsQueryHandler
         {
             Id = p.Id,
             Name = p.Name,
-            IsActive = p.IsActive,
+            Status = p.Status,
             Shifts = p.Shifts
                 .OrderBy(s => s.StartTime)
                 .Select(s => new ShiftDto
                 {
                     Id = s.Id,
-                    Name = s.Name,
-                    StartTime = s.StartTime.ToString(@"hh\:mm"),
-                    EndTime = s.EndTime.ToString(@"hh\:mm"),
-                    IsEnabled = s.IsEnabled
+                    Name = s.Name ?? "Unknown",
+                    StartTime = s.StartTime?.ToString(@"hh\:mm") ?? "",
+                    EndTime = s.EndTime?.ToString(@"hh\:mm") ?? "",
+                    Status = s.Status
                 })
                 .ToList()
         }).ToList();

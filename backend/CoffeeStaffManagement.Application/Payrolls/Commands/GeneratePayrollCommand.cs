@@ -4,5 +4,6 @@ namespace CoffeeStaffManagement.Application.Payroll.Commands;
 
 public record GeneratePayrollCommand(
     int EmployeeId,
-    string Month // yyyy-MM
+    int Month,
+    int Year
 ) : IRequest;

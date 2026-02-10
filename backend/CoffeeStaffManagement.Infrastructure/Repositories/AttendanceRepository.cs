@@ -21,18 +21,22 @@ public class AttendanceRepository : IAttendanceRepository
     {
         return await _context.Attendances
             .Include(a => a.Employee)
+            .Include(a => a.Schedule)
+                .ThenInclude(s => s!.Shift)
             .FirstOrDefaultAsync(a =>
                 a.EmployeeId == employeeId &&
-                a.ShiftId == shiftId &&
-                a.WorkDate == workDate);
+                a.Schedule != null &&
+                a.Schedule.ShiftId == shiftId &&
+                a.Schedule.WorkDate == workDate);
     }
 
     public async Task<List<Attendance>> GetByDateAsync(DateOnly workDate)
     {
         return await _context.Attendances
             .Include(a => a.Employee)
-            .Include(a => a.Shift)
-            .Where(a => a.WorkDate == workDate)
+            .Include(a => a.Schedule)
+            .ThenInclude(s => s!.Shift)
+            .Where(a => a.Schedule != null && a.Schedule.WorkDate == workDate)
             .OrderBy(a => a.EmployeeId)
             .ToListAsync();
     }
@@ -44,11 +48,13 @@ public class AttendanceRepository : IAttendanceRepository
     DateOnly toDate)
     {
         return await _context.Attendances
+            .Include(a => a.Schedule)
             .Where(a =>
                 a.EmployeeId == employeeId &&
-                a.WorkDate >= fromDate &&
-                a.WorkDate <= toDate &&
-                a.Status == "present")
+                a.Schedule != null &&
+                a.Schedule.WorkDate >= fromDate &&
+                a.Schedule.WorkDate <= toDate &&
+                a.CheckIn != null)
             .ToListAsync();
     }
 

@@ -147,39 +147,6 @@ export interface Attendance {
 }
 
 /* ======================================================
-   ATTENDANCE QR
-====================================================== */
-
-export type AttendanceQrAction = 'CheckIn' | 'CheckOut'
-
-export interface AttendanceQrLog {
-  id: string
-  employeeId: string
-  workDate: string
-  role: string
-  actionType: AttendanceQrAction
-  actionTime: string
-  phone: string
-  createdAt: string
-}
-
-/* ======================================================
-   LEAVE REQUEST
-====================================================== */
-
-export type LeaveStatus = 'pending' | 'approved' | 'rejected'
-
-export interface LeaveRequest {
-  id: number
-  employeeId: number
-  fromDate: string
-  toDate: string
-  reason?: string
-  status: LeaveStatus
-  createdAt: string
-}
-
-/* ======================================================
    PAYROLL
 ====================================================== */
 

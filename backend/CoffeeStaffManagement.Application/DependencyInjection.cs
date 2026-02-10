@@ -1,4 +1,6 @@
 using MediatR;
+using CoffeeStaffManagement.Application.Common.Behaviors;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CoffeeStaffManagement.Application;
@@ -9,8 +11,12 @@ public static class DependencyInjection
         this IServiceCollection services)
     {
         services.AddMediatR(cfg =>
-            cfg.RegisterServicesFromAssembly(
-                typeof(Application.DependencyInjection).Assembly));
+        {
+            cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
+            cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+        });
+
+        services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
 
         return services;
     }

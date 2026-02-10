@@ -20,11 +20,15 @@ public class AttendanceConfiguration
         builder.Property(a => a.EmployeeId)
             .HasColumnName("employee_id");
 
-        builder.Property(a => a.ShiftId)
-            .HasColumnName("shift_id");
+        builder.Property(a => a.ScheduleId)
+            .HasColumnName("schedule_id");
 
-        builder.Property(a => a.WorkDate)
-            .HasColumnName("work_date");
+        builder.Property(a => a.TotalHours)
+            .HasColumnName("total_hours")
+            .HasPrecision(5, 2);
+
+        builder.Property(a => a.Note)
+            .HasColumnName("note");
 
         builder.Property(a => a.CheckIn)
             .HasColumnName("check_in");
@@ -32,22 +36,15 @@ public class AttendanceConfiguration
         builder.Property(a => a.CheckOut)
             .HasColumnName("check_out");
 
-        builder.Property(a => a.Status)
-            .HasColumnName("status");
-
-        builder.Property(a => a.CreatedAt)
-            .HasColumnName("created_at");
+        // builder.Property(a => a.CreatedAt)
+        //     .HasColumnName("created_at");
 
         builder.HasOne(a => a.Employee)
             .WithMany()
             .HasForeignKey(a => a.EmployeeId);
 
-        builder.HasOne(a => a.Shift)
-            .WithMany(s => s.Attendances)
-            .HasForeignKey(a => a.ShiftId);
-
-        builder.HasIndex(a =>
-            new { a.EmployeeId, a.ShiftId, a.WorkDate })
-            .IsUnique();
+        builder.HasOne(a => a.Schedule)
+            .WithMany()
+            .HasForeignKey(a => a.ScheduleId);
     }
 }

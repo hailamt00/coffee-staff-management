@@ -1,6 +1,7 @@
 using CoffeeStaffManagement.Application.Employees.Commands;
 using CoffeeStaffManagement.Application.Employees.DTOs;
 using CoffeeStaffManagement.Application.Employees.Queries;
+using CoffeeStaffManagement.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -40,17 +41,7 @@ public class EmployeesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateEmployeeDto dto)
     {
-        var id = await _mediator.Send(new CreateEmployeeCommand(
-            dto.Name,
-            dto.Phone,
-            dto.Cid,
-            dto.Gender,
-            dto.SalaryService,
-            dto.SalaryBar,
-            dto.Dob,
-            dto.HireDate
-        ));
-
+        var id = await _mediator.Send(new CreateEmployeeCommand(dto));
         return CreatedAtAction(nameof(GetById), new { id }, null);
     }
 
@@ -58,18 +49,7 @@ public class EmployeesController : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateEmployeeDto dto)
     {
-        await _mediator.Send(new UpdateEmployeeCommand(
-            id,
-            dto.Name,
-            dto.Phone,
-            dto.Cid,
-            dto.Gender,
-            dto.SalaryService,
-            dto.SalaryBar,
-            dto.Dob,
-            dto.HireDate
-        ));
-
+        await _mediator.Send(new UpdateEmployeeCommand(id, dto));
         return NoContent();
     }
 

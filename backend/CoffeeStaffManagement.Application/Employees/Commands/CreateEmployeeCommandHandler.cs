@@ -1,5 +1,7 @@
 using CoffeeStaffManagement.Application.Common.Interfaces;
 using CoffeeStaffManagement.Domain.Entities;
+using CoffeeStaffManagement.Domain.Enums;
+using CoffeeStaffManagement.Application.Employees.DTOs;
 using MediatR;
 using System;
 using System.Threading;
@@ -11,10 +13,17 @@ public class CreateEmployeeCommandHandler
     : IRequestHandler<CreateEmployeeCommand, int>
 {
     private readonly IEmployeeRepository _repo;
+    private readonly IActivityLogger _logger;
+    private readonly ICurrentUserService _currentUserService;
 
-    public CreateEmployeeCommandHandler(IEmployeeRepository repo)
+    public CreateEmployeeCommandHandler(
+        IEmployeeRepository repo,
+        IActivityLogger logger,
+        ICurrentUserService currentUserService)
     {
         _repo = repo;
+        _logger = logger;
+        _currentUserService = currentUserService;
     }
 
     public async Task<int> Handle(
@@ -23,17 +32,26 @@ public class CreateEmployeeCommandHandler
     {
         var employee = new Employee
         {
-            Name = request.Name,
-            Phone = request.Phone,
-            Cid = request.Cid,
-            Gender = request.Gender,
-            SalaryService = request.SalaryService ?? 0,
-            SalaryBar = request.SalaryBar ?? 0,
-            Dob = request.Dob,
-            HireDate = request.HireDate ?? DateTime.UtcNow
+            Name = request.Request.Name,
+            Phone = request.Request.Phone,
+            Cid = request.Request.Cid,
+            Gender = request.Request.Gender,
+            ServiceSalary = request.Request.ServiceSalary ?? 0,
+            BaristaSalary = request.Request.BaristaSalary ?? 0,
+            Dob = request.Request.Dob,
+            HireDate = request.Request.HireDate ?? DateOnly.FromDateTime(DateTime.UtcNow)
         };
 
         await _repo.AddAsync(employee);
+
+        await _logger.LogAsync(
+            _currentUserService.UserId,
+            "Create",
+            "Employee",
+            employee.Id,
+            $"Created employee {employee.Name} ({employee.Code})",
+            cancellationToken);
+
         return employee.Id;
     }
 }

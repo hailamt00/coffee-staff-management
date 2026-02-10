@@ -20,11 +20,8 @@ public class PositionConfiguration : IEntityTypeConfiguration<Position>
             .HasMaxLength(150)
             .IsRequired();
 
-        builder.Property(x => x.IsActive)
-            .HasColumnName("is_active");
-
-        builder.Property(x => x.CreatedAt)
-            .HasColumnName("created_at");
+        builder.Property(x => x.Status)
+            .HasColumnName("status");
 
         builder.HasMany(x => x.Shifts)
             .WithOne(x => x.Position)

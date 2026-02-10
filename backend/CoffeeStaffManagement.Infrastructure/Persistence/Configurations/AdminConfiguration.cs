@@ -28,7 +28,6 @@ public class AdminConfiguration : IEntityTypeConfiguration<Admin>
             .IsRequired();
 
         builder.Property(a => a.CreatedAt)
-            .HasColumnName("created_at")
-            .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            .HasColumnName("created_at");
     }
 }

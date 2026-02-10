@@ -1,11 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "SWSt5u6AGZk=",
+  "dgSpecHash": "rruSnEJ9M78=",
   "success": true,
   "projectFilePath": "D:\\GitHub\\coffee-staff-management\\backend\\CoffeeStaffManagement.Infrastructure\\CoffeeStaffManagement.Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\haila\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\haila\\.nuget\\packages\\dapper\\2.1.66\\dapper.2.1.66.nupkg.sha512",
+    "C:\\Users\\haila\\.nuget\\packages\\fluentvalidation\\12.1.1\\fluentvalidation.12.1.1.nupkg.sha512",
+    "C:\\Users\\haila\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\12.1.1\\fluentvalidation.dependencyinjectionextensions.12.1.1.nupkg.sha512",
     "C:\\Users\\haila\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\haila\\.nuget\\packages\\mediatr\\14.0.0\\mediatr.14.0.0.nupkg.sha512",
     "C:\\Users\\haila\\.nuget\\packages\\mediatr.contracts\\2.0.1\\mediatr.contracts.2.0.1.nupkg.sha512",

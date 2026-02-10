@@ -20,11 +20,10 @@ public class PayrollsController : ControllerBase
     [HttpPost("generate")]
     public async Task<IActionResult> Generate(
         [FromQuery] int employeeId,
-        [FromQuery] string month)
+        [FromQuery] int month,
+        [FromQuery] int year)
     {
-        await _mediator.Send(
-            new GeneratePayrollCommand(employeeId, month));
-
-        return Ok();
+        await _mediator.Send(new GeneratePayrollCommand(employeeId, month, year));
+        return Ok("Payroll generated successfully");
     }
 }

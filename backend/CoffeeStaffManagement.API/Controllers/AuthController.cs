@@ -1,7 +1,5 @@
 using CoffeeStaffManagement.Application.Auth.Commands;
 using CoffeeStaffManagement.Application.Auth.DTOs;
-using CoffeeStaffManagement.Application.Employees.Commands;
-using CoffeeStaffManagement.Application.Employees.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,25 +22,4 @@ public class AuthController : ControllerBase
         var result = await _mediator.Send(new LoginCommand(request));
         return Ok(result);
     }
-
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(
-    int id,
-    [FromBody] UpdateEmployeeDto dto)
-    {
-        await _mediator.Send(
-            new UpdateEmployeeCommand(id,
-            dto.Name,
-            dto.Phone,
-            dto.Cid,
-            dto.Gender,
-            dto.SalaryService,
-            dto.SalaryBar,
-            dto.Dob,
-            dto.HireDate
-));
-
-        return NoContent();
-    }
-
 }

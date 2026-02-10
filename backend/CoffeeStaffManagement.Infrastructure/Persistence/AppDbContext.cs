@@ -10,18 +10,24 @@ public class AppDbContext : DbContext
     {
     }
 
+    // Keeping existing ones:
     public DbSet<Admin> Admins => Set<Admin>();
     public DbSet<Employee> Employees => Set<Employee>();
     public DbSet<Position> Positions => Set<Position>();
     public DbSet<Attendance> Attendances => Set<Attendance>();
     public DbSet<Shift> Shifts => Set<Shift>();
-    public DbSet<LeaveRequest> LeaveRequests => Set<LeaveRequest>();
     public DbSet<Payroll> Payrolls => Set<Payroll>();
-    public DbSet<PayrollAdjustment> PayrollAdjustments => Set<PayrollAdjustment>();
+
+    // New ones:
+    public DbSet<RewardPenaltyType> RewardPenaltyTypes => Set<RewardPenaltyType>();
+    public DbSet<RewardPenalty> RewardPenalties => Set<RewardPenalty>();
+    public DbSet<PayrollDetail> PayrollDetails => Set<PayrollDetail>();
+    public DbSet<Revenue> Revenues => Set<Revenue>();
+    public DbSet<Transaction> Transactions => Set<Transaction>();
+
     public DbSet<ActivityLog> ActivityLogs => Set<ActivityLog>();
-    public DbSet<AttendanceQrLog> AttendanceQrLogs => Set<AttendanceQrLog>();
     public DbSet<Schedule> Schedules => Set<Schedule>();
-    public DbSet<EmployeeShiftRequest> EmployeeShiftRequests => Set<EmployeeShiftRequest>();
+    public DbSet<ScheduleRequest> ScheduleRequests => Set<ScheduleRequest>();
 
 
 

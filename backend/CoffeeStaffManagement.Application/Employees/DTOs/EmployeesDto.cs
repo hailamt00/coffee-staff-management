@@ -1,4 +1,5 @@
 using System;
+using CoffeeStaffManagement.Domain.Enums;
 
 namespace CoffeeStaffManagement.Application.Employees.DTOs
 {
@@ -8,11 +9,11 @@ namespace CoffeeStaffManagement.Application.Employees.DTOs
         string Name,
         string Phone,
         string? Cid,
-        string? Gender,
-        decimal SalaryService,
-        decimal SalaryBar,
+        Gender Gender,
+        decimal ServiceSalary,
+        decimal BaristaSalary,
         DateOnly? Dob,
-        DateTime HireDate,
+        DateOnly HireDate,
         DateTime CreatedAt
     );
 }

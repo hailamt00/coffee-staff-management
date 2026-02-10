@@ -11,7 +11,6 @@ import {
   Briefcase,
   CalendarDays,
   Fingerprint,
-  CalendarOff,
   DollarSign,
   SlidersHorizontal,
   UserCog,
@@ -49,7 +48,6 @@ const sections = [
     title: 'Time Management',
     items: [
       { label: 'Attendance', icon: Fingerprint, path: '/attendance' },
-      { label: 'Leave Requests', icon: CalendarOff, path: '/leave-requests' },
     ],
   },
   {

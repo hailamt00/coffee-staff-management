@@ -57,10 +57,10 @@ D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Infrastructure\o
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Infrastructure\obj\Debug\net10.0\CoffeeStaffManagement.Infrastructure.AssemblyInfoInputs.cache
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Infrastructure\obj\Debug\net10.0\CoffeeStaffManagement.Infrastructure.AssemblyInfo.cs
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Infrastructure\obj\Debug\net10.0\CoffeeStaffManagement.Infrastructure.csproj.CoreCompileInputs.cache
+D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Infrastructure\obj\Debug\net10.0\CoffeeStaffManagement.Infrastructure.sourcelink.json
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Infrastructure\obj\Debug\net10.0\CoffeeSt.B37CC8C1.Up2Date
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Infrastructure\obj\Debug\net10.0\CoffeeStaffManagement.Infrastructure.dll
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Infrastructure\obj\Debug\net10.0\refint\CoffeeStaffManagement.Infrastructure.dll
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Infrastructure\obj\Debug\net10.0\CoffeeStaffManagement.Infrastructure.pdb
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Infrastructure\obj\Debug\net10.0\CoffeeStaffManagement.Infrastructure.genruntimeconfig.cache
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Infrastructure\obj\Debug\net10.0\ref\CoffeeStaffManagement.Infrastructure.dll
-D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Infrastructure\obj\Debug\net10.0\CoffeeStaffManagement.Infrastructure.sourcelink.json

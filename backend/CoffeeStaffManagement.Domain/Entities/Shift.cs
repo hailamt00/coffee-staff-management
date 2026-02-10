@@ -1,17 +1,18 @@
+using CoffeeStaffManagement.Domain.Common;
+
 namespace CoffeeStaffManagement.Domain.Entities;
 
-public class Shift
+public class Shift : BaseEntity
 {
-    public int Id { get; set; }
-
     public int PositionId { get; set; }
-    public Position Position { get; set; } = null!;
 
-    public string Name { get; set; } = null!;
-    public TimeSpan StartTime { get; set; }
-    public TimeSpan EndTime { get; set; }
+    public string? Name { get; set; }
+    public TimeSpan? StartTime { get; set; }
+    public TimeSpan? EndTime { get; set; }
 
-    public bool IsEnabled { get; set; } = true;
-    public ICollection<Attendance> Attendances { get; set; }
-        = new List<Attendance>();
+    public bool Status { get; set; } = true;
+
+    public Position? Position { get; set; }
+    public ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
+    public ICollection<ScheduleRequest> ScheduleRequests { get; set; } = new List<ScheduleRequest>();
 }

@@ -1,11 +1,10 @@
+using CoffeeStaffManagement.Domain.Common;
+
 namespace CoffeeStaffManagement.Domain.Entities;
 
-public class Admin
+public class Admin : AuditableEntity
 {
-    public int Id { get; set; }
-
     public string Username { get; set; } = null!;
     public string PasswordHash { get; set; } = null!;
-
-    public DateTime CreatedAt { get; set; }
+    public string? FullName { get; set; }
 }

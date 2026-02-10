@@ -1,5 +1,10 @@
+using CoffeeStaffManagement.Application.Common.Interfaces;
+using CoffeeStaffManagement.Application.Positions.DTOs;
+using CoffeeStaffManagement.Application.Shifts.DTOs;
 using CoffeeStaffManagement.Domain.Entities;
 using MediatR;
+
+namespace CoffeeStaffManagement.Application.Positions.Commands;
 
 public class UpdatePositionCommandHandler
     : IRequestHandler<UpdatePositionCommand, PositionDto>
@@ -19,6 +24,7 @@ public class UpdatePositionCommandHandler
             ?? throw new Exception("Position not found");
 
         position.Name = request.Request.Name;
+        // position.Status = request.Request.IsActive; // If Request has IsActive? Check properties. Assuming validation only for Name/Shifts based on code.
 
         position.Shifts.Clear();
         foreach (var s in request.Request.Shifts)
@@ -28,7 +34,7 @@ public class UpdatePositionCommandHandler
                 Name = s.Name,
                 StartTime = TimeSpan.Parse(s.StartTime),
                 EndTime = TimeSpan.Parse(s.EndTime),
-                IsEnabled = s.IsEnabled
+                Status = s.Status // Was IsEnabled
             });
         }
 
@@ -38,14 +44,14 @@ public class UpdatePositionCommandHandler
         {
             Id = position.Id,
             Name = position.Name,
-            IsActive = position.IsActive,
+            Status = position.Status,
             Shifts = position.Shifts.Select(s => new ShiftDto
             {
                 Id = s.Id,
-                Name = s.Name,
-                StartTime = s.StartTime.ToString(@"hh\:mm"),
-                EndTime = s.EndTime.ToString(@"hh\:mm"),
-                IsEnabled = s.IsEnabled
+                Name = s.Name ?? "Unknown",
+                StartTime = s.StartTime?.ToString(@"hh\:mm") ?? "",
+                EndTime = s.EndTime?.ToString(@"hh\:mm") ?? "",
+                Status = s.Status
             }).ToList()
         };
     }

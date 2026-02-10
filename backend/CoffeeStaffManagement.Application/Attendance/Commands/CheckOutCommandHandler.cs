@@ -25,7 +25,28 @@ public class CheckOutCommandHandler
         if (attendance == null)
             throw new Exception("Attendance not found");
 
-        attendance.CheckOut = TimeOnly.FromDateTime(DateTime.Now);
+        if (attendance.CheckOut != null)
+            throw new Exception("Already checked out");
+
+        var now = DateTime.Now;
+        var checkOutTime = now.TimeOfDay;
+        var shiftEndTime = attendance.Schedule?.Shift?.EndTime;
+
+        attendance.CheckOut = now;
+
+        if (shiftEndTime.HasValue && checkOutTime < shiftEndTime.Value.Subtract(TimeSpan.FromMinutes(15))) // 15 mins grace period
+        {
+            var earlyNote = $"Early checkout: {checkOutTime:hh\\:mm} (Shift ends: {shiftEndTime.Value:hh\\:mm})";
+            attendance.Note = string.IsNullOrEmpty(attendance.Note)
+                ? earlyNote
+                : $"{attendance.Note}; {earlyNote}";
+        }
+
+        if (attendance.CheckIn.HasValue)
+        {
+            var duration = attendance.CheckOut.Value - attendance.CheckIn.Value;
+            attendance.TotalHours = Math.Round((decimal)duration.TotalHours, 2);
+        }
 
         await _repo.UpdateAsync(attendance, cancellationToken);
     }

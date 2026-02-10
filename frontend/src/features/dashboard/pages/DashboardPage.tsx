@@ -7,7 +7,7 @@ import {
 import {
   Users,
   UserCheck,
-  UserX,
+  CalendarDays,
   Shield,
   ArrowUpRight,
 } from 'lucide-react'
@@ -94,10 +94,10 @@ export default function DashboardPage() {
           icon={UserCheck}
         />
         <StatCard
-          title="On Leave"
-          value={4}
-          note="Approved leave"
-          icon={UserX}
+          title="Schedules"
+          value={0}
+          note="This week"
+          icon={CalendarDays}
         />
         <StatCard
           title="Admins"
@@ -125,7 +125,7 @@ export default function DashboardPage() {
           </p>
           <p className="mt-2">
             This dashboard gives you a quick snapshot of staff
-            attendance, leave status, and system access.
+            attendance, schedules, and system access.
             <br />
             Use the sidebar to navigate through management features.
           </p>

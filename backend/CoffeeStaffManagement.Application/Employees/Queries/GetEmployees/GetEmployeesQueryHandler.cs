@@ -31,10 +31,10 @@ namespace CoffeeStaffManagement.Application.Employees.Queries
                 e.Phone,
                 e.Cid,
                 e.Gender,
-                e.SalaryService,
-                e.SalaryBar,
+                e.ServiceSalary ?? 0,
+                e.BaristaSalary ?? 0,
                 e.Dob,
-                e.HireDate,
+                e.HireDate ?? default,
                 e.CreatedAt
             )).ToList();
         }

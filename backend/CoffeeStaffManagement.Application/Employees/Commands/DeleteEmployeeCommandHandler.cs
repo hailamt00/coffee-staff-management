@@ -10,10 +10,17 @@ public class DeleteEmployeeCommandHandler
     : IRequestHandler<DeleteEmployeeCommand, Unit>
 {
     private readonly IEmployeeRepository _repo;
+    private readonly IActivityLogger _logger;
+    private readonly ICurrentUserService _currentUserService;
 
-    public DeleteEmployeeCommandHandler(IEmployeeRepository repo)
+    public DeleteEmployeeCommandHandler(
+        IEmployeeRepository repo,
+        IActivityLogger logger,
+        ICurrentUserService currentUserService)
     {
         _repo = repo;
+        _logger = logger;
+        _currentUserService = currentUserService;
     }
 
     public async Task<Unit> Handle(
@@ -24,6 +31,15 @@ public class DeleteEmployeeCommandHandler
             ?? throw new Exception("Employee not found");
 
         await _repo.DeleteAsync(employee);
+
+        await _logger.LogAsync(
+            _currentUserService.UserId,
+            "Delete",
+            "Employee",
+            employee.Id,
+            $"Deleted employee {employee.Name} ({employee.Code})",
+            cancellationToken);
+
         return Unit.Value;
     }
 }

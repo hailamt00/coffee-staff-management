@@ -25,7 +25,7 @@ public class LoginCommandHandler
         LoginCommand request,
         CancellationToken cancellationToken)
     {
-        // 1️⃣ Lấy username từ LoginRequest
+        // 1. Get username from LoginRequest
         var admin = await _adminRepo.GetByUsernameAsync(
             request.Request.Username
         );
@@ -33,7 +33,7 @@ public class LoginCommandHandler
         if (admin is null)
             throw new UnauthorizedAccessException("Invalid credentials");
 
-        // 2️⃣ Verify password
+        // 2. Verify password
         var isPasswordValid = _hasher.Verify(
             request.Request.Password,
             admin.PasswordHash
@@ -42,10 +42,10 @@ public class LoginCommandHandler
         if (!isPasswordValid)
             throw new UnauthorizedAccessException("Invalid credentials");
 
-        // 3️⃣ Generate JWT
+        // 3. Generate JWT
         var token = _jwt.GenerateToken(admin);
 
-        // 4️⃣ Response
+        // 4. Response
         return new LoginResponse
         {
             Token = token,

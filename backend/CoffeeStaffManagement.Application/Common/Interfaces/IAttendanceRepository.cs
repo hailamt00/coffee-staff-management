@@ -1,4 +1,5 @@
 using AttendanceEntity = CoffeeStaffManagement.Domain.Entities.Attendance;
+using CoffeeStaffManagement.Domain.Entities;
 
 namespace CoffeeStaffManagement.Application.Common.Interfaces;
 

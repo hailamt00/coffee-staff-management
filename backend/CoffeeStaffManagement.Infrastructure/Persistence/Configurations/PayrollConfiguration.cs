@@ -8,7 +8,7 @@ public class PayrollConfiguration
 {
     public void Configure(EntityTypeBuilder<Payroll> builder)
     {
-        builder.ToTable("payroll");
+        builder.ToTable("payrolls");
 
         builder.HasKey(x => x.Id);
 
@@ -18,11 +18,8 @@ public class PayrollConfiguration
         builder.Property(x => x.Month)
             .HasColumnName("month");
 
-        builder.Property(x => x.TotalHours)
-            .HasColumnName("total_hours");
-
-        builder.Property(x => x.BaseSalary)
-            .HasColumnName("base_salary");
+        builder.Property(x => x.Year)
+            .HasColumnName("year");
 
         builder.Property(x => x.TotalSalary)
             .HasColumnName("total_salary");
@@ -30,7 +27,7 @@ public class PayrollConfiguration
         builder.Property(x => x.CreatedAt)
             .HasColumnName("created_at");
 
-        builder.HasIndex(x => new { x.EmployeeId, x.Month })
+        builder.HasIndex(x => new { x.EmployeeId, x.Month, x.Year })
             .IsUnique();
     }
 }

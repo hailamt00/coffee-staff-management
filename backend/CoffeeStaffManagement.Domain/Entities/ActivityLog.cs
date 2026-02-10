@@ -1,15 +1,14 @@
+using CoffeeStaffManagement.Domain.Common;
+
 namespace CoffeeStaffManagement.Domain.Entities;
 
-public class ActivityLog
+public class ActivityLog : AuditableEntity
 {
-    public int Id { get; set; }
-
-    public int AdminId { get; set; }
-    public Admin Admin { get; set; } = null!;
-
+    public int? AdminId { get; set; }
     public string Action { get; set; } = null!;
-    public string? TargetTable { get; set; }
+    public string? TargetType { get; set; }
     public int? TargetId { get; set; }
+    public string? Details { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    public Admin? Admin { get; set; }
 }

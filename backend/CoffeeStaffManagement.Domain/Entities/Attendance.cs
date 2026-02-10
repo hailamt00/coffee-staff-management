@@ -1,21 +1,20 @@
+using CoffeeStaffManagement.Domain.Common;
+
 namespace CoffeeStaffManagement.Domain.Entities;
 
-public class Attendance
+public class Attendance : BaseEntity
 {
-    public int Id { get; set; }
-
+    public int ScheduleId { get; set; }
     public int EmployeeId { get; set; }
-    public Employee Employee { get; set; } = null!;
 
-    public int ShiftId { get; set; }
-    public Shift Shift { get; set; } = null!;
+    public DateTime? CheckIn { get; set; }
+    public DateTime? CheckOut { get; set; }
+    public decimal? TotalHours { get; set; }
+    public string? Note { get; set; }
 
-    public DateOnly WorkDate { get; set; }
+    public Schedule? Schedule { get; set; }
+    public Employee? Employee { get; set; }
 
-    public TimeOnly? CheckIn { get; set; }
-    public TimeOnly? CheckOut { get; set; }
-
-    public string Status { get; set; } = null!;
-
-    public DateTime CreatedAt { get; set; }
+    public ICollection<PayrollDetail> PayrollDetails { get; set; } = new List<PayrollDetail>();
+    public ICollection<RewardPenalty> RewardsPenalties { get; set; } = new List<RewardPenalty>();
 }

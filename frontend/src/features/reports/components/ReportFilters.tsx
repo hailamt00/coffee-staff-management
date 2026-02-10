@@ -20,7 +20,7 @@ export default function ReportFilters() {
         <select className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900">
           <option>Attendance</option>
           <option>Payroll</option>
-          <option>Leave</option>
+          <option>Revenue</option>
         </select>
       </div>
 

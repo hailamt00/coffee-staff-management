@@ -26,14 +26,8 @@ public class ScheduleConfiguration : IEntityTypeConfiguration<Schedule>
             .HasColumnName("work_date")
             .IsRequired();
 
-        builder.Property(x => x.ApprovedBy)
-            .HasColumnName("approved_by");
-
         builder.Property(x => x.ApprovedAt)
             .HasColumnName("approved_at");
-
-        builder.Property(x => x.CreatedAt)
-            .HasColumnName("created_at");
 
         builder.HasIndex(x => new { x.EmployeeId, x.ShiftId, x.WorkDate })
             .IsUnique();

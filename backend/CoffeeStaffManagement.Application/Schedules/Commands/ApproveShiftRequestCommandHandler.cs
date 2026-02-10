@@ -1,5 +1,6 @@
 using CoffeeStaffManagement.Application.Common.Interfaces;
 using CoffeeStaffManagement.Domain.Entities;
+using CoffeeStaffManagement.Domain.Enums;
 using MediatR;
 
 namespace CoffeeStaffManagement.Application.Schedules.Commands;
@@ -7,11 +8,11 @@ namespace CoffeeStaffManagement.Application.Schedules.Commands;
 public class ApproveShiftRequestCommandHandler
     : IRequestHandler<ApproveShiftRequestCommand>
 {
-    private readonly IEmployeeShiftRequestRepository _requestRepo;
+    private readonly IScheduleRequestRepository _requestRepo;
     private readonly IScheduleRepository _scheduleRepo;
 
     public ApproveShiftRequestCommandHandler(
-        IEmployeeShiftRequestRepository requestRepo,
+        IScheduleRequestRepository requestRepo,
         IScheduleRepository scheduleRepo)
     {
         _requestRepo = requestRepo;
@@ -26,7 +27,7 @@ public class ApproveShiftRequestCommandHandler
         if (shiftRequest == null)
             throw new Exception("Shift request not found");
 
-        if (shiftRequest.Status != "PENDING")
+        if (shiftRequest.Status != ScheduleRequestStatus.Pending)
             throw new Exception("Shift request already processed");
 
         if (request.IsApproved)
@@ -39,26 +40,23 @@ public class ApproveShiftRequestCommandHandler
             if (exists)
                 throw new Exception("Schedule already exists");
 
-            shiftRequest.Status = "APPROVED";
+            shiftRequest.Status = ScheduleRequestStatus.Approved;
 
             var schedule = new Schedule
             {
                 EmployeeId = shiftRequest.EmployeeId,
                 ShiftId = shiftRequest.ShiftId,
                 WorkDate = shiftRequest.WorkDate,
-                ApprovedBy = request.ApprovedBy,
-                ApprovedAt = DateTime.UtcNow,
-                CreatedAt = DateTime.UtcNow
+                ApprovedAt = DateTime.UtcNow
             };
 
             await _scheduleRepo.AddAsync(schedule);
         }
         else
         {
-            shiftRequest.Status = "REJECTED";
+            shiftRequest.Status = ScheduleRequestStatus.Rejected;
         }
 
-        shiftRequest.UpdatedAt = DateTime.UtcNow;
         await _requestRepo.UpdateAsync(shiftRequest);
     }
 }

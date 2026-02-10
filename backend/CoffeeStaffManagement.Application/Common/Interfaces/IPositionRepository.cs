@@ -1,5 +1,7 @@
 using CoffeeStaffManagement.Domain.Entities;
 
+namespace CoffeeStaffManagement.Application.Common.Interfaces;
+
 public interface IPositionRepository
 {
     Task<List<Position>> GetAllAsync();

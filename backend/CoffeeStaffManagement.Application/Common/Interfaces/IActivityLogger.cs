@@ -3,9 +3,10 @@ namespace CoffeeStaffManagement.Application.Common.Interfaces;
 public interface IActivityLogger
 {
     Task LogAsync(
-        int adminId,
+        int? userId,
         string action,
-        string? targetTable,
-        int? targetId,
+        string? entityType,
+        int? entityId,
+        string? details,
         CancellationToken ct);
 }

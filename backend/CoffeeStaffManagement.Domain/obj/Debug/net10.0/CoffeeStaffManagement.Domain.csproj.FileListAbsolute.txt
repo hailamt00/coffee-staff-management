@@ -5,8 +5,8 @@ D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Domain\obj\Debug
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Domain\obj\Debug\net10.0\CoffeeStaffManagement.Domain.AssemblyInfoInputs.cache
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Domain\obj\Debug\net10.0\CoffeeStaffManagement.Domain.AssemblyInfo.cs
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Domain\obj\Debug\net10.0\CoffeeStaffManagement.Domain.csproj.CoreCompileInputs.cache
+D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Domain\obj\Debug\net10.0\CoffeeStaffManagement.Domain.sourcelink.json
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Domain\obj\Debug\net10.0\CoffeeStaffManagement.Domain.dll
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Domain\obj\Debug\net10.0\refint\CoffeeStaffManagement.Domain.dll
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Domain\obj\Debug\net10.0\CoffeeStaffManagement.Domain.pdb
 D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Domain\obj\Debug\net10.0\ref\CoffeeStaffManagement.Domain.dll
-D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Domain\obj\Debug\net10.0\CoffeeStaffManagement.Domain.sourcelink.json

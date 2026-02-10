@@ -8,7 +8,7 @@ import PublicRoute from '@/shared/components/PublicLayout'
 import EmployeesPage from '@/features/employees/pages/EmployeesPage'
 import PositionsPage from '@/features/positions/pages/PositionsPage'
 import AttendancePage from '@/features/attendance/pages/AttendancePage'
-import LeaveRequestsPage from '@/features/leave-requests/pages/LeaveRequestsPage'
+import SchedulePage from '@/features/schedule/pages/SchedulePage'
 import PayrollPage from '@/features/payroll/pages/PayrollPage'
 import AdjustmentsPage from '@/features/adjustments/page/AdjustmentsPage'
 import UsersPage from '@/features/users/pages/UsersPage'
@@ -16,7 +16,6 @@ import RolesPage from '@/features/roles/pages/RolesPage'
 import SettingsPage from '@/features/settings/page/SettingsPage'
 import ReportsPage from '@/features/reports/pages/ReportPage'
 import ActivityLogPage from '@/features/activity-log/pages/ActivityPage'
-import AttendanceQrPage from '@/features/attendance/pages/AttendanceQrPage'
 import AddEmployeePage from '@/features/employees/pages/AddEmployeePage'
 import EditEmployeePage from '@/features/employees/pages/EditEmployeePage'
 
@@ -65,12 +64,12 @@ export const router = createBrowserRouter([
             element: <PositionsPage />,
           },
           {
-            path: 'attendance',
-            element: <AttendancePage />,
+            path: 'schedule',
+            element: <SchedulePage />,
           },
           {
-            path: 'leave-requests',
-            element: <LeaveRequestsPage />,
+            path: 'attendance',
+            element: <AttendancePage />,
           },
           {
             path: 'payroll',
@@ -100,10 +99,6 @@ export const router = createBrowserRouter([
             path: 'activity-logs',
             element: <ActivityLogPage />,
           },
-          {
-            path: 'attendance-qr',
-            element: <AttendanceQrPage />,
-          }
         ],
       },
     ],

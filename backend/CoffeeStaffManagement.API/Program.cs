@@ -1,4 +1,5 @@
 using CoffeeStaffManagement.Api.Extensions;
+using CoffeeStaffManagement.API.Middleware;
 using CoffeeStaffManagement.Application;
 using CoffeeStaffManagement.Infrastructure;
 
@@ -17,6 +18,7 @@ builder.Services.AddApi(builder.Configuration);
 var app = builder.Build();
 
 // ===== MIDDLEWARE =====
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseSwagger();
 app.UseSwaggerUI();
 

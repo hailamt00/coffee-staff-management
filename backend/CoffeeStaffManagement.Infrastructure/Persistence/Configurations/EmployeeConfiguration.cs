@@ -1,4 +1,5 @@
 using CoffeeStaffManagement.Domain.Entities;
+using CoffeeStaffManagement.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -38,14 +39,14 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
 
         builder.Property(e => e.Gender)
             .HasColumnName("gender")
-            .HasMaxLength(10);
+            .HasConversion<string>();
 
-        builder.Property(e => e.SalaryService)
-            .HasColumnName("salary_service")
+        builder.Property(e => e.ServiceSalary)
+            .HasColumnName("service_salary")
             .HasPrecision(12, 2);
 
-        builder.Property(e => e.SalaryBar)
-            .HasColumnName("salary_bar")
+        builder.Property(e => e.BaristaSalary)
+            .HasColumnName("barista_salary")
             .HasPrecision(12, 2);
 
         builder.Property(e => e.Dob)
@@ -53,6 +54,10 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
 
         builder.Property(e => e.HireDate)
             .HasColumnName("hire_date");
+
+        builder.Property(e => e.Status)
+            .HasColumnName("status")
+            .HasDefaultValue(true);
 
         builder.Property(e => e.CreatedAt)
             .HasColumnName("created_at");

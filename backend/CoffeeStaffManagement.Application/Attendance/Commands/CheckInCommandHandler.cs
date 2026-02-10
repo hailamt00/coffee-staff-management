@@ -7,34 +7,58 @@ namespace CoffeeStaffManagement.Application.Attendance.Commands;
 public class CheckInCommandHandler
     : IRequestHandler<CheckInCommand>
 {
-    private readonly IAttendanceRepository _repo;
+    private readonly IAttendanceRepository _attendanceRepo;
+    private readonly IScheduleRepository _scheduleRepo;
 
-    public CheckInCommandHandler(IAttendanceRepository repo)
+    public CheckInCommandHandler(
+        IAttendanceRepository attendanceRepo,
+        IScheduleRepository scheduleRepo)
     {
-        _repo = repo;
+        _attendanceRepo = attendanceRepo;
+        _scheduleRepo = scheduleRepo;
     }
 
     public async Task Handle(
         CheckInCommand request,
         CancellationToken cancellationToken)
     {
-        var existing = await _repo.GetAsync(
+        // 1. Find Schedule
+        var schedule = await _scheduleRepo.GetAsync(
             request.Request.EmployeeId,
             request.Request.ShiftId,
             request.Request.WorkDate);
 
+        if (schedule == null)
+            throw new Exception("No schedule found for this shift/date");
+
+        // 2. Check if already checked in
+        var existing = await _attendanceRepo.GetAsync(
+            request.Request.EmployeeId,
+            request.Request.ShiftId,
+            request.Request.WorkDate); // Note: Repo might need update to search by ScheduleId, but sticking to existing params for now if unique enough
+
         if (existing != null)
             throw new Exception("Already checked in");
+
+        // 3. Create Attendance
+        var now = DateTime.Now;
+        var checkInTime = now.TimeOfDay;
+        var shiftStartTime = schedule.Shift?.StartTime;
+
+        string? note = null;
+        if (shiftStartTime.HasValue && checkInTime > shiftStartTime.Value.Add(TimeSpan.FromMinutes(15))) // 15 mins grace period
+        {
+            note = $"Late: {checkInTime:hh\\:mm} (Shift starts: {shiftStartTime.Value:hh\\:mm})";
+        }
 
         var attendance = new AttendanceEntity
         {
             EmployeeId = request.Request.EmployeeId,
-            ShiftId = request.Request.ShiftId,
-            WorkDate = request.Request.WorkDate,
-            CheckIn = TimeOnly.FromDateTime(DateTime.Now),
-            Status = "present"
+            ScheduleId = schedule.Id,
+            CheckIn = now,
+            Note = note
         };
 
-        await _repo.AddAsync(attendance, cancellationToken);
+        await _attendanceRepo.AddAsync(attendance, cancellationToken);
     }
 }

@@ -6,7 +6,8 @@ public interface IPayrollRepository
 {
     Task<PayrollEntity?> GetAsync(
         int employeeId,
-        string month,
+        int month,
+        int year,
         CancellationToken ct);
 
     Task<PayrollEntity?> GetByIdAsync(

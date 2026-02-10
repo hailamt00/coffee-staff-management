@@ -16,13 +16,15 @@ public class PayrollRepository : IPayrollRepository
 
     public async Task<Payroll?> GetAsync(
         int employeeId,
-        string month,
+        int month,
+        int year,
         CancellationToken ct)
     {
         return await _context.Payrolls
             .FirstOrDefaultAsync(p =>
                 p.EmployeeId == employeeId &&
-                p.Month == month,
+                p.Month == month &&
+                p.Year == year,
                 ct);
     }
 

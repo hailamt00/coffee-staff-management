@@ -12,8 +12,8 @@ public class AttendanceDto
 
     public DateOnly WorkDate { get; set; }
 
-    public TimeOnly? CheckIn { get; set; }
-    public TimeOnly? CheckOut { get; set; }
+    public DateTime? CheckIn { get; set; }
+    public DateTime? CheckOut { get; set; }
 
     public string Status { get; set; } = null!;
 }

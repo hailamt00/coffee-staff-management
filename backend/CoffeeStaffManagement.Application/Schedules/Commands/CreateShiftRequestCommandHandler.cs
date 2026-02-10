@@ -5,9 +5,9 @@ using MediatR;
 public class CreateShiftRequestCommandHandler
     : IRequestHandler<CreateShiftRequestCommand>
 {
-    private readonly IEmployeeShiftRequestRepository _repo;
+    private readonly IScheduleRequestRepository _repo;
 
-    public CreateShiftRequestCommandHandler(IEmployeeShiftRequestRepository repo)
+    public CreateShiftRequestCommandHandler(IScheduleRequestRepository repo)
     {
         _repo = repo;
     }
@@ -16,7 +16,7 @@ public class CreateShiftRequestCommandHandler
         CreateShiftRequestCommand request,
         CancellationToken cancellationToken)
     {
-        var entity = new EmployeeShiftRequest
+        var entity = new ScheduleRequest
         {
             EmployeeId = request.EmployeeId,
             ShiftId = request.ShiftId,
@@ -27,5 +27,5 @@ public class CreateShiftRequestCommandHandler
         await _repo.AddAsync(entity);
     }
 
-    
+
 }

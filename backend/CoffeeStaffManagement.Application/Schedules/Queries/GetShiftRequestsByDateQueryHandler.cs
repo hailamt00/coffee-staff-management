@@ -7,10 +7,10 @@ namespace CoffeeStaffManagement.Application.Schedules.Queries;
 public class GetShiftRequestsByDateQueryHandler
     : IRequestHandler<GetShiftRequestsByDateQuery, List<AdminShiftRequestDto>>
 {
-    private readonly IEmployeeShiftRequestRepository _repo;
+    private readonly IScheduleRequestRepository _repo;
 
     public GetShiftRequestsByDateQueryHandler(
-        IEmployeeShiftRequestRepository repo)
+        IScheduleRequestRepository repo)
     {
         _repo = repo;
     }
@@ -23,11 +23,11 @@ public class GetShiftRequestsByDateQueryHandler
 
         return data.Select(x => new AdminShiftRequestDto(
             x.Id,
-            x.Employee.Code,
-            x.Employee.Name,
-            x.Shift.Name,
+            x.Employee?.Code ?? "",
+            x.Employee?.Name ?? "",
+            x.Shift?.Name ?? "",
             x.WorkDate,
-            x.Status
+            x.Status.ToString().ToLower()
         )).ToList();
     }
 }

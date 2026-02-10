@@ -1,6 +1,9 @@
+using CoffeeStaffManagement.Application.Common.Interfaces;
 using CoffeeStaffManagement.Domain.Entities;
 using CoffeeStaffManagement.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+
+namespace CoffeeStaffManagement.Infrastructure.Repositories;
 
 public class PositionRepository : IPositionRepository
 {

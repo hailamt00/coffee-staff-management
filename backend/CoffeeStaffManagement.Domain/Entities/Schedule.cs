@@ -1,17 +1,18 @@
+using CoffeeStaffManagement.Domain.Common;
+
 namespace CoffeeStaffManagement.Domain.Entities;
 
-public class Schedule
+public class Schedule : BaseEntity
 {
-    public int Id { get; set; }
-
     public int EmployeeId { get; set; }
     public int ShiftId { get; set; }
+
     public DateOnly WorkDate { get; set; }
+    public DateTime? ApprovedAt { get; set; }
 
-    public int? ApprovedBy { get; set; }
-    public DateTime ApprovedAt { get; set; }
-    public DateTime CreatedAt { get; set; }
+    public Employee? Employee { get; set; }
+    public Shift? Shift { get; set; }
 
-    public Employee Employee { get; set; } = null!;
-    public Shift Shift { get; set; } = null!;
+    public Attendance? Attendance { get; set; }
+    public Revenue? Revenue { get; set; }
 }
