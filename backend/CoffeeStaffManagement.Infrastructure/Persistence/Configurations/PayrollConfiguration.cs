@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CoffeeStaffManagement.Infrastructure.Persistence.Configurations;
+
 public class PayrollConfiguration
     : IEntityTypeConfiguration<Payroll>
 {
@@ -10,7 +11,8 @@ public class PayrollConfiguration
     {
         builder.ToTable("payrolls");
 
-        builder.HasKey(x => x.Id);
+        builder.Property(x => x.Id)
+            .HasColumnName("id");
 
         builder.Property(x => x.EmployeeId)
             .HasColumnName("employee_id");

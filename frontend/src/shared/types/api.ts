@@ -54,8 +54,8 @@ export interface Employee {
   phone: string
   cid?: string | null
   gender?: Gender
-  salaryService: number
-  salaryBar: number
+  serviceSalary: number
+  baristaSalary: number
   dob?: string | null
   hireDate: string
   createdAt: string
@@ -73,8 +73,8 @@ export interface CreateEmployeeRequest {
   gender?: Gender
   dob?: string | null
   hireDate?: string | null
-  salaryService?: number
-  salaryBar?: number
+  serviceSalary?: number
+  baristaSalary?: number
 }
 
 /**
@@ -88,8 +88,8 @@ export interface UpdateEmployeeRequest {
   gender?: Gender
   dob?: string | null
   hireDate?: string | null
-  salaryService?: number
-  salaryBar?: number
+  serviceSalary?: number
+  baristaSalary?: number
 }
 
 /* ======================================================
@@ -106,7 +106,7 @@ export interface Shift {
 export interface Position {
   id: number
   name: string
-  isActive: boolean
+  status: boolean
   shifts?: Shift[]
 }
 
@@ -140,10 +140,22 @@ export interface Attendance {
   employeeId: number
   shiftId: number
   workDate: string
-  checkIn?: string
-  checkOut?: string
+  checkIn?: string | null
+  checkOut?: string | null
   status: AttendanceStatus
   createdAt: string
+}
+
+export interface CheckInRequest {
+  employeeId: number
+  shiftId: number
+  workDate: string
+}
+
+export interface CheckOutRequest {
+  employeeId: number
+  shiftId: number
+  workDate: string
 }
 
 /* ======================================================
@@ -153,9 +165,9 @@ export interface Attendance {
 export interface Payroll {
   id: number
   employeeId: number
-  month: string
-  totalHours: number
-  baseSalary: number
+  employeeName?: string
+  month: number
+  year: number
   totalSalary: number
   createdAt: string
 }
@@ -188,4 +200,80 @@ export interface ActivityLog {
   targetTable?: string
   targetId?: number
   createdAt: string
+}
+
+/* ======================================================
+   SCHEDULE
+====================================================== */
+
+export interface Schedule {
+  employeeCode: string
+  employeeName: string
+  shiftName: string
+  workDate: string
+}
+
+export type ScheduleStatus = 'pending' | 'approved' | 'rejected'
+
+export interface ScheduleRequest {
+  requestId: number
+  employeeCode: string
+  employeeName: string
+  shiftName: string
+  workDate: string
+  status: string
+}
+
+export interface CreateShiftRequest {
+  employeeId: number
+  shiftId: number
+  workDate: string
+  note?: string
+}
+
+export interface ApproveShiftRequest {
+  requestId: number
+  isApproved: boolean
+}
+/* ======================================================
+   REVENUE & TRANSACTIONS
+====================================================== */
+
+export interface Transaction {
+  id: number
+  revenueId: number
+  type: 'Income' | 'Expense'
+  amount: number
+  reason?: string
+  createdAt: string
+}
+
+export interface Revenue {
+  id: number
+  scheduleId: number
+  employeeId: number
+  openingBalance: number
+  cash: number
+  bank: number
+  net: number
+  totalRevenue: number
+  deviation: number
+  note?: string
+  createdAt: string
+  transactions?: Transaction[]
+}
+
+export interface CreateTransactionRequest {
+  revenueId: number
+  type: 'Income' | 'Expense'
+  amount: number
+  reason?: string
+}
+
+export interface CreateRevenueRequest {
+  scheduleId: number
+  openingBalance: number
+  cash: number
+  bank: number
+  note?: string
 }

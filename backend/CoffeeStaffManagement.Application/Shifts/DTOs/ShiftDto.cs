@@ -7,4 +7,5 @@ public class ShiftDto
     public string StartTime { get; set; } = null!;
     public string EndTime { get; set; } = null!;
     public bool Status { get; set; }
+    public bool IsEnabled { get; set; }
 }

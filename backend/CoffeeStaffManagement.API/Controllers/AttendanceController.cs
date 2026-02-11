@@ -9,7 +9,6 @@ namespace CoffeeStaffManagement.API.Controllers;
 
 [ApiController]
 [Route("api/attendance")]
-[Authorize]
 public class AttendanceController : ControllerBase
 {
     private readonly IMediator _mediator;

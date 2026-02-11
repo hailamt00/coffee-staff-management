@@ -19,7 +19,7 @@ public class PayrollDetailConfiguration : IEntityTypeConfiguration<PayrollDetail
         builder.Property(x => x.Rate).HasColumnName("rate").HasPrecision(12, 2);
         builder.Property(x => x.Amount).HasColumnName("amount").HasPrecision(12, 2);
 
-        builder.HasOne(x => x.Payroll).WithMany().HasForeignKey(x => x.PayrollId);
-        builder.HasOne(x => x.Attendance).WithMany().HasForeignKey(x => x.AttendanceId);
+        builder.HasOne(x => x.Payroll).WithMany(p => p.Details).HasForeignKey(x => x.PayrollId);
+        builder.HasOne(x => x.Attendance).WithMany(a => a.PayrollDetails).HasForeignKey(x => x.AttendanceId);
     }
 }

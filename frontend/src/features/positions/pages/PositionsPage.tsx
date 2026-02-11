@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
+import { motion } from 'framer-motion'
 import { usePosition } from '../hooks/usePosition'
 import { PositionTable } from '../components/PositionTable'
 import { PositionDialog } from '../components/PositionDialog'
-import { Button } from '@/shared/ui/button'
-import { Card } from '@/shared/ui/card'
+import { Button } from '@/shared/components/ui/button'
+import { Card, CardContent } from '@/shared/components/ui/card'
 import {
   AlertDialog,
   AlertDialogContent,
@@ -11,8 +12,9 @@ import {
   AlertDialogTitle,
   AlertDialogDescription,
   AlertDialogFooter,
-} from '@/shared/ui/alert-dialog'
-import { Plus } from 'lucide-react'
+} from '@/shared/components/ui/alert-dialog'
+import { Plus, Briefcase, Users, Clock } from 'lucide-react'
+import { StatCard } from '@/shared/components/StatCard'
 
 export default function PositionPage() {
   const { positions, loading, createPosition, updatePosition, deletePosition } =
@@ -24,18 +26,37 @@ export default function PositionPage() {
     useState<{ id: number; name: string } | null>(null)
   const editingPosition = positions.find(p => p.id === editingId)
 
+  // Calculate statistics
+  const stats = useMemo(() => {
+    const totalPositions = positions.length
+    const totalShifts = positions.reduce((sum, p) => sum + (p.shifts?.length || 0), 0)
+
+    return {
+      totalPositions,
+      totalShifts,
+    }
+  }, [positions])
+
   return (
-    <div className="space-y-6">
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25 }}
+      className="space-y-6"
+    >
       {/* HEADER */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-end justify-between px-2">
         <div>
-          <h1 className="text-2xl font-semibold">Positions</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Manage working positions and shifts
+          <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
+            Positions
+          </h1>
+          <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+            Role & Shift Configuration
           </p>
         </div>
 
         <Button
+          className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 border-none h-10 px-6 rounded-lg font-bold uppercase tracking-widest text-[10px]"
           onClick={() => {
             setEditingId(null)
             setDialogOpen(true)
@@ -46,17 +67,49 @@ export default function PositionPage() {
         </Button>
       </div>
 
-      <Card className="p-6">
-        {loading ? 'Loading...' : (
-          <PositionTable
-            data={positions}
-            onEdit={id => {
-              setEditingId(id)
-              setDialogOpen(true)
-            }}
-            onDelete={(id, name) => setDeleteTarget({ id, name })}
-          />
-        )}
+      {/* STATS SECTION */}
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <StatCard
+          title="Total Positions"
+          value={stats.totalPositions}
+          description="Job roles defined"
+          icon={Briefcase}
+          iconColor="text-slate-900 dark:text-white"
+        />
+        <StatCard
+          title="Total Shifts"
+          value={stats.totalShifts}
+          description="Across all positions"
+          icon={Clock}
+          iconColor="text-blue-600 dark:text-blue-400"
+        />
+        <StatCard
+          title="Configuration"
+          value={stats.totalPositions > 0 ? "Active" : "Empty"}
+          description="System status"
+          icon={Users}
+          iconColor="text-green-600 dark:text-green-400"
+          trend={stats.totalPositions > 0 ? 'up' : 'neutral'}
+          trendValue={stats.totalPositions > 0 ? 'Configured' : 'Setup needed'}
+        />
+      </div>
+
+      <Card className="border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm">
+        <CardContent className="p-6">
+          <h2 className="mb-4 text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
+            Position Details
+          </h2>
+          {loading ? 'Loading...' : (
+            <PositionTable
+              data={positions}
+              onEdit={id => {
+                setEditingId(id)
+                setDialogOpen(true)
+              }}
+              onDelete={(id, name) => setDeleteTarget({ id, name })}
+            />
+          )}
+        </CardContent>
       </Card>
 
       <PositionDialog
@@ -91,6 +144,6 @@ export default function PositionPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </motion.div>
   )
 }

@@ -8,12 +8,16 @@ public class AdminConfiguration : IEntityTypeConfiguration<Admin>
 {
     public void Configure(EntityTypeBuilder<Admin> builder)
     {
-        builder.ToTable("admins");
+        builder.ToTable("admin");
 
         builder.HasKey(a => a.Id);
 
         builder.Property(a => a.Id)
             .HasColumnName("id");
+
+        builder.Property(a => a.FullName)
+            .HasColumnName("full_name")
+            .HasMaxLength(100);
 
         builder.Property(a => a.Username)
             .HasColumnName("username")

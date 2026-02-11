@@ -1,4 +1,5 @@
 using CoffeeStaffManagement.Application.Payroll.Commands;
+using CoffeeStaffManagement.Application.Payrolls.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,16 @@ public class PayrollsController : ControllerBase
     public PayrollsController(IMediator mediator)
     {
         _mediator = mediator;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetByMonth(
+        [FromQuery] int month,
+        [FromQuery] int year)
+    {
+        var result = await _mediator.Send(
+            new GetPayrollByMonthQuery(month, year));
+        return Ok(result);
     }
 
     [HttpPost("generate")]

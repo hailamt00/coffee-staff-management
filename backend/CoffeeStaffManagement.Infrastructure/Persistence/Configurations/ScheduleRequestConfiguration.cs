@@ -1,4 +1,5 @@
 using CoffeeStaffManagement.Domain.Entities;
+using CoffeeStaffManagement.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -12,7 +13,7 @@ public class ScheduleRequestConfiguration
         builder.ToTable("schedule_requests");
 
         builder.HasKey(e => e.Id);
-        
+
         builder.Property(e => e.Id)
             .HasColumnName("id");
 
@@ -27,20 +28,21 @@ public class ScheduleRequestConfiguration
 
         builder.Property(e => e.Status)
             .HasColumnName("status")
-            .HasDefaultValue("pending");
+            .HasConversion<string>()
+            .HasDefaultValue(ScheduleRequestStatus.Pending);
 
         builder.Property(e => e.Note)
             .HasColumnName("note");
 
         builder.Property(e => e.CreatedAt)
             .HasColumnName("created_at");
-            
+
         builder.HasOne(e => e.Employee)
-            .WithMany()
+            .WithMany(em => em.ScheduleRequests)
             .HasForeignKey(e => e.EmployeeId);
 
         builder.HasOne(e => e.Shift)
-            .WithMany()
+            .WithMany(s => s.ScheduleRequests)
             .HasForeignKey(e => e.ShiftId);
 
         builder.HasIndex(x => new { x.EmployeeId, x.ShiftId, x.WorkDate })

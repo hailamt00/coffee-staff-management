@@ -5,9 +5,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from '@/shared/ui/dialog'
-import { Input } from '@/shared/ui/input'
-import { Button } from '@/shared/ui/button'
+} from '@/shared/components/ui/dialog'
+import { Input } from '@/shared/components/ui/input'
+import { Button } from '@/shared/components/ui/button'
 import { ShiftEditor } from './ShiftEditor'
 import type {
   CreatePositionRequest,

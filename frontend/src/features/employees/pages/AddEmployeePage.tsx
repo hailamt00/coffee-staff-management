@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card'
-import { Button } from '@/shared/ui/button'
-import { Input } from '@/shared/ui/input'
-import { Label } from '@/shared/ui/label'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
+import { Button } from '@/shared/components/ui/button'
+import { Input } from '@/shared/components/ui/input'
+import { Label } from '@/shared/components/ui/label'
 import { useEmployee } from '../hooks/useEmployee'
 import { useNavigate } from 'react-router-dom'
 import type { Gender } from '@/shared/types/api'
@@ -24,17 +24,17 @@ export default function AddEmployeePage() {
     phone: '',
     cid: '',
     gender: '' as Gender | '',
-    salaryService: '',
-    salaryBar: '',
+    serviceSalary: '',
+    baristaSalary: '',
     dob: '',
     hireDate: '',
   })
 
   const handleChange =
     (key: keyof typeof form) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      setForm(prev => ({ ...prev, [key]: e.target.value }))
-    }
+      (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        setForm(prev => ({ ...prev, [key]: e.target.value }))
+      }
 
   const handleSubmit = async () => {
     if (!form.name.trim()) {
@@ -58,8 +58,8 @@ export default function AddEmployeePage() {
         hireDate: form.hireDate
           ? new Date(form.hireDate).toISOString()
           : null,
-        salaryService: Number(form.salaryService) || 0,
-        salaryBar: Number(form.salaryBar) || 0,
+        serviceSalary: Number(form.serviceSalary) || 0,
+        baristaSalary: Number(form.baristaSalary) || 0,
       })
 
       navigate('/employees')
@@ -69,108 +69,118 @@ export default function AddEmployeePage() {
   }
 
   return (
-    <Card className="mx-auto max-w-4xl shadow-sm">
-      <CardHeader>
-        <CardTitle className="text-xl">Add New Employee</CardTitle>
-        <p className="text-sm text-muted-foreground">
-          Enter employee master information
-        </p>
-      </CardHeader>
+    <div className="space-y-6">
+      <div className="flex items-center gap-2">
+        <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
+          Back
+        </Button>
+      </div>
 
-      <CardContent className="space-y-8">
-        {/* ===== BASIC INFO ===== */}
-        <Section title="Basic Information">
-          <Grid>
-            <Field label="Employee Name" required>
-              <Input
-                placeholder="Name"
-                value={form.name}
-                onChange={handleChange('name')}
-              />
-            </Field>
+      <Card className="mx-auto max-w-4xl shadow-sm border-t-4 border-black dark:border-white">
+        <CardHeader>
+          <CardTitle className="text-xl font-semibold text-slate-800 dark:text-slate-100 border-l-4 border-black dark:border-white pl-3">
+            Add New Employee
+          </CardTitle>
+          <p className="mt-1 text-sm text-slate-500">
+            Enter employee master information
+          </p>
+        </CardHeader>
 
-            <Field label="Phone Number" required>
-              <Input
-                placeholder="Phone"
-                value={form.phone}
-                onChange={handleChange('phone')}
-              />
-            </Field>
+        <CardContent className="space-y-8">
+          {/* ===== BASIC INFO ===== */}
+          <Section title="Basic Information">
+            <Grid>
+              <Field label="Employee Name" required>
+                <Input
+                  placeholder="Name"
+                  value={form.name}
+                  onChange={handleChange('name')}
+                />
+              </Field>
 
-            <Field label="Citizen ID (CID)">
-              <Input
-                placeholder="Optional"
-                value={form.cid}
-                onChange={handleChange('cid')}
-              />
-            </Field>
+              <Field label="Phone Number" required>
+                <Input
+                  placeholder="Phone"
+                  value={form.phone}
+                  onChange={handleChange('phone')}
+                />
+              </Field>
 
-            <Field label="Gender">
-              <Select
-                value={form.gender}
-                onChange={handleChange('gender')}
-                options={GENDERS}
-                placeholder="Select"
-              />
-            </Field>
-          </Grid>
-        </Section>
+              <Field label="Citizen ID (CID)">
+                <Input
+                  placeholder="Optional"
+                  value={form.cid}
+                  onChange={handleChange('cid')}
+                />
+              </Field>
 
-        {/* ===== SALARY ===== */}
-        <Section title="Salary Information">
-          <Grid>
-            <Field label="Salary Service">
-              <Input
-                type="number"
-                placeholder="0"
-                value={form.salaryService}
-                onChange={handleChange('salaryService')}
-              />
-            </Field>
+              <Field label="Gender">
+                <Select
+                  value={form.gender}
+                  onChange={handleChange('gender')}
+                  options={GENDERS}
+                  placeholder="Select"
+                />
+              </Field>
+            </Grid>
+          </Section>
 
-            <Field label="Salary Bar">
-              <Input
-                type="number"
-                placeholder="0"
-                value={form.salaryBar}
-                onChange={handleChange('salaryBar')}
-              />
-            </Field>
-          </Grid>
-        </Section>
+          {/* ===== SALARY ===== */}
+          <Section title="Salary Information">
+            <Grid>
+              <Field label="Salary Service">
+                <Input
+                  type="number"
+                  placeholder="0"
+                  value={form.serviceSalary}
+                  onChange={handleChange('serviceSalary')}
+                />
+              </Field>
 
-        {/* ===== DATE ===== */}
-        <Section title="Date Information">
-          <Grid>
-            <Field label="Date of Birth">
-              <Input type="date" value={form.dob} onChange={handleChange('dob')} />
-            </Field>
+              <Field label="Salary Bar">
+                <Input
+                  type="number"
+                  placeholder="0"
+                  value={form.baristaSalary}
+                  onChange={handleChange('baristaSalary')}
+                />
+              </Field>
+            </Grid>
+          </Section>
 
-            <Field label="Hire Date">
-              <Input
-                type="date"
-                value={form.hireDate}
-                onChange={handleChange('hireDate')}
-              />
-            </Field>
-          </Grid>
-        </Section>
+          {/* ===== DATE ===== */}
+          <Section title="Date Information">
+            <Grid>
+              <Field label="Date of Birth">
+                <Input type="date" value={form.dob} onChange={handleChange('dob')} />
+              </Field>
 
-        {/* ===== ACTIONS ===== */}
-        <div className="flex justify-end gap-3 border-t pt-6">
-          <Button variant="outline" onClick={() => navigate(-1)}>
-            Cancel
-          </Button>
-          <Button onClick={handleSubmit} disabled={loading}>
-            {loading ? 'Saving...' : 'Save Employee'}
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+              <Field label="Hire Date">
+                <Input
+                  type="date"
+                  value={form.hireDate}
+                  onChange={handleChange('hireDate')}
+                />
+              </Field>
+            </Grid>
+          </Section>
+
+          {/* ===== ACTIONS ===== */}
+          <div className="flex justify-end gap-3 border-t pt-6">
+            <Button variant="outline" onClick={() => navigate(-1)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSubmit} disabled={loading}>
+              {loading ? 'Saving...' : 'Save Employee'}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   )
 }
 
-/* ===== UI HELPERS (GIỮ NGUYÊN) ===== */
+/* ================= UI HELPERS ================= */
 
 function Section({
   title,

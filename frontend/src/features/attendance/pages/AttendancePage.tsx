@@ -1,192 +1,182 @@
-import { useState } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { motion } from 'framer-motion'
+import { useAttendance } from '../hooks/useAttendance'
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from '@/shared/ui/card'
-import { Button } from '@/shared/ui/button'
-import { Badge } from '@/shared/ui/badge'
-import { Input } from '@/shared/ui/input'
+} from '@/shared/components/ui/card'
+import { Badge } from '@/shared/components/ui/badge'
+import { Input } from '@/shared/components/ui/input'
 import {
-  CalendarDays,
   Clock,
   CheckCircle,
   XCircle,
   Users,
-  MoreHorizontal,
+  AlertCircle,
 } from 'lucide-react'
-
-/* ================= TYPES ================= */
-
-type AttendanceStatus = 'on-time' | 'late' | 'absent'
-
-type Attendance = {
-  id: string
-  employee: string
-  shift: string
-  checkIn?: string
-  checkOut?: string
-  status: AttendanceStatus
-}
-
-/* ================= MOCK DATA ================= */
-
-const MOCK_ATTENDANCE: Attendance[] = [
-  {
-    id: '1',
-    employee: 'Nguyen Van A',
-    shift: 'Morning',
-    checkIn: '07:02',
-    checkOut: '12:00',
-    status: 'late',
-  },
-  {
-    id: '2',
-    employee: 'Tran Thi B',
-    shift: 'Morning',
-    checkIn: '06:58',
-    checkOut: '12:00',
-    status: 'on-time',
-  },
-  {
-    id: '3',
-    employee: 'Le Van C',
-    shift: 'Afternoon',
-    status: 'absent',
-  },
-]
+import { formatDate } from '@/shared/utils/format'
+import { StatCard } from '@/shared/components/StatCard'
+import { DataTable } from '@/shared/components/ui/data-table'
+import type { ColumnDef } from '@tanstack/react-table'
+import type { Attendance } from '@/shared/types/api'
 
 /* ================= HELPERS ================= */
 
-function StatusBadge({ status }: { status: AttendanceStatus }) {
+function StatusBadge({ status }: { status: string }) {
   switch (status) {
-    case 'on-time':
-      return <Badge className="bg-emerald-500/10 text-emerald-600">On time</Badge>
+    case 'present':
+      return <Badge className="bg-black text-white dark:bg-white dark:text-black border-black dark:border-white">Present</Badge>
     case 'late':
-      return <Badge className="bg-amber-500/10 text-amber-600">Late</Badge>
+      return <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20">Late</Badge>
     case 'absent':
-      return <Badge className="bg-red-500/10 text-red-600">Absent</Badge>
+      return <Badge className="bg-red-500/10 text-red-600 border-red-500/20">Absent</Badge>
+    default:
+      return <Badge variant="outline">{status}</Badge>
   }
 }
 
 /* ================= PAGE ================= */
 
 export default function AttendancePage() {
-  const [date] = useState(() =>
+  const { attendances, loading, loadAttendance } = useAttendance()
+
+  const [date, setDate] = useState(() =>
     new Date().toISOString().slice(0, 10)
   )
 
-  return (
-    <div className="space-y-8">
-      {/* ===== Header ===== */}
-      <div className="flex items-center justify-between">
+  useEffect(() => {
+    loadAttendance(date)
+  }, [date, loadAttendance])
+
+  // Stats calculation
+  const stats = useMemo(() => {
+    const total = attendances.length
+    const present = attendances.filter(a => a.status === 'present').length
+    const late = attendances.filter(a => a.status === 'late').length
+    const absent = attendances.filter(a => a.status === 'absent').length
+    const presentRate = total > 0 ? ((present / total) * 100).toFixed(1) : '0.0'
+
+    return { total, present, late, absent, presentRate }
+  }, [attendances])
+
+  const columns = useMemo<ColumnDef<Attendance>[]>(() => [
+    {
+      accessorKey: "employeeId",
+      header: "Employee",
+      cell: ({ row }) => (
         <div>
-          <h1 className="text-2xl font-semibold text-black dark:text-white">
+          <p className="font-semibold text-slate-900 dark:text-slate-100">
+            Employee #{row.getValue("employeeId")}
+          </p>
+          <p className="text-[10px] text-muted-foreground uppercase">
+            ID: {row.original.id}
+          </p>
+        </div>
+      )
+    },
+    {
+      accessorKey: "shiftId",
+      header: "Shift",
+      cell: ({ row }) => <Badge variant="outline">Shift #{row.getValue("shiftId")}</Badge>
+    },
+    {
+      accessorKey: "checkIn",
+      header: "Check In",
+      cell: ({ row }) => <span className="font-mono text-xs">{row.getValue("checkIn") || "—"}</span>
+    },
+    {
+      accessorKey: "checkOut",
+      header: "Check Out",
+      cell: ({ row }) => <span className="font-mono text-xs">{row.getValue("checkOut") || "—"}</span>
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ row }) => <StatusBadge status={row.getValue("status")} />
+    }
+  ], [])
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25 }}
+      className="space-y-8"
+    >
+      {/* ===== Header ===== */}
+      <div className="flex items-end justify-between px-2">
+        <div>
+          <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
             Attendance
           </h1>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Daily check-in and check-out tracking
+          <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+            Clock In/Out Tracking
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <CalendarDays className="h-4 w-4 text-slate-400" />
-          <Input type="date" defaultValue={date} className="w-40" />
-        </div>
+        <Input
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          className="w-40 h-10 rounded-lg border-slate-200 dark:border-neutral-800"
+        />
       </div>
 
-      {/* ===== Summary ===== */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <SummaryCard title="Total" value={12} icon={Users} />
-        <SummaryCard title="On time" value={8} icon={CheckCircle} />
-        <SummaryCard title="Late" value={3} icon={Clock} />
-        <SummaryCard title="Absent" value={1} icon={XCircle} />
+      {/* STATS SECTION */}
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          title="Total Records"
+          value={stats.total}
+          description="Today's shifts"
+          icon={Users}
+          iconColor="text-slate-900 dark:text-white"
+        />
+        <StatCard
+          title="Present"
+          value={stats.present}
+          description={`${stats.presentRate}% attendance`}
+          icon={CheckCircle}
+          iconColor="text-green-600 dark:text-green-400"
+          trend="up"
+          trendValue={`${stats.presentRate}%`}
+        />
+        <StatCard
+          title="Late Arrivals"
+          value={stats.late}
+          description="Delayed check-ins"
+          icon={AlertCircle}
+          iconColor="text-amber-600 dark:text-amber-400"
+          trend={stats.late > 0 ? 'down' : 'neutral'}
+          trendValue={stats.late > 0 ? `${stats.late} late` : 'On time'}
+        />
+        <StatCard
+          title="Absent"
+          value={stats.absent}
+          description="No show"
+          icon={XCircle}
+          iconColor="text-red-600 dark:text-red-400"
+          trend={stats.absent > 0 ? 'down' : 'up'}
+          trendValue={stats.absent === 0 ? 'Perfect' : `${stats.absent} absent`}
+        />
       </div>
 
-      {/* ===== List ===== */}
-      <motion.div
-        initial={{ opacity: 0, y: 6 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.25, ease: 'easeOut' }}
-      >
-        <Card className="border border-slate-200 dark:border-neutral-800 bg-white dark:bg-black">
-          <CardHeader>
-            <CardTitle className="text-base font-semibold">
-              Attendance list
-            </CardTitle>
-          </CardHeader>
+      {/* ===== Table ===== */}
+      <Card className="border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm">
+        <CardContent className="p-6">
+          <h2 className="mb-4 text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
+            Attendance Records
+          </h2>
 
-          <CardContent className="space-y-2">
-            {MOCK_ATTENDANCE.map((item) => (
-              <div
-                key={item.id}
-                className="
-                  flex items-center justify-between
-                  rounded-lg border border-slate-100 dark:border-neutral-900
-                  p-4 transition
-                  hover:bg-slate-50 dark:hover:bg-neutral-900
-                "
-              >
-                {/* LEFT */}
-                <div>
-                  <p className="font-medium text-black dark:text-white">
-                    {item.employee}
-                  </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    {item.shift} shift
-                  </p>
-                </div>
-
-                {/* CENTER */}
-                <div className="hidden sm:block text-sm text-slate-500 dark:text-slate-400">
-                  {item.checkIn
-                    ? `${item.checkIn} → ${item.checkOut}`
-                    : '—'}
-                </div>
-
-                {/* RIGHT */}
-                <div className="flex items-center gap-4">
-                  <StatusBadge status={item.status} />
-
-                  <Button variant="ghost" size="icon">
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-      </motion.div>
-    </div>
-  )
-}
-
-/* ================= SMALL COMPONENT ================= */
-
-function SummaryCard({
-  title,
-  value,
-  icon: Icon,
-}: {
-  title: string
-  value: number
-  icon: React.ElementType
-}) {
-  return (
-    <Card className="border border-slate-200 dark:border-neutral-800 bg-white dark:bg-black">
-      <CardContent className="flex items-center justify-between p-4">
-        <div>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            {title}
-          </p>
-          <p className="mt-1 text-2xl font-semibold text-black dark:text-white">
-            {value}
-          </p>
-        </div>
-        <Icon className="h-5 w-5 text-slate-400 dark:text-slate-500" />
-      </CardContent>
-    </Card>
+          <DataTable
+            columns={columns}
+            data={attendances}
+            loading={loading}
+            searchKey="employeeId"
+          />
+        </CardContent>
+      </Card>
+    </motion.div>
   )
 }

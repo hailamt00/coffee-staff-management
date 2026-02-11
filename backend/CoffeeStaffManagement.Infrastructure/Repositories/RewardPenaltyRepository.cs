@@ -53,6 +53,17 @@ public class RewardPenaltyRepository : IRewardPenaltyRepository
             .ToListAsync();
     }
 
+    public async Task<List<RewardPenalty>> GetAllAsync(int month, int year)
+    {
+        return await _context.RewardPenalties
+            .Include(r => r.Type)
+            .Include(r => r.Employee)
+            .Where(r => r.CreatedAt.Month == month &&
+                        r.CreatedAt.Year == year)
+            .OrderByDescending(r => r.CreatedAt)
+            .ToListAsync();
+    }
+
     public async Task AddAsync(RewardPenalty rewardPenalty)
     {
         _context.RewardPenalties.Add(rewardPenalty);

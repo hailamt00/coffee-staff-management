@@ -22,11 +22,11 @@ public class RevenueConfiguration : IEntityTypeConfiguration<Revenue>
         builder.Property(x => x.Net).HasColumnName("net").HasPrecision(12, 2);
         builder.Property(x => x.TotalRevenue).HasColumnName("revenue").HasPrecision(12, 2);
         builder.Property(x => x.Deviation).HasColumnName("deviation").HasPrecision(12, 2);
-        
+
         builder.Property(x => x.Note).HasColumnName("note");
         builder.Property(x => x.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-        builder.HasOne(x => x.Schedule).WithMany().HasForeignKey(x => x.ScheduleId);
-        builder.HasOne(x => x.Employee).WithMany().HasForeignKey(x => x.EmployeeId);
+        builder.HasOne(x => x.Schedule).WithOne(s => s.Revenue).HasForeignKey<Revenue>(x => x.ScheduleId);
+        builder.HasOne(x => x.Employee).WithMany(e => e.Revenues).HasForeignKey(x => x.EmployeeId);
     }
 }

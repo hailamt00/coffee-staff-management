@@ -18,6 +18,14 @@ public class RewardsPenaltiesController : ControllerBase
         _mediator = mediator;
     }
 
+    [HttpGet("all")]
+    public async Task<ActionResult<List<RewardPenaltyDto>>> GetAll(
+        [FromQuery] int month,
+        [FromQuery] int year)
+    {
+        return Ok(await _mediator.Send(new GetRewardsPenaltiesQuery(month, year)));
+    }
+
     [HttpGet("types")]
     public async Task<ActionResult<List<RewardPenaltyTypeDto>>> GetTypes()
     {

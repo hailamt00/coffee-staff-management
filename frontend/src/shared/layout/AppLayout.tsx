@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
+import { ScrollArea } from '@/shared/components/ui/scroll-area'
 import Header from './Header'
 import Sidebar from './Sidebar'
 import clsx from 'clsx'
@@ -20,16 +21,15 @@ export default function AppLayout() {
   }, [collapsed])
 
   return (
-    <div className="h-screen w-full bg-slate-50 dark:bg-neutral-950 overflow-hidden">
+    <div className="h-screen w-full bg-slate-50 dark:bg-black overflow-hidden relative">
       <div className="flex h-full">
         {/* ================= Desktop Sidebar ================= */}
         <aside
           className={clsx(
             'hidden md:flex flex-col shrink-0',
-            'bg-white dark:bg-black shadow-[1px_0_0_rgba(0,0,0,0.04)] dark:shadow-[1px_0_0_rgba(255,255,255,0.04)]',
-            'border-r border-slate-200 dark:border-neutral-800',
+            'bg-white dark:bg-neutral-900 border-r border-slate-200 dark:border-neutral-800',
             'transition-[width] duration-300 ease-in-out',
-            collapsed ? 'w-16' : 'w-[220px]'
+            collapsed ? 'w-16' : 'w-60'
           )}
         >
           <Sidebar
@@ -48,7 +48,7 @@ export default function AppLayout() {
           {/* Backdrop */}
           <div
             className={clsx(
-              'absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300',
+              'absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300',
               sidebarOpen ? 'opacity-100' : 'opacity-0'
             )}
             onClick={() => setSidebarOpen(false)}
@@ -57,8 +57,8 @@ export default function AppLayout() {
           {/* Drawer */}
           <div
             className={clsx(
-              'absolute left-0 top-0 h-full w-[220px]',
-              'bg-white dark:bg-black',
+              'absolute left-0 top-0 h-full w-60',
+              'bg-white dark:bg-neutral-900',
               'border-r border-slate-200 dark:border-neutral-800',
               'shadow-2xl',
               'transition-transform duration-300 ease-out',
@@ -70,29 +70,32 @@ export default function AppLayout() {
         </div>
 
         {/* ================= Main ================= */}
-        <div className="flex flex-1 flex-col overflow-hidden">
+        <div className="flex flex-1 flex-col overflow-hidden bg-white dark:bg-[#050505]">
           {/* Header */}
-          <div className="sticky top-0 z-30">
-            <Header onToggleSidebar={() => setSidebarOpen(true)} />
-          </div>
+          <Header onToggleSidebar={() => setSidebarOpen(true)} />
 
           {/* Content */}
-          <main className="flex-1 overflow-y-auto no-scrollbar px-4 sm:px-6 py-4 sm:py-6">
-            <div className="mx-auto w-full max-w-[1440px]">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={location.pathname}
-                  initial={{ opacity: 0, y: 8, scale: 0.98 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -8, scale: 0.98 }}
-                  transition={{ duration: 0.22, ease: 'easeOut' }}
-                  className="min-h-full"
-                >
-                  <Outlet />
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          </main>
+          <ScrollArea className="flex-1">
+            <main className="px-6 py-6">
+              <div className="mx-auto w-full max-w-7xl">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={location.pathname}
+                    initial={{ opacity: 0, y: 12, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -12, scale: 0.98 }}
+                    transition={{
+                      duration: 0.4,
+                      ease: [0.22, 1, 0.36, 1] // Custom cubic-bezier for smooth easing
+                    }}
+                    className="min-h-full"
+                  >
+                    <Outlet />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </main>
+          </ScrollArea>
         </div>
       </div>
     </div>

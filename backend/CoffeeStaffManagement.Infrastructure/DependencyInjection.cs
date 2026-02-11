@@ -19,6 +19,7 @@ public static class DependencyInjection
         services.AddScoped<ICurrentUserService, CurrentUserService>();
 
         // ===== DATABASE =====
+        // ===== DATABASE =====
         services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(
                 configuration.GetConnectionString("Default")));

@@ -49,6 +49,9 @@ public class AttendanceRepository : IAttendanceRepository
     {
         return await _context.Attendances
             .Include(a => a.Schedule)
+                .ThenInclude(s => s!.Shift)
+                    .ThenInclude(sh => sh!.Position)
+            .Include(a => a.RewardsPenalties)
             .Where(a =>
                 a.EmployeeId == employeeId &&
                 a.Schedule != null &&

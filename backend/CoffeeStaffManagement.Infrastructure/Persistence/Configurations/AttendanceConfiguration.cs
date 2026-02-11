@@ -36,15 +36,14 @@ public class AttendanceConfiguration
         builder.Property(a => a.CheckOut)
             .HasColumnName("check_out");
 
-        // builder.Property(a => a.CreatedAt)
-        //     .HasColumnName("created_at");
+
 
         builder.HasOne(a => a.Employee)
-            .WithMany()
+            .WithMany(e => e.Attendances)
             .HasForeignKey(a => a.EmployeeId);
 
         builder.HasOne(a => a.Schedule)
-            .WithMany()
-            .HasForeignKey(a => a.ScheduleId);
+            .WithOne(s => s.Attendance)
+            .HasForeignKey<Attendance>(a => a.ScheduleId);
     }
 }

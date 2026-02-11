@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
 import { motion } from 'framer-motion'
 import { useCountUp } from '@/shared/hooks/useCountUp'
 

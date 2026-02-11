@@ -26,7 +26,8 @@ public class GetEmployeeRewardsPenaltiesQueryHandler : IRequestHandler<GetEmploy
             EmployeeName = r.Employee?.Name ?? "Unknown",
             TypeId = r.TypeId,
             TypeName = r.Type?.Name ?? "Unknown",
-            Amount = r.Amount
+            Amount = r.Amount,
+            CreatedAt = r.CreatedAt
         }).ToList();
     }
 }

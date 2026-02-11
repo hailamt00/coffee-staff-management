@@ -11,6 +11,7 @@ public class Shift : BaseEntity
     public TimeSpan? EndTime { get; set; }
 
     public bool Status { get; set; } = true;
+    public bool IsEnabled { get; set; } = true;
 
     public Position? Position { get; set; }
     public ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();

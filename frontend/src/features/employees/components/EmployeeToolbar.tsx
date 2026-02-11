@@ -1,5 +1,5 @@
-import { Input } from '@/shared/ui/input'
-import { Button } from '@/shared/ui/button'
+import { Input } from '@/shared/components/ui/input'
+import { Button } from '@/shared/components/ui/button'
 import { Plus } from 'lucide-react'
 
 export function EmployeeToolbar({

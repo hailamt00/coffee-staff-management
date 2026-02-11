@@ -1,8 +1,8 @@
-import { Input } from '@/shared/ui/input'
-import { Switch } from '@/shared/ui/switch'
-import { Card } from '@/shared/ui/card'
+import { Input } from '@/shared/components/ui/input'
+import { Switch } from '@/shared/components/ui/switch'
+import { Card } from '@/shared/components/ui/card'
 import type { SaveShiftRequest } from '@/shared/types/api'
-import { cn } from '@/lib/utils'
+import { cn } from '@/shared/lib/utils'
 
 export function ShiftEditor({
     shifts,

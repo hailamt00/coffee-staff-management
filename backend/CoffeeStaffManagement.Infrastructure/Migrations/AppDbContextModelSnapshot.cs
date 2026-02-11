@@ -36,6 +36,9 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("action");
 
+                    b.Property<int?>("AdminId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -45,16 +48,15 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                     b.Property<string>("Details")
                         .HasColumnType("text");
 
-                    b.Property<int?>("EntityId")
+                    b.Property<int?>("TargetId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("EntityType")
+                    b.Property<string>("TargetType")
                         .HasColumnType("text");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("AdminId");
 
                     b.ToTable("activities", (string)null);
                 });
@@ -69,10 +71,13 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("FullName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("full_name");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
@@ -90,7 +95,7 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                     b.HasIndex("Username")
                         .IsUnique();
 
-                    b.ToTable("admins", (string)null);
+                    b.ToTable("admin", (string)null);
                 });
 
             modelBuilder.Entity("CoffeeStaffManagement.Domain.Entities.Attendance", b =>
@@ -122,9 +127,6 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("schedule_id");
 
-                    b.Property<int?>("ShiftId")
-                        .HasColumnType("integer");
-
                     b.Property<decimal?>("TotalHours")
                         .HasPrecision(5, 2)
                         .HasColumnType("numeric(5,2)")
@@ -134,9 +136,8 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.HasIndex("ScheduleId");
-
-                    b.HasIndex("ShiftId");
+                    b.HasIndex("ScheduleId")
+                        .IsUnique();
 
                     b.ToTable("attendance", (string)null);
                 });
@@ -149,6 +150,11 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                         .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal?>("BaristaSalary")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("numeric(12,2)")
+                        .HasColumnName("barista_salary");
 
                     b.Property<string>("Cid")
                         .HasMaxLength(20)
@@ -172,12 +178,12 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                         .HasColumnName("dob");
 
                     b.Property<string>("Gender")
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)")
+                        .IsRequired()
+                        .HasColumnType("text")
                         .HasColumnName("gender");
 
-                    b.Property<DateTime>("HireDate")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly?>("HireDate")
+                        .HasColumnType("date")
                         .HasColumnName("hire_date");
 
                     b.Property<string>("Name")
@@ -192,15 +198,10 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                         .HasColumnType("character varying(20)")
                         .HasColumnName("phone");
 
-                    b.Property<decimal>("SalaryBar")
+                    b.Property<decimal?>("ServiceSalary")
                         .HasPrecision(12, 2)
                         .HasColumnType("numeric(12,2)")
-                        .HasColumnName("salary_bar");
-
-                    b.Property<decimal>("SalaryService")
-                        .HasPrecision(12, 2)
-                        .HasColumnType("numeric(12,2)")
-                        .HasColumnName("salary_service");
+                        .HasColumnName("service_salary");
 
                     b.Property<bool>("Status")
                         .ValueGeneratedOnAdd()
@@ -217,7 +218,8 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
@@ -247,40 +249,6 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("payrolls", (string)null);
-                });
-
-            modelBuilder.Entity("CoffeeStaffManagement.Domain.Entities.PayrollAdjustment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("numeric")
-                        .HasColumnName("amount");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<int>("PayrollId")
-                        .HasColumnType("integer")
-                        .HasColumnName("payroll_id");
-
-                    b.Property<string>("Reason")
-                        .HasColumnType("text")
-                        .HasColumnName("reason");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PayrollId");
-
-                    b.ToTable("payroll_adjustments", (string)null);
                 });
 
             modelBuilder.Entity("CoffeeStaffManagement.Domain.Entities.PayrollDetail", b =>
@@ -409,7 +377,8 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.HasIndex("ScheduleId");
+                    b.HasIndex("ScheduleId")
+                        .IsUnique();
 
                     b.ToTable("revenues", (string)null);
                 });
@@ -428,7 +397,7 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                         .HasColumnType("numeric(12,2)")
                         .HasColumnName("amount");
 
-                    b.Property<int?>("AttendanceId")
+                    b.Property<int>("AttendanceId")
                         .HasColumnType("integer")
                         .HasColumnName("attendance_id");
 
@@ -438,17 +407,9 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                         .HasColumnName("created_at")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("date");
-
                     b.Property<int>("EmployeeId")
                         .HasColumnType("integer")
                         .HasColumnName("employee_id");
-
-                    b.Property<string>("Reason")
-                        .HasColumnType("text")
-                        .HasColumnName("reason");
 
                     b.Property<int>("TypeId")
                         .HasColumnType("integer")
@@ -474,11 +435,6 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("DefaultAmount")
-                        .HasPrecision(12, 2)
-                        .HasColumnType("numeric(12,2)")
-                        .HasColumnName("default_amount");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -487,8 +443,8 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)")
+                        .HasMaxLength(15)
+                        .HasColumnType("character varying(15)")
                         .HasColumnName("type");
 
                     b.HasKey("Id");
@@ -505,7 +461,7 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("ApprovedAt")
+                    b.Property<DateTime?>("ApprovedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("approved_at");
 
@@ -560,7 +516,7 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("text")
-                        .HasDefaultValue("pending")
+                        .HasDefaultValue("Pending")
                         .HasColumnName("status");
 
                     b.Property<DateOnly>("WorkDate")
@@ -586,7 +542,7 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<TimeSpan>("EndTime")
+                    b.Property<TimeSpan?>("EndTime")
                         .HasColumnType("interval")
                         .HasColumnName("end_time");
 
@@ -600,7 +556,7 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("position_id");
 
-                    b.Property<TimeSpan>("StartTime")
+                    b.Property<TimeSpan?>("StartTime")
                         .HasColumnType("interval")
                         .HasColumnName("start_time");
 
@@ -646,8 +602,8 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)")
+                        .HasMaxLength(15)
+                        .HasColumnType("character varying(15)")
                         .HasColumnName("type");
 
                     b.HasKey("Id");
@@ -657,23 +613,28 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                     b.ToTable("transactions", (string)null);
                 });
 
+            modelBuilder.Entity("CoffeeStaffManagement.Domain.Entities.ActivityLog", b =>
+                {
+                    b.HasOne("CoffeeStaffManagement.Domain.Entities.Admin", "Admin")
+                        .WithMany()
+                        .HasForeignKey("AdminId");
+
+                    b.Navigation("Admin");
+                });
+
             modelBuilder.Entity("CoffeeStaffManagement.Domain.Entities.Attendance", b =>
                 {
                     b.HasOne("CoffeeStaffManagement.Domain.Entities.Employee", "Employee")
-                        .WithMany()
+                        .WithMany("Attendances")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CoffeeStaffManagement.Domain.Entities.Schedule", "Schedule")
-                        .WithMany()
-                        .HasForeignKey("ScheduleId")
+                        .WithOne("Attendance")
+                        .HasForeignKey("CoffeeStaffManagement.Domain.Entities.Attendance", "ScheduleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("CoffeeStaffManagement.Domain.Entities.Shift", null)
-                        .WithMany("Attendances")
-                        .HasForeignKey("ShiftId");
 
                     b.Navigation("Employee");
 
@@ -683,7 +644,7 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
             modelBuilder.Entity("CoffeeStaffManagement.Domain.Entities.Payroll", b =>
                 {
                     b.HasOne("CoffeeStaffManagement.Domain.Entities.Employee", "Employee")
-                        .WithMany()
+                        .WithMany("Payrolls")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -691,27 +652,16 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("CoffeeStaffManagement.Domain.Entities.PayrollAdjustment", b =>
-                {
-                    b.HasOne("CoffeeStaffManagement.Domain.Entities.Payroll", "Payroll")
-                        .WithMany("Adjustments")
-                        .HasForeignKey("PayrollId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Payroll");
-                });
-
             modelBuilder.Entity("CoffeeStaffManagement.Domain.Entities.PayrollDetail", b =>
                 {
                     b.HasOne("CoffeeStaffManagement.Domain.Entities.Attendance", "Attendance")
-                        .WithMany()
+                        .WithMany("PayrollDetails")
                         .HasForeignKey("AttendanceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CoffeeStaffManagement.Domain.Entities.Payroll", "Payroll")
-                        .WithMany()
+                        .WithMany("Details")
                         .HasForeignKey("PayrollId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -724,14 +674,14 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
             modelBuilder.Entity("CoffeeStaffManagement.Domain.Entities.Revenue", b =>
                 {
                     b.HasOne("CoffeeStaffManagement.Domain.Entities.Employee", "Employee")
-                        .WithMany()
+                        .WithMany("Revenues")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CoffeeStaffManagement.Domain.Entities.Schedule", "Schedule")
-                        .WithMany()
-                        .HasForeignKey("ScheduleId")
+                        .WithOne("Revenue")
+                        .HasForeignKey("CoffeeStaffManagement.Domain.Entities.Revenue", "ScheduleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -743,11 +693,11 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
             modelBuilder.Entity("CoffeeStaffManagement.Domain.Entities.RewardPenalty", b =>
                 {
                     b.HasOne("CoffeeStaffManagement.Domain.Entities.Attendance", "Attendance")
-                        .WithMany()
+                        .WithMany("RewardsPenalties")
                         .HasForeignKey("AttendanceId");
 
                     b.HasOne("CoffeeStaffManagement.Domain.Entities.Employee", "Employee")
-                        .WithMany()
+                        .WithMany("RewardsPenalties")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -768,13 +718,13 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
             modelBuilder.Entity("CoffeeStaffManagement.Domain.Entities.Schedule", b =>
                 {
                     b.HasOne("CoffeeStaffManagement.Domain.Entities.Employee", "Employee")
-                        .WithMany()
+                        .WithMany("Schedules")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CoffeeStaffManagement.Domain.Entities.Shift", "Shift")
-                        .WithMany()
+                        .WithMany("Schedules")
                         .HasForeignKey("ShiftId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -787,13 +737,13 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
             modelBuilder.Entity("CoffeeStaffManagement.Domain.Entities.ScheduleRequest", b =>
                 {
                     b.HasOne("CoffeeStaffManagement.Domain.Entities.Employee", "Employee")
-                        .WithMany()
+                        .WithMany("ScheduleRequests")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CoffeeStaffManagement.Domain.Entities.Shift", "Shift")
-                        .WithMany()
+                        .WithMany("ScheduleRequests")
                         .HasForeignKey("ShiftId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -825,9 +775,31 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                     b.Navigation("Revenue");
                 });
 
+            modelBuilder.Entity("CoffeeStaffManagement.Domain.Entities.Attendance", b =>
+                {
+                    b.Navigation("PayrollDetails");
+
+                    b.Navigation("RewardsPenalties");
+                });
+
+            modelBuilder.Entity("CoffeeStaffManagement.Domain.Entities.Employee", b =>
+                {
+                    b.Navigation("Attendances");
+
+                    b.Navigation("Payrolls");
+
+                    b.Navigation("Revenues");
+
+                    b.Navigation("RewardsPenalties");
+
+                    b.Navigation("ScheduleRequests");
+
+                    b.Navigation("Schedules");
+                });
+
             modelBuilder.Entity("CoffeeStaffManagement.Domain.Entities.Payroll", b =>
                 {
-                    b.Navigation("Adjustments");
+                    b.Navigation("Details");
                 });
 
             modelBuilder.Entity("CoffeeStaffManagement.Domain.Entities.Position", b =>
@@ -845,9 +817,18 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                     b.Navigation("RewardsPenalties");
                 });
 
+            modelBuilder.Entity("CoffeeStaffManagement.Domain.Entities.Schedule", b =>
+                {
+                    b.Navigation("Attendance");
+
+                    b.Navigation("Revenue");
+                });
+
             modelBuilder.Entity("CoffeeStaffManagement.Domain.Entities.Shift", b =>
                 {
-                    b.Navigation("Attendances");
+                    b.Navigation("ScheduleRequests");
+
+                    b.Navigation("Schedules");
                 });
 #pragma warning restore 612, 618
         }

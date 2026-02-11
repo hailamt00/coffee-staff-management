@@ -32,6 +32,9 @@ public class ShiftConfiguration : IEntityTypeConfiguration<Shift>
         builder.Property(x => x.Status)
             .HasColumnName("status");
 
+        builder.Property(x => x.IsEnabled)
+            .HasColumnName("is_enabled");
+
         builder.HasIndex(x => new { x.PositionId, x.Name })
             .IsUnique();
     }

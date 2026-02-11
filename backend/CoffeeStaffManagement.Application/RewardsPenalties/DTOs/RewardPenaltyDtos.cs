@@ -22,6 +22,7 @@ public class RewardPenaltyDto
     public int TypeId { get; set; }
     public string TypeName { get; set; } = null!;
     public decimal Amount { get; set; }
+    public DateTime CreatedAt { get; set; }
 }
 
 public record ApplyRewardPenaltyRequest(

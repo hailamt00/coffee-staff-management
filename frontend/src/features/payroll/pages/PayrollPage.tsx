@@ -1,108 +1,102 @@
-import { useState } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { motion } from 'framer-motion'
+import { usePayroll } from '../hooks/usePayroll'
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from '@/shared/ui/card'
-import { Badge } from '@/shared/ui/badge'
+} from '@/shared/components/ui/card'
+import { Button } from '@/shared/components/ui/button'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/shared/ui/select'
+} from '@/shared/components/ui/select'
 import {
   DollarSign,
   Users,
   CheckCircle,
-  Clock,
+  Play,
+  Wallet,
+  TrendingUp
 } from 'lucide-react'
-
-/* ================= TYPES ================= */
-
-type PayrollStatus = 'paid' | 'pending'
-
-type PayrollItem = {
-  id: string
-  employee: string
-  baseSalary: number
-  overtime: number
-  deduction: number
-  status: PayrollStatus
-}
-
-/* ================= MOCK DATA ================= */
-
-const MOCK_PAYROLL: PayrollItem[] = [
-  {
-    id: '1',
-    employee: 'Nguyen Van A',
-    baseSalary: 1200,
-    overtime: 150,
-    deduction: 50,
-    status: 'paid',
-  },
-  {
-    id: '2',
-    employee: 'Tran Thi B',
-    baseSalary: 1000,
-    overtime: 0,
-    deduction: 0,
-    status: 'pending',
-  },
-  {
-    id: '3',
-    employee: 'Le Van C',
-    baseSalary: 900,
-    overtime: 80,
-    deduction: 30,
-    status: 'paid',
-  },
-]
-
-/* ================= HELPERS ================= */
-
-function StatusBadge({ status }: { status: PayrollStatus }) {
-  return status === 'paid' ? (
-    <Badge className="bg-emerald-500/10 text-emerald-600">
-      Paid
-    </Badge>
-  ) : (
-    <Badge className="bg-amber-500/10 text-amber-600">
-      Pending
-    </Badge>
-  )
-}
-
-function formatMoney(value: number) {
-  return `$${value.toLocaleString()}`
-}
+import { formatMoney } from '@/shared/utils/format'
+import { StatCard } from '@/shared/components/StatCard'
+import { DataTable } from '@/shared/components/ui/data-table'
+import type { ColumnDef } from '@tanstack/react-table'
+import type { Payroll } from '@/shared/types/api'
 
 /* ================= PAGE ================= */
 
 export default function PayrollPage() {
-  const [month, setMonth] = useState('01')
+  const { payrolls, loading, loadPayrolls, generatePayroll } = usePayroll()
+
+  const [month, setMonth] = useState('02') // Default to current month
   const [year, setYear] = useState('2026')
 
+  useEffect(() => {
+    loadPayrolls(Number(month), Number(year))
+  }, [month, year, loadPayrolls])
+
+  const handleGenerate = async () => {
+    await generatePayroll(1, Number(month), Number(year))
+  }
+
+  // Calculate statistics
+  const stats = useMemo(() => {
+    const totalPayroll = payrolls.reduce((sum, p) => sum + p.totalSalary, 0)
+    const totalEmployees = payrolls.length
+    const avgSalary = totalEmployees > 0 ? totalPayroll / totalEmployees : 0
+
+    return {
+      totalPayroll: formatMoney(totalPayroll),
+      totalEmployees,
+      avgSalary: formatMoney(avgSalary),
+    }
+  }, [payrolls])
+
+  const columns = useMemo<ColumnDef<Payroll>[]>(() => [
+    {
+      accessorKey: "employeeName",
+      header: "Employee",
+      cell: ({ row }) => <div className="font-medium text-slate-900 dark:text-slate-100">{row.original.employeeName || `Employee #${row.original.employeeId}`}</div>
+    },
+    {
+      accessorKey: "totalSalary",
+      header: () => <div className="text-right">Total Salary</div>,
+      cell: ({ row }) => <div className="text-right font-semibold text-emerald-600">{formatMoney(row.getValue("totalSalary"))}</div>
+    },
+    {
+      accessorKey: "createdAt",
+      header: () => <div className="text-right">Created At</div>,
+      cell: ({ row }) => <div className="text-right text-slate-500">{new Date(row.getValue("createdAt")).toLocaleDateString()}</div>
+    }
+  ], [])
+
   return (
-    <div className="space-y-8">
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25 }}
+      className="space-y-8"
+    >
       {/* ===== Header ===== */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="flex flex-wrap items-end justify-between gap-4 px-2">
         <div>
-          <h1 className="text-2xl font-semibold text-black dark:text-white">
+          <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
             Payroll
           </h1>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Monthly salary overview and payment status
+          <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+            Compensation Analysis
           </p>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
           <Select value={month} onValueChange={setMonth}>
-            <SelectTrigger className="w-24">
+            <SelectTrigger className="w-20 h-10 rounded-lg border-slate-200 dark:border-neutral-800">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -118,133 +112,70 @@ export default function PayrollPage() {
           </Select>
 
           <Select value={year} onValueChange={setYear}>
-            <SelectTrigger className="w-24">
+            <SelectTrigger className="w-24 h-10 rounded-lg border-slate-200 dark:border-neutral-800">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="2025">2025</SelectItem>
-              <SelectItem value="2026">2026</SelectItem>
+              {['2024', '2025', '2026', '2027'].map((y) => (
+                <SelectItem key={y} value={y}>
+                  {y}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
+
+          <Button
+            onClick={handleGenerate}
+            className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-slate-200 border-none h-10 px-6 rounded-lg font-bold uppercase tracking-widest text-[10px]"
+          >
+            <Play className="mr-2 h-4 w-4" />
+            Generate Payroll
+          </Button>
         </div>
       </div>
 
-      {/* ===== Summary ===== */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <SummaryCard
+      {/* STATS SECTION */}
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <StatCard
           title="Total Payroll"
-          value="$3,350"
+          value={stats.totalPayroll}
+          description={`${month}/${year}`}
           icon={DollarSign}
+          iconColor="text-emerald-600 dark:text-emerald-400"
+          trend="up"
+          trendValue="Monthly disbursement"
         />
-        <SummaryCard
-          title="Paid"
-          value="$2,380"
-          icon={CheckCircle}
-        />
-        <SummaryCard
-          title="Pending"
-          value="$970"
-          icon={Clock}
-        />
-        <SummaryCard
-          title="Employees"
-          value="3"
+        <StatCard
+          title="Employees Paid"
+          value={stats.totalEmployees}
+          description="Total recipients"
           icon={Users}
+          iconColor="text-blue-600 dark:text-blue-400"
+        />
+        <StatCard
+          title="Average Salary"
+          value={stats.avgSalary}
+          description="Per employee"
+          icon={Wallet}
+          iconColor="text-purple-600 dark:text-purple-400"
         />
       </div>
 
-      {/* ===== Table ===== */}
-      <motion.div
-        initial={{ opacity: 0, y: 6 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.25, ease: 'easeOut' }}
-      >
-        <Card className="border border-slate-200 dark:border-neutral-800 bg-white dark:bg-black">
-          <CardHeader>
-            <CardTitle className="text-base font-semibold">
-              Payroll Details
-            </CardTitle>
-          </CardHeader>
+      {/* ===== TABLE ===== */}
+      <Card className="border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm">
+        <CardContent className="p-6">
+          <h2 className="mb-4 text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
+            Payroll Records
+          </h2>
 
-          <CardContent className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-slate-200 dark:border-neutral-800 text-slate-500 dark:text-slate-400">
-                  <th className="py-3 text-left">Employee</th>
-                  <th className="py-3 text-right">Base</th>
-                  <th className="py-3 text-right">Overtime</th>
-                  <th className="py-3 text-right">Deduction</th>
-                  <th className="py-3 text-right">Net</th>
-                  <th className="py-3 text-right">Status</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {MOCK_PAYROLL.map((item) => {
-                  const net =
-                    item.baseSalary +
-                    item.overtime -
-                    item.deduction
-
-                  return (
-                    <tr
-                      key={item.id}
-                      className="border-b border-slate-100 dark:border-neutral-900 hover:bg-slate-50 dark:hover:bg-neutral-900"
-                    >
-                      <td className="py-3 font-medium text-black dark:text-white">
-                        {item.employee}
-                      </td>
-                      <td className="py-3 text-right">
-                        {formatMoney(item.baseSalary)}
-                      </td>
-                      <td className="py-3 text-right">
-                        {formatMoney(item.overtime)}
-                      </td>
-                      <td className="py-3 text-right">
-                        {formatMoney(item.deduction)}
-                      </td>
-                      <td className="py-3 text-right font-semibold">
-                        {formatMoney(net)}
-                      </td>
-                      <td className="py-3 text-right">
-                        <StatusBadge status={item.status} />
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </CardContent>
-        </Card>
-      </motion.div>
-    </div>
-  )
-}
-
-/* ================= SUMMARY CARD ================= */
-
-function SummaryCard({
-  title,
-  value,
-  icon: Icon,
-}: {
-  title: string
-  value: string
-  icon: React.ElementType
-}) {
-  return (
-    <Card className="border border-slate-200 dark:border-neutral-800 bg-white dark:bg-black">
-      <CardContent className="flex items-center justify-between p-4">
-        <div>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            {title}
-          </p>
-          <p className="mt-1 text-2xl font-semibold text-black dark:text-white">
-            {value}
-          </p>
-        </div>
-        <Icon className="h-5 w-5 text-slate-400 dark:text-slate-500" />
-      </CardContent>
-    </Card>
+          <DataTable
+            columns={columns}
+            data={payrolls}
+            searchKey="employeeName"
+            loading={loading}
+          />
+        </CardContent>
+      </Card>
+    </motion.div>
   )
 }

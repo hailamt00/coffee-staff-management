@@ -9,7 +9,7 @@ namespace CoffeeStaffManagement.Application.Employees.DTOs
         public string Phone { get; set; } = null!;
 
         public string? Cid { get; set; }
-        public Gender Gender { get; set; }
+        public Gender? Gender { get; set; }
 
         public decimal? ServiceSalary { get; set; }
         public decimal? BaristaSalary { get; set; }

@@ -51,4 +51,16 @@ public class PayrollRepository : IPayrollRepository
         _context.Payrolls.Update(payroll);
         await _context.SaveChangesAsync(ct);
     }
+    public async Task<List<Payroll>> GetByMonthAsync(
+        int month,
+        int year,
+        CancellationToken ct)
+    {
+        return await _context.Payrolls
+            .Include(p => p.Employee) // Include Employee for name
+            .Where(p =>
+                p.Month == month &&
+                p.Year == year)
+            .ToListAsync(ct);
+    }
 }

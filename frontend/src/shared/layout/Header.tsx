@@ -3,22 +3,25 @@ import { RootState } from '@/app/store'
 import { logout } from '@/features/auth/slices/authSlice'
 import { setLanguage } from '@/features/ui/slices/uiSlice'
 
-import { Button } from '@/shared/ui/button'
+import { Button } from '@/shared/components/ui/button'
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from '@/shared/ui/avatar'
-import { Badge } from '@/shared/ui/badge'
+} from '@/shared/components/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/shared/ui/dropdown-menu'
+} from '@/shared/components/ui/dropdown-menu'
+import { Breadcrumbs } from '@/shared/components/ui/breadcrumbs'
 
 import {
+  Sun,
+  Search,
+  Command,
   Menu,
   Bell,
   User,
@@ -26,7 +29,6 @@ import {
   Languages,
   Check,
   Moon,
-  Sun,
 } from 'lucide-react'
 
 import { useTheme } from '@/shared/theme/useTheme'
@@ -46,33 +48,59 @@ export default function Header({ onToggleSidebar }: Props) {
       className={clsx(
         'sticky top-0 z-30 h-14',
         'flex items-center justify-between',
-        'px-4 sm:px-6',
+        'px-6',
         'border-b border-slate-200 dark:border-neutral-800',
-        'bg-white/80 dark:bg-black/70 backdrop-blur',
+        'bg-white dark:bg-black',
         'text-slate-900 dark:text-white',
         'transition-colors'
       )}
     >
       {/* ===== LEFT ===== */}
-      <div className="flex items-center gap-3">
-        {/* Mobile menu */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="md:hidden"
-          onClick={onToggleSidebar}
-        >
-          <Menu size={20} />
-        </Button>
+      <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3">
+          {/* Mobile menu */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={onToggleSidebar}
+          >
+            <Menu size={18} />
+          </Button>
 
-        {/* App title */}
-        <div className="flex flex-col leading-tight">
-          <span className="text-sm font-semibold tracking-wide">
-            Coffee Staff Management
-          </span>
-          <span className="text-[11px] text-slate-500 dark:text-slate-400 hidden sm:block">
-            Chill Coffee & Tea
-          </span>
+          {/* App title */}
+          <div className="flex flex-col leading-tight border-r border-slate-200 dark:border-neutral-800 pr-4 mr-1">
+            <span className="text-sm font-black tracking-tighter uppercase">
+              CSM_Elite
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 hidden sm:block uppercase tracking-widest">
+              V.2.0 PRO
+            </span>
+          </div>
+        </div>
+
+        {/* Breadcrumbs */}
+        <div className="hidden lg:block">
+          <Breadcrumbs />
+        </div>
+      </div>
+
+      {/* ===== CENTER SEARCH ===== */}
+      <div className="hidden md:flex flex-1 max-w-md mx-8">
+        <div className="relative w-full group">
+          <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+            <Search className="h-3.5 w-3.5 text-slate-400 group-focus-within:text-slate-900 dark:group-focus-within:text-white transition-colors" />
+          </div>
+          <input
+            type="text"
+            className="w-full h-9 bg-slate-50 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-lg pl-9 pr-12 text-xs font-medium focus:ring-1 focus:ring-black dark:focus:ring-white transition-all shadow-sm"
+            placeholder="Search commands or staff..."
+          />
+          <div className="absolute inset-y-0 right-3 flex items-center gap-0.5 pointer-events-none">
+            <kbd className="h-5 px-1.5 rounded bg-white dark:bg-black border border-slate-200 dark:border-neutral-800 text-[9px] font-bold text-slate-400 flex items-center gap-0.5 shadow-sm">
+              <Command size={8} /> K
+            </kbd>
+          </div>
         </div>
       </div>
 
@@ -127,17 +155,7 @@ export default function Header({ onToggleSidebar }: Props) {
           className="relative hover:bg-slate-100 dark:hover:bg-neutral-800"
         >
           <Bell size={18} />
-          <Badge
-            className="
-      absolute -top-1 -right-1
-      h-4 w-4 p-0
-      flex items-center justify-center
-      text-[10px] leading-none
-      rounded-full
-    "
-          >
-            3
-          </Badge>
+          <span className="absolute top-1.5 right-1.5 h-2 w-2 bg-black dark:bg-white rounded-full border-2 border-white dark:border-black animate-pulse" />
         </Button>
 
         {/* 👤 Profile */}

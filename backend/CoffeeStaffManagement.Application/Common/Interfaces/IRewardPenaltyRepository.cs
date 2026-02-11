@@ -13,6 +13,7 @@ public interface IRewardPenaltyRepository
 
     // RewardPenalty
     Task<List<RewardPenalty>> GetByEmployeeIdAsync(int employeeId, int month, int year);
+    Task<List<RewardPenalty>> GetAllAsync(int month, int year);
     Task AddAsync(RewardPenalty rewardPenalty);
     Task DeleteAsync(RewardPenalty rewardPenalty);
 }

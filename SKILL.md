@@ -20,7 +20,7 @@ description: Coffee Staff Management - Admin Dashboard for a coffee shop. Focus:
 - **Dashboard**: Displays general stats (Overview). Includes Sidebar/Header for navigation.
 
 ### 2.2 Employee Management (`Employees`)
-- **View**: List of employees (#, Code, Name, Phone, CID, Salaries, DOB, HireDate, Status).
+- **View**: List of employees (#, Code, Name, Phone, CID, Gender, Salaries, DOB, HireDate, Status).
 - **Actions**: Search, Add, Edit, Delete (Soft delete? Status toggle?).
 
 ### 2.3 Position & Shift Management (`Positions`, `Shifts`)
@@ -87,12 +87,13 @@ description: Coffee Staff Management - Admin Dashboard for a coffee shop. Focus:
 - **Features**:
     - [x] Employees (CRUD, Soft Delete).
     - [x] Positions/Shifts (CRUD, Status field standardized).
-    - [x] Schedules (Request -> Approve cycle). *Renamed from EmployeeShiftRequest*
-    - [x] Attendance (Check-in/out). *Linked to Schedules, calculated duration*
-    - [x] Payroll (Generation). *Month/Year input, Attendance aggregation*
-    - [ ] Revenue/Transactions. *Not started*
+    - [x] Schedules (Request -> Approve cycle).
+    - [x] Attendance (Check-in/out).
+    - [x] Payroll (Weighted calculation, Rewards/Penalties).
+    - [x] Revenue/Transactions (Expense-aware Net, Deviation logic).
 
-## 5. Next Steps
-1.  **Database**: Apply `SyncWithSchema` migration (`dotnet ef database update`).
-2.  **Feature**: Implement Revenue/Transaction logic.
-3.  **Refinement**: Comprehensive testing of Payroll calculations.
+## 5. Project Roadmap (Completed)
+1.  **Database**: Fully synchronized and optimized.
+2.  **Staff Portal**: Mobile-first portal with phone verification completed.
+3.  **UI/UX**: Comprehensive Teal/Cyan standardization achieved across all pages.
+4.  **Financials**: Automated payroll and revenue tracking fully implemented.

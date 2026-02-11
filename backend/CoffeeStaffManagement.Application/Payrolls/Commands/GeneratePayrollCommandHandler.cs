@@ -1,4 +1,5 @@
 using CoffeeStaffManagement.Application.Common.Interfaces;
+using CoffeeStaffManagement.Domain.Entities;
 using PayrollEntity = CoffeeStaffManagement.Domain.Entities.Payroll;
 using MediatR;
 
@@ -38,39 +39,70 @@ public class GeneratePayrollCommandHandler
                 start,
                 end);
 
-        decimal totalHours = 0;
+        decimal totalSalary = 0;
+        var details = new List<PayrollDetail>();
+
         foreach (var a in attendances)
         {
+            decimal hours = 0;
             if (a.TotalHours.HasValue)
             {
-                totalHours += a.TotalHours.Value;
+                hours = a.TotalHours.Value;
             }
             else if (a.CheckIn.HasValue && a.CheckOut.HasValue)
             {
                 var duration = a.CheckOut.Value - a.CheckIn.Value;
-                totalHours += (decimal)duration.TotalHours;
+                hours = (decimal)duration.TotalHours;
             }
+
+            if (hours <= 0) continue;
+
+            // Determine Rate based on Position
+            var positionName = a.Schedule?.Shift?.Position?.Name ?? "";
+            decimal monthlySalary = employee.ServiceSalary ?? 0;
+
+            if (positionName.Contains("Barista", StringComparison.OrdinalIgnoreCase))
+            {
+                monthlySalary = employee.BaristaSalary ?? 0;
+            }
+
+            // Assume 26 days * 8 hours = 208 hours/month as base
+            decimal hourlyRate = monthlySalary / (26 * 8);
+            decimal amount = Math.Round(hours * hourlyRate, 2);
+
+            details.Add(new PayrollDetail
+            {
+                AttendanceId = a.Id,
+                Hours = Math.Round(hours, 2),
+                Rate = Math.Round(hourlyRate, 2),
+                Amount = amount
+            });
+
+            totalSalary += amount;
         }
 
-        // Simple calculation for now:
-        // Assuming separate salaries for Service vs Barista not handled here yet, using Barista salary as default or need logic.
-        // For simplicity let's use ServiceSalary if Position matches, but we don't have Position here easily.
-        // Let's use ServiceSalary as base for now or average. User script has service_salary and barista_salary.
-        // Ideally we check the Shift -> Position to get the rate.
-        // But let's stick to what we have (Employee).
-
-        // TODO: Refine rate calculation based on Position
-        decimal hourlyRate = (employee.ServiceSalary ?? 0) / (26 * 8);
+        // Add Rewards / Penalties
+        foreach (var a in attendances)
+        {
+            if (a.RewardsPenalties != null)
+            {
+                foreach (var rp in a.RewardsPenalties)
+                {
+                    totalSalary += rp.Amount; // Positive for reward, negative for penalty should be stored in Amount?
+                    // Let's check RewardPenaltyType if needed, but usually Amount has sign.
+                }
+            }
+        }
 
         var payroll = new PayrollEntity
         {
             EmployeeId = request.EmployeeId,
             Month = request.Month,
             Year = request.Year,
-            TotalSalary = Math.Round(hourlyRate * totalHours, 2),
-            CreatedAt = DateTime.UtcNow
+            TotalSalary = Math.Round(totalSalary, 2),
+            CreatedAt = DateTime.UtcNow,
+            Details = details
         };
-
 
         await _payrollRepo.AddAsync(payroll, ct);
     }

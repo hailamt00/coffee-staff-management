@@ -1,14 +1,15 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import {
     ChevronDown,
     ChevronRight,
     Pencil,
     Trash2,
-    Search,
 } from 'lucide-react'
 import type { Position } from '@/shared/types/api'
-import { StatusBadge } from '@/shared/components/StatusBadge'
-import { cn } from '@/lib/utils'
+import { StatusBadge } from '@/shared/components/ui/status-badge'
+import { DataTable } from '@/shared/components/ui/data-table'
+import { Button } from '@/shared/components/ui/button'
+import { ColumnDef } from '@tanstack/react-table'
 
 type Props = {
     data: Position[]
@@ -23,196 +24,111 @@ export function PositionTable({
     onEdit,
     onDelete,
 }: Props) {
-    const [openRow, setOpenRow] = useState<number | null>(null)
-    const [search, setSearch] = useState('')
-    const [filter, setFilter] = useState<'all' | 'active' | 'inactive'>('all')
-
-    /* ===== FILTERED DATA ===== */
-    const filtered = useMemo(() => {
-        return data.filter(p => {
-            const shifts = p.shifts ?? []
-            const enabled = shifts.some(s => s.isEnabled)
-
-            if (filter === 'active' && !enabled) return false
-            if (filter === 'inactive' && enabled) return false
-
-            if (search) {
-                return p.name.toLowerCase().includes(search.toLowerCase())
+    const columns = useMemo<ColumnDef<Position>[]>(() => [
+        {
+            id: "expander",
+            header: () => null,
+            cell: ({ row }) => (
+                <button
+                    onClick={() => row.toggleExpanded()}
+                    className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
+                >
+                    {row.getIsExpanded() ? (
+                        <ChevronDown className="h-4 w-4 text-slate-800 dark:text-white" />
+                    ) : (
+                        <ChevronRight className="h-4 w-4 text-slate-400" />
+                    )}
+                </button>
+            ),
+        },
+        {
+            accessorKey: "name",
+            header: "Position Name",
+            cell: ({ row }) => <div className="font-bold text-slate-900 dark:text-white uppercase tracking-tight">{row.getValue("name")}</div>
+        },
+        {
+            id: "shifts_count",
+            header: "Shifts",
+            cell: ({ row }) => {
+                const shifts = row.original.shifts ?? []
+                const enabledCount = shifts.filter(s => s.isEnabled).length
+                return (
+                    <div className="font-bold text-slate-500">
+                        {enabledCount} / {shifts.length}
+                    </div>
+                )
             }
-
-            return true
-        })
-    }, [data, search, filter])
-
-    return (
-        <div className="space-y-4 text-sm">
-
-            {/* ===== TOOLBAR ===== */}
-            <div className="flex flex-wrap items-center justify-between gap-3">
-                {/* search */}
-                <div className="relative w-[260px]">
-                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <input
-                        value={search}
-                        onChange={e => setSearch(e.target.value)}
-                        placeholder="Search position..."
-                        className="h-9 w-full rounded-md border bg-background pl-8 pr-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                    />
+        },
+        {
+            accessorKey: "status",
+            header: "Status",
+            cell: ({ row }) => <StatusBadge active={row.getValue("status")} />
+        },
+        {
+            id: "actions",
+            header: () => <div className="text-center">Actions</div>,
+            cell: ({ row }) => (
+                <div className="flex justify-center gap-2">
+                    <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-8 w-8 rounded-lg bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200"
+                        onClick={() => onEdit(row.original.id)}
+                    >
+                        <Pencil size={14} />
+                    </Button>
+                    <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-8 w-8 rounded-lg bg-red-500 hover:bg-red-600 text-white"
+                        onClick={() => onDelete(row.original.id, row.original.name)}
+                    >
+                        <Trash2 size={14} />
+                    </Button>
                 </div>
+            )
+        }
+    ], [onEdit, onDelete])
 
-                {/* filter */}
-                <div className="flex rounded-md border overflow-hidden">
-                    {(['all', 'active', 'inactive'] as const).map(x => (
-                        <button
-                            key={x}
-                            onClick={() => setFilter(x)}
-                            className={cn(
-                                'px-3 py-1.5 text-sm capitalize transition',
-                                filter === x
-                                    ? 'bg-primary text-primary-foreground'
-                                    : 'hover:bg-muted'
-                            )}
+    const renderShifts = ({ row }: { row: any }) => {
+        const shifts = row.original.shifts ?? []
+        return (
+            <div className="bg-slate-50/50 dark:bg-black/40 border-y border-slate-100 dark:border-neutral-800">
+                {shifts.length > 0 ? (
+                    shifts.map((s: any, i: number) => (
+                        <div
+                            key={i}
+                            className="grid grid-cols-[3fr_2fr_2fr_120px] items-center px-12 py-3 border-t first:border-0 border-slate-100 dark:border-neutral-800/50 transition-colors hover:bg-white dark:hover:bg-white/5"
                         >
-                            {x}
-                        </button>
-                    ))}
-                </div>
-            </div>
-
-            {/* ===== TABLE ===== */}
-            <div className="rounded-lg border overflow-hidden">
-
-                {/* header */}
-                <div className="grid grid-cols-[40px_40px_3fr_2fr_2fr_120px] px-3 py-3 font-semibold text-muted-foreground bg-muted/40">
-                    <div>#</div>
-                    <div />
-                    <div>Name</div>
-                    <div>Shifts</div>
-                    <div>Status</div>
-                    <div className="text-center">Actions</div>
-                </div>
-
-                {/* loading */}
-                {loading && (
-                    <div className="py-10 text-center text-muted-foreground">
-                        Loading positions...
-                    </div>
-                )}
-
-                {/* empty */}
-                {!loading && filtered.length === 0 && (
-                    <div className="py-10 text-center text-muted-foreground">
-                        No positions found
-                    </div>
-                )}
-
-                {/* rows */}
-                {filtered.map((p, index) => {
-                    const shifts = p.shifts ?? []
-                    const enabledCount = shifts.filter(s => s.isEnabled).length
-                    const expanded = openRow === p.id
-
-                    return (
-                        <div key={p.id} className="border-t">
-
-                            {/* ===== POSITION ROW ===== */}
-                            <div
-                                className={cn(
-                                    'grid grid-cols-[40px_40px_3fr_2fr_2fr_120px] items-center px-3 py-3 transition cursor-pointer',
-                                    expanded ? 'bg-muted/40' : 'hover:bg-muted/30'
-                                )}
-                                onClick={() =>
-                                    setOpenRow(expanded ? null : p.id)
-                                }
-                            >
-                                <div className="text-muted-foreground">{index + 1}</div>
-
-                                <div className="flex justify-center">
-                                    {expanded ? (
-                                        <ChevronDown size={16} />
-                                    ) : (
-                                        <ChevronRight size={16} />
-                                    )}
-                                </div>
-
-                                <div className="font-medium">{p.name}</div>
-
-                                <div>
-                                    {enabledCount} / {shifts.length}
-                                </div>
-
-                                <div>
-                                    <StatusBadge active={enabledCount > 0} />
-                                </div>
-
-                                <div
-                                    className="flex justify-center gap-2"
-                                    onClick={e => e.stopPropagation()}
-                                >
-                                    <IconBtn onClick={() => onEdit(p.id)}>
-                                        <Pencil size={14} />
-                                    </IconBtn>
-                                    <IconBtn danger onClick={() => onDelete(p.id, p.name)}>
-                                        <Trash2 size={14} />
-                                    </IconBtn>
-                                </div>
+                            <div className="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-wider">
+                                {s.name}
                             </div>
-
-                            {/* ===== SHIFT ROWS ===== */}
-                            <div
-                                className={cn(
-                                    'grid transition-all overflow-hidden',
-                                    expanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
-                                )}
-                            >
-                                <div className="overflow-hidden ml-10">
-                                    {shifts.map((s, i) => (
-                                        <div
-                                            key={i}
-                                            className="grid grid-cols-[40px_3fr_2fr_2fr_120px] items-center px-3 py-2 border-t text-muted-foreground"
-                                        >
-                                            <div />
-                                            <div className="font-medium text-foreground">
-                                                {s.name}
-                                            </div>
-                                            <div>
-                                                {s.startTime} – {s.endTime}
-                                            </div>
-                                            <div>
-                                                <StatusBadge active={s.isEnabled} />
-                                            </div>
-                                            <div />
-                                        </div>
-                                    ))}
-                                </div>
+                            <div className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">
+                                {s.startTime} – {s.endTime}
                             </div>
+                            <div>
+                                <StatusBadge active={s.isEnabled} />
+                            </div>
+                            <div />
                         </div>
-                    )
-                })}
+                    ))
+                ) : (
+                    <div className="p-4 text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                        No shifts configured for this position
+                    </div>
+                )}
             </div>
-        </div>
-    )
-}
+        )
+    }
 
-/* ===== ICON BUTTON ===== */
-function IconBtn({
-    children,
-    danger,
-    ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
-    danger?: boolean
-}) {
     return (
-        <button
-            {...props}
-            className={cn(
-                'h-8 w-8 rounded-md border flex items-center justify-center transition',
-                danger
-                    ? 'hover:bg-destructive hover:text-destructive-foreground'
-                    : 'hover:bg-primary hover:text-primary-foreground'
-            )}
-        >
-            {children}
-        </button>
+        <DataTable
+            columns={columns}
+            data={data}
+            loading={loading}
+            searchKey="name"
+            getRowCanExpand={() => true}
+            renderSubComponent={renderShifts}
+        />
     )
 }
