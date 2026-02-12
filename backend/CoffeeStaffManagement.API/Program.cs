@@ -4,6 +4,9 @@ using CoffeeStaffManagement.Application;
 using CoffeeStaffManagement.Application.Common.Interfaces;
 using CoffeeStaffManagement.Infrastructure;
 using CoffeeStaffManagement.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,7 +42,11 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<AppDbContext>();
+
         var hasher = services.GetRequiredService<IPasswordHasher>();
+
+
+
         DbInitializer.Initialize(context, hasher);
     }
     catch (Exception ex)

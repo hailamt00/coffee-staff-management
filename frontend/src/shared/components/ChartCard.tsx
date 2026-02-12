@@ -1,6 +1,5 @@
 import { ReactNode } from 'react'
 import { Card, CardHeader, CardContent } from '@/shared/components/ui/card'
-import { Button } from '@/shared/components/ui/button'
 import { motion } from 'framer-motion'
 import clsx from 'clsx'
 

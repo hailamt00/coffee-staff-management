@@ -31,7 +31,7 @@ import {
   Moon,
 } from 'lucide-react'
 
-import { useTheme } from '@/shared/theme/useTheme'
+import { useTheme } from '@/shared/theme/ThemeContext'
 import clsx from 'clsx'
 
 interface Props {
@@ -92,6 +92,9 @@ export default function Header({ onToggleSidebar }: Props) {
             <Search className="h-3.5 w-3.5 text-slate-400 group-focus-within:text-slate-900 dark:group-focus-within:text-white transition-colors" />
           </div>
           <input
+            id="mainSearch"
+            name="search"
+            aria-label="Search commands or staff"
             type="text"
             className="w-full h-9 bg-slate-50 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-lg pl-9 pr-12 text-xs font-medium focus:ring-1 focus:ring-black dark:focus:ring-white transition-all shadow-sm"
             placeholder="Search commands or staff..."

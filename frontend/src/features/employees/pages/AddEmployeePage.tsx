@@ -51,13 +51,11 @@ export default function AddEmployeePage() {
     try {
       await createEmployee({
         name: form.name.trim(),
-        phone: form.phone.trim(),
+        phone: form.phone.replace(/\D/g, ''),
         cid: form.cid || null,
         gender: form.gender || null,
         dob: form.dob || null,
-        hireDate: form.hireDate
-          ? new Date(form.hireDate).toISOString()
-          : null,
+        hireDate: form.hireDate || null,
         serviceSalary: Number(form.serviceSalary) || 0,
         baristaSalary: Number(form.baristaSalary) || 0,
       })
@@ -90,32 +88,36 @@ export default function AddEmployeePage() {
           {/* ===== BASIC INFO ===== */}
           <Section title="Basic Information">
             <Grid>
-              <Field label="Employee Name" required>
+              <Field id="empName" label="Employee Name" required>
                 <Input
+                  id="empName"
                   placeholder="Name"
                   value={form.name}
                   onChange={handleChange('name')}
                 />
               </Field>
 
-              <Field label="Phone Number" required>
+              <Field id="empPhone" label="Phone Number" required>
                 <Input
+                  id="empPhone"
                   placeholder="Phone"
                   value={form.phone}
                   onChange={handleChange('phone')}
                 />
               </Field>
 
-              <Field label="Citizen ID (CID)">
+              <Field id="empCid" label="Citizen ID (CID)">
                 <Input
+                  id="empCid"
                   placeholder="Optional"
                   value={form.cid}
                   onChange={handleChange('cid')}
                 />
               </Field>
 
-              <Field label="Gender">
+              <Field id="empGender" label="Gender">
                 <Select
+                  id="empGender"
                   value={form.gender}
                   onChange={handleChange('gender')}
                   options={GENDERS}
@@ -128,8 +130,9 @@ export default function AddEmployeePage() {
           {/* ===== SALARY ===== */}
           <Section title="Salary Information">
             <Grid>
-              <Field label="Salary Service">
+              <Field id="empServiceSalary" label="Salary Service">
                 <Input
+                  id="empServiceSalary"
                   type="number"
                   placeholder="0"
                   value={form.serviceSalary}
@@ -137,8 +140,9 @@ export default function AddEmployeePage() {
                 />
               </Field>
 
-              <Field label="Salary Bar">
+              <Field id="empBaristaSalary" label="Salary Bar">
                 <Input
+                  id="empBaristaSalary"
                   type="number"
                   placeholder="0"
                   value={form.baristaSalary}
@@ -151,12 +155,13 @@ export default function AddEmployeePage() {
           {/* ===== DATE ===== */}
           <Section title="Date Information">
             <Grid>
-              <Field label="Date of Birth">
-                <Input type="date" value={form.dob} onChange={handleChange('dob')} />
+              <Field id="empDob" label="Date of Birth">
+                <Input id="empDob" type="date" value={form.dob} onChange={handleChange('dob')} />
               </Field>
 
-              <Field label="Hire Date">
+              <Field id="empHireDate" label="Hire Date">
                 <Input
+                  id="empHireDate"
                   type="date"
                   value={form.hireDate}
                   onChange={handleChange('hireDate')}
@@ -208,17 +213,19 @@ function Grid({ children }: { children: React.ReactNode }) {
 }
 
 function Field({
+  id,
   label,
   required,
   children,
 }: {
+  id: string
   label: string
   required?: boolean
   children: React.ReactNode
 }) {
   return (
     <div className="space-y-1.5">
-      <Label className="text-sm">
+      <Label htmlFor={id} className="text-sm cursor-pointer">
         {label}
         {required && <span className="ml-1 text-red-500">*</span>}
       </Label>
@@ -228,11 +235,13 @@ function Field({
 }
 
 function Select({
+  id,
   value,
   onChange,
   options,
   placeholder,
 }: {
+  id?: string
   value: any
   onChange: React.ChangeEventHandler<HTMLSelectElement>
   options: { value: any; label: string }[]
@@ -240,6 +249,7 @@ function Select({
 }) {
   return (
     <select
+      id={id}
       value={value}
       onChange={onChange}
       className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-400"

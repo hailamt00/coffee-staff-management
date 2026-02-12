@@ -62,6 +62,18 @@ public class AttendanceRepository : IAttendanceRepository
     }
 
 
+    public async Task<List<Attendance>> GetByDateRangeAsync(DateOnly fromDate, DateOnly toDate)
+    {
+        return await _context.Attendances
+            .Include(a => a.Schedule)
+            .Where(a =>
+                a.Schedule != null &&
+                a.Schedule.WorkDate >= fromDate &&
+                a.Schedule.WorkDate <= toDate)
+            .ToListAsync();
+    }
+
+
     public async Task AddAsync(
         Attendance attendance,
         CancellationToken ct)

@@ -85,12 +85,14 @@ export default function LoginPage() {
             <div className="p-8 space-y-6">
               {/* Username field */}
               <div className="space-y-2">
-                <label className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                <label htmlFor="username" className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider">
                   Username
                 </label>
                 <div className="relative group">
                   <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-slate-900 dark:group-focus-within:text-white transition-colors" />
                   <Input
+                    id="username"
+                    name="username"
                     placeholder="Enter username"
                     className="h-12 pl-12 bg-slate-50 dark:bg-neutral-900 border-slate-200 dark:border-neutral-800 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 rounded-xl focus:ring-2 focus:ring-slate-900 dark:focus:ring-white transition-all"
                     value={username}
@@ -101,12 +103,14 @@ export default function LoginPage() {
 
               {/* Password field */}
               <div className="space-y-2">
-                <label className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                <label htmlFor="password" className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider">
                   Password
                 </label>
                 <div className="relative group">
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-slate-900 dark:group-focus-within:text-white transition-colors" />
                   <Input
+                    id="password"
+                    name="password"
                     type="password"
                     placeholder="Enter password"
                     className="h-12 pl-12 bg-slate-50 dark:bg-neutral-900 border-slate-200 dark:border-neutral-800 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 rounded-xl focus:ring-2 focus:ring-slate-900 dark:focus:ring-white transition-all"

@@ -6,6 +6,7 @@ using CoffeeStaffManagement.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
 
 namespace CoffeeStaffManagement.Infrastructure;
 
@@ -19,10 +20,17 @@ public static class DependencyInjection
         services.AddScoped<ICurrentUserService, CurrentUserService>();
 
         // ===== DATABASE =====
-        // ===== DATABASE =====
-        services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(
-                configuration.GetConnectionString("Default")));
+        var dataSourceBuilder = new NpgsqlDataSourceBuilder(configuration.GetConnectionString("Default"));
+        dataSourceBuilder.EnableDynamicJson();
+
+        var dataSource = dataSourceBuilder.Build();
+        services.AddSingleton(dataSource);
+
+        services.AddDbContext<AppDbContext>((sp, options) =>
+        {
+            var ds = sp.GetRequiredService<NpgsqlDataSource>();
+            options.UseNpgsql(ds);
+        });
 
         // ===== REPOSITORIES =====
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));

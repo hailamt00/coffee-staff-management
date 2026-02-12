@@ -1,62 +1,74 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useDispatch } from 'react-redux'
 import { positionApi } from '../api/position.api'
 import { addNotification } from '@/features/ui/slices/uiSlice'
 import type {
-  Position,
   CreatePositionRequest,
   UpdatePositionRequest,
 } from '@/shared/types/api'
 
 export function usePosition() {
   const dispatch = useDispatch()
-  const [positions, setPositions] = useState<Position[]>([])
-  const [loading, setLoading] = useState(false)
+  const queryClient = useQueryClient()
 
-  const load = useCallback(async () => {
-    setLoading(true)
-    try {
-      setPositions(await positionApi.getAll())
-    } catch {
+  /* ================= QUERIES ================= */
+
+  const positionsQuery = useQuery({
+    queryKey: ['positions'],
+    queryFn: () => positionApi.getAll(),
+  })
+
+  /* ================= COMMANDS ================= */
+
+  const createMutation = useMutation({
+    mutationFn: (payload: CreatePositionRequest) => positionApi.create(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['positions'] })
       dispatch(
         addNotification({
-          type: 'error',
-          title: 'Load failed',
-          message: 'Cannot load positions',
+          type: 'success',
+          title: 'Success',
+          message: 'Position created',
         })
       )
-    } finally {
-      setLoading(false)
-    }
-  }, [dispatch])
+    },
+  })
 
-  const createPosition = async (payload: CreatePositionRequest) => {
-    const created = await positionApi.create(payload)
-    setPositions(p => [...p, created])
-  }
+  const updateMutation = useMutation({
+    mutationFn: ({ id, payload }: { id: number; payload: UpdatePositionRequest }) =>
+      positionApi.update(id, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['positions'] })
+      dispatch(
+        addNotification({
+          type: 'success',
+          title: 'Success',
+          message: 'Position updated',
+        })
+      )
+    },
+  })
 
-  const updatePosition = async (
-    id: number,
-    payload: UpdatePositionRequest
-  ) => {
-    const updated = await positionApi.update(id, payload)
-    setPositions(p => p.map(x => (x.id === id ? updated : x)))
-  }
-
-  const deletePosition = async (id: number) => {
-    await positionApi.delete(id)
-    setPositions(p => p.filter(x => x.id !== id))
-  }
-
-  useEffect(() => {
-    load()
-  }, [load])
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => positionApi.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['positions'] })
+      dispatch(
+        addNotification({
+          type: 'success',
+          title: 'Success',
+          message: 'Position deleted',
+        })
+      )
+    },
+  })
 
   return {
-    positions,
-    loading,
-    createPosition,
-    updatePosition,
-    deletePosition,
+    positions: positionsQuery.data || [],
+    loading: positionsQuery.isLoading || createMutation.isPending || updateMutation.isPending || deleteMutation.isPending,
+
+    createPosition: createMutation.mutateAsync,
+    updatePosition: (id: number, payload: UpdatePositionRequest) => updateMutation.mutateAsync({ id, payload }),
+    deletePosition: deleteMutation.mutateAsync,
   }
 }

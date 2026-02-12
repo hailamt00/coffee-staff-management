@@ -1,9 +1,7 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { useSchedule } from '../hooks/useSchedule'
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
 import { Button } from '@/shared/components/ui/button'
 import { Input } from '@/shared/components/ui/input'
-import { Badge } from '@/shared/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import {
     Dialog,
@@ -20,150 +18,52 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/shared/components/ui/select'
-import { CheckCircle, XCircle, Plus, Clock } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { formatDate } from '@/shared/utils/format'
-import { DataTable } from '@/shared/components/ui/data-table'
-import type { ColumnDef } from '@tanstack/react-table'
 import { useEmployee } from '@/features/employees/hooks/useEmployee'
 import { usePosition } from '@/features/positions/hooks/usePosition'
+import { WeeklyScheduleTable } from '../components/WeeklyScheduleTable'
+import { WeeklyRequestTable } from '../components/WeeklyRequestTable'
 
 export default function SchedulePage() {
-    const {
-        schedules,
-        requests,
-        loading: scheduleLoading,
-        loadSchedule,
-        loadRequests,
-        createRequest,
-        approveRequest,
-    } = useSchedule()
-    const { employees, loading: empLoading } = useEmployee()
-    const { positions, loading: posLoading } = usePosition()
-    const loading = scheduleLoading || empLoading || posLoading
-
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10))
-    const [activeTab, setActiveTab] = useState('schedule')
+    const [activeTab, setActiveTab] = useState('weekly')
 
-    // Load data when date or tab changes
-    useEffect(() => {
-        if (activeTab === 'schedule') {
-            loadSchedule(date)
-        } else {
-            loadRequests(date)
-        }
-    }, [date, activeTab, loadSchedule, loadRequests])
+    const {
+        addSchedule,
+    } = useSchedule()
+    const { employees } = useEmployee()
+    const { positions } = usePosition()
 
-    /* ================= CREATE REQUEST DIALOG ================= */
-    const [openRequest, setOpenRequest] = useState(false)
-    const [reqEmployeeId, setReqEmployeeId] = useState('')
-    const [reqShiftId, setReqShiftId] = useState('')
-    const [reqDate, setReqDate] = useState(date)
+    /* ================= ADD DIALOG ================= */
+    const [openAdd, setOpenAdd] = useState(false)
+    const [addEmployeeId, setAddEmployeeId] = useState('')
+    const [addPositionId, setAddPositionId] = useState('')
+    const [addSelectedShifts, setAddSelectedShifts] = useState<number[]>([])
+    const [addDate, setAddDate] = useState(date)
 
-    const handleCreateRequest = async () => {
-        if (!reqEmployeeId || !reqShiftId) return
-        await createRequest({
-            employeeId: Number(reqEmployeeId),
-            shiftId: Number(reqShiftId),
-            workDate: reqDate,
+    const handleAdd = async () => {
+        if (!addEmployeeId || addSelectedShifts.length === 0) return
+        await addSchedule({
+            employeeId: Number(addEmployeeId),
+            shiftIds: addSelectedShifts,
+            workDate: addDate,
         })
-        setOpenRequest(false)
-        loadRequests(date)
+        setOpenAdd(false)
+        setAddEmployeeId('')
+        setAddPositionId('')
+        setAddSelectedShifts([])
     }
 
-    const allSlifts = useMemo(() => {
+    const availableShifts = useMemo(() => {
+        if (!addPositionId) return []
+        const pos = positions.find(p => p.id === Number(addPositionId))
+        return pos?.shifts || []
+    }, [addPositionId, positions])
+
+    const allWeeklyShifts = useMemo(() => {
         return positions.flatMap(p => (p.shifts || []).map(s => ({ ...s, positionName: p.name })))
     }, [positions])
-
-    /* ================= COLUMNS ================= */
-    const scheduleColumns = useMemo<ColumnDef<any>[]>(() => [
-        {
-            accessorKey: "employeeName",
-            header: "Employee",
-            cell: ({ row }) => <div className="font-medium text-slate-900 dark:text-slate-100">{row.getValue("employeeName")}</div>
-        },
-        {
-            accessorKey: "shiftName",
-            header: "Shift",
-            cell: ({ row }) => (
-                <div className="flex items-center gap-2">
-                    <Clock className="h-3 w-3 text-slate-400" />
-                    <span>{row.getValue("shiftName")}</span>
-                </div>
-            )
-        },
-        {
-            id: "status",
-            header: "Status",
-            cell: () => <Badge variant="outline" className="text-slate-800 border-slate-200 bg-slate-50">Scheduled</Badge>
-        }
-    ], [])
-
-    const requestColumns = useMemo<ColumnDef<any>[]>(() => [
-        {
-            accessorKey: "employeeName",
-            header: "Employee",
-            cell: ({ row }) => <div className="font-medium text-slate-900 dark:text-slate-100">{row.getValue("employeeName")}</div>
-        },
-        {
-            accessorKey: "workDate",
-            header: "Date",
-            cell: ({ row }) => <span className="text-sm text-slate-500">{formatDate(row.getValue("workDate"))}</span>
-        },
-        {
-            accessorKey: "status",
-            header: "Status",
-            cell: ({ row }) => {
-                const status = row.getValue("status") as string
-                return (
-                    <Badge
-                        className={
-                            status === 'approved'
-                                ? 'bg-slate-100 text-black border-slate-200 shadow-sm'
-                                : status === 'rejected'
-                                    ? 'bg-red-500/10 text-red-600 border-red-500/20'
-                                    : 'bg-amber-500/10 text-amber-600 border-amber-500/20'
-                        }
-                        variant="secondary"
-                    >
-                        {status}
-                    </Badge>
-                )
-            }
-        },
-        {
-            accessorKey: "note",
-            header: "Note",
-            cell: ({ row }) => <span className="text-xs italic text-slate-400">{row.getValue("note") || "—"}</span>
-        },
-        {
-            id: "actions",
-            header: () => <div className="text-right">Actions</div>,
-            cell: ({ row }) => {
-                const status = row.original.status
-                if (status !== 'pending') return null
-                return (
-                    <div className="flex justify-end gap-1">
-                        <Button
-                            size="sm"
-                            variant="ghost"
-                            className="h-8 w-8 p-0 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
-                            onClick={() => approveRequest({ requestId: row.original.requestId, isApproved: true })}
-                        >
-                            <CheckCircle className="h-4 w-4" />
-                        </Button>
-                        <Button
-                            size="sm"
-                            variant="ghost"
-                            className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
-                            onClick={() => approveRequest({ requestId: row.original.requestId, isApproved: false })}
-                        >
-                            <XCircle className="h-4 w-4" />
-                        </Button>
-                    </div>
-                )
-            }
-        }
-    ], [approveRequest])
 
     return (
         <div className="space-y-6">
@@ -178,117 +78,153 @@ export default function SchedulePage() {
                     </p>
                 </div>
 
-                <div className="flex items-center gap-2">
-                    <Input
-                        type="date"
-                        value={date}
-                        onChange={e => setDate(e.target.value)}
-                        className="w-40 h-10 border-slate-200 dark:border-neutral-800 rounded-lg"
-                    />
+                <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2 bg-slate-100 dark:bg-neutral-800 p-1 rounded-lg">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0"
+                            onClick={() => {
+                                const d = new Date(date)
+                                d.setDate(d.getDate() - 7)
+                                setDate(d.toISOString().slice(0, 10))
+                            }}
+                        >
+                            &lt;
+                        </Button>
+                        <div className="px-2 text-sm font-bold min-w-[140px] text-center">
+                            {(() => {
+                                const curr = new Date(date)
+                                const day = curr.getDay()
+                                const diff = curr.getDate() - day + (day === 0 ? -6 : 1)
+                                const monday = new Date(curr.setDate(diff))
+                                const sunday = new Date(curr.setDate(diff + 6))
+                                return `${formatDate(monday.toISOString().slice(0, 10))} - ${formatDate(sunday.toISOString().slice(0, 10))}`
+                            })()}
+                        </div>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0"
+                            onClick={() => {
+                                const d = new Date(date)
+                                d.setDate(d.getDate() + 7)
+                                setDate(d.toISOString().slice(0, 10))
+                            }}
+                        >
+                            &gt;
+                        </Button>
+                    </div>
+
                 </div>
             </div>
 
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <div className="flex items-center justify-between mb-4">
-                    <TabsList className="bg-slate-100/50 dark:bg-neutral-900/50 border">
-                        <TabsTrigger value="schedule" className="data-[state=active]:bg-white data-[state=active]:text-black dark:data-[state=active]:bg-black dark:data-[state=active]:text-white">Daily Schedule</TabsTrigger>
-                        <TabsTrigger value="requests" className="data-[state=active]:bg-white data-[state=active]:text-black dark:data-[state=active]:bg-black dark:data-[state=active]:text-white">Shift Requests</TabsTrigger>
+            <div className="flex items-center justify-between">
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="bg-slate-100/50 dark:bg-neutral-900/50 border h-10 p-1 rounded-lg">
+                    <TabsList className="bg-transparent border-none">
+                        <TabsTrigger value="weekly" className="h-8 px-4 data-[state=active]:bg-white data-[state=active]:text-black dark:data-[state=active]:bg-black dark:data-[state=active]:text-white">Weekly Schedule</TabsTrigger>
+                        <TabsTrigger value="requests" className="h-8 px-4 data-[state=active]:bg-white data-[state=active]:text-black dark:data-[state=active]:bg-black dark:data-[state=active]:text-white">Requests</TabsTrigger>
                     </TabsList>
+                </Tabs>
 
-                    <Dialog open={openRequest} onOpenChange={setOpenRequest}>
-                        <DialogTrigger asChild>
-                            <Button className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 border-none h-10 px-6 rounded-lg font-bold uppercase tracking-widest text-[10px]">
-                                <Plus className="mr-2 h-4 w-4" />
-                                Request Shift
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>Request a Shift</DialogTitle>
-                            </DialogHeader>
-                            <div className="space-y-4 py-4">
-                                <div className="space-y-2">
-                                    <Label>Date</Label>
-                                    <Input
-                                        type="date"
-                                        value={reqDate}
-                                        onChange={e => setReqDate(e.target.value)}
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label>Employee</Label>
-                                    <Select value={reqEmployeeId} onValueChange={setReqEmployeeId}>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Select Employee" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {employees.map(e => (
-                                                <SelectItem key={e.id} value={String(e.id)}>
-                                                    {e.name} ({e.code})
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <div className="space-y-2">
-                                    <Label>Shift</Label>
-                                    <Select value={reqShiftId} onValueChange={setReqShiftId}>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Select Shift" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {allSlifts.map(s => (
-                                                <SelectItem key={s.id} value={String(s.id)}>
-                                                    {s.positionName} - {s.name} ({s.startTime} - {s.endTime})
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <Button onClick={handleCreateRequest} className="w-full bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-slate-200 uppercase font-black text-[10px] tracking-[0.2em] py-6 rounded-xl">
-                                    Submit Schedule Request
-                                </Button>
+                <Dialog open={openAdd} onOpenChange={setOpenAdd}>
+                    <DialogTrigger asChild>
+                        <Button className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 border-none h-10 px-6 rounded-lg font-bold uppercase tracking-widest text-[10px]">
+                            <Plus className="mr-2 h-4 w-4" />
+                            Add
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-md">
+                        <DialogHeader>
+                            <DialogTitle>Add to Schedule</DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="addDate">Date</Label>
+                                <Input
+                                    id="addDate"
+                                    type="date"
+                                    value={addDate}
+                                    onChange={e => setAddDate(e.target.value)}
+                                />
                             </div>
-                        </DialogContent>
-                    </Dialog>
-                </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="addEmployee">Employee</Label>
+                                <Select value={addEmployeeId} onValueChange={setAddEmployeeId}>
+                                    <SelectTrigger id="addEmployee">
+                                        <SelectValue placeholder="Select Employee" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {employees.map(e => (
+                                            <SelectItem key={e.id} value={String(e.id)}>
+                                                {e.name} ({e.code})
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="addPosition">Position</Label>
+                                <Select value={addPositionId} onValueChange={setAddPositionId}>
+                                    <SelectTrigger id="addPosition">
+                                        <SelectValue placeholder="Select Position" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {positions.map(p => (
+                                            <SelectItem key={p.id} value={String(p.id)}>
+                                                {p.name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
 
-                {/* ===== TAB: SCHEDULE ===== */}
-                <TabsContent value="schedule" className="space-y-4">
-                    <Card className="border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm overflow-hidden">
-                        <CardHeader className="bg-slate-50/50 dark:bg-black/20 border-b border-slate-100 dark:border-neutral-800">
-                            <CardTitle className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                                Daily Lineup for {formatDate(date)}
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <DataTable
-                                columns={scheduleColumns}
-                                data={schedules}
-                                loading={loading}
-                                searchKey="employeeName"
-                            />
-                        </CardContent>
-                    </Card>
+                            {availableShifts.length > 0 && (
+                                <div className="space-y-2">
+                                    <Label>Shifts</Label>
+                                    <div className="grid grid-cols-1 gap-2 border rounded-lg p-3">
+                                        {availableShifts.map(s => (
+                                            <div key={s.id} className="flex items-center gap-2">
+                                                <input
+                                                    type="checkbox"
+                                                    id={`shift-${s.id}`}
+                                                    checked={addSelectedShifts.includes(s.id)}
+                                                    onChange={e => {
+                                                        if (e.target.checked) {
+                                                            setAddSelectedShifts([...addSelectedShifts, s.id])
+                                                        } else {
+                                                            setAddSelectedShifts(addSelectedShifts.filter(id => id !== s.id))
+                                                        }
+                                                    }}
+                                                    className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
+                                                />
+                                                <Label htmlFor={`shift-${s.id}`} className="text-sm cursor-pointer">
+                                                    {s.name} ({s.startTime?.slice(0, 5)} - {s.endTime?.slice(0, 5)})
+                                                </Label>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            <Button onClick={handleAdd} className="w-full bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-slate-200 uppercase font-black text-[10px] tracking-[0.2em] py-6 rounded-xl">
+                                Add to Schedule
+                            </Button>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+            </div>
+
+
+            <Tabs value={activeTab} className="w-full">
+                {/* ===== TAB: WEEKLY ===== */}
+                <TabsContent value="weekly" className="space-y-4">
+                    <WeeklyScheduleTable date={date} shifts={allWeeklyShifts} />
                 </TabsContent>
 
                 {/* ===== TAB: REQUESTS ===== */}
                 <TabsContent value="requests" className="space-y-4">
-                    <Card className="border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm overflow-hidden">
-                        <CardHeader className="bg-slate-50/50 dark:bg-black/20 border-b border-slate-100 dark:border-neutral-800">
-                            <CardTitle className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                                Pending Requests
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <DataTable
-                                columns={requestColumns}
-                                data={requests}
-                                loading={loading}
-                                searchKey="employee.name"
-                            />
-                        </CardContent>
-                    </Card>
+                    <WeeklyRequestTable date={date} shifts={allWeeklyShifts} />
                 </TabsContent>
             </Tabs>
         </div>

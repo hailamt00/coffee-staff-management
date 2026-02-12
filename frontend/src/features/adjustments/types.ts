@@ -4,7 +4,7 @@ export interface Adjustment {
     employeeId: number
     employeeName: string
     typeId: number
-    typeName: string // "Thưởng" or "Phạt" usually
+    typeName: string // "Bonus" or "Penalty" usually
     amount: number
     createdAt: string
 }

@@ -824,6 +824,9 @@
         }
       },
       "CoffeeStaffManagement.Domain/1.0.0": {
+        "dependencies": {
+          "Npgsql": "10.0.0"
+        },
         "runtime": {
           "CoffeeStaffManagement.Domain.dll": {
             "assemblyVersion": "1.0.0.0",

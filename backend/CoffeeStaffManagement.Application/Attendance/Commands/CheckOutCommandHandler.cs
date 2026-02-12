@@ -23,10 +23,10 @@ public class CheckOutCommandHandler
             request.Request.WorkDate);
 
         if (attendance == null)
-            throw new Exception("Attendance not found");
+            throw new KeyNotFoundException("Attendance not found");
 
         if (attendance.CheckOut != null)
-            throw new Exception("Already checked out");
+            throw new ArgumentException("Already checked out");
 
         var now = DateTime.Now;
         var checkOutTime = now.TimeOfDay;

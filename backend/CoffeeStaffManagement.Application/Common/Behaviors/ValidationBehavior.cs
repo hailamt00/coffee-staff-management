@@ -32,7 +32,14 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
                 .ToList();
 
             if (failures.Count != 0)
+            {
+                // Simple console log for debugging 400 errors
+                foreach (var failure in failures)
+                {
+                    System.Console.WriteLine($"Validation Error: {failure.PropertyName} - {failure.ErrorMessage}");
+                }
                 throw new ValidationException(failures);
+            }
         }
 
         return await next();

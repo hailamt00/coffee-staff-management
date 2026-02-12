@@ -1,8 +1,6 @@
-
-import { useState, useCallback } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { revenueApi } from '../api/revenue.api'
 import type {
-    Revenue,
     CreateRevenueRequest,
     CreateTransactionRequest,
 } from '@/shared/types/api'
@@ -11,31 +9,22 @@ import { addNotification } from '@/features/ui/slices/uiSlice'
 
 export function useRevenue() {
     const dispatch = useDispatch()
-    const [revenues, setRevenues] = useState<Revenue[]>([])
-    const [loading, setLoading] = useState(false)
+    const queryClient = useQueryClient()
 
-    const loadRevenues = useCallback(async (date: string) => {
-        setLoading(true)
-        try {
-            const data = await revenueApi.getByDate(date)
-            setRevenues(data)
-        } catch {
-            dispatch(
-                addNotification({
-                    type: 'error',
-                    title: 'Load failed',
-                    message: 'Cannot load revenue reports',
-                })
-            )
-            setRevenues([])
-        } finally {
-            setLoading(false)
-        }
-    }, [dispatch])
+    /* ================= QUERIES ================= */
 
-    const createRevenue = async (payload: CreateRevenueRequest) => {
-        try {
-            await revenueApi.create(payload)
+    const revenuesQuery = (date: string) => useQuery({
+        queryKey: ['revenues', date],
+        queryFn: () => revenueApi.getByDate(date),
+        enabled: !!date,
+    })
+
+    /* ================= COMMANDS ================= */
+
+    const createRevenueMutation = useMutation({
+        mutationFn: (payload: CreateRevenueRequest) => revenueApi.create(payload),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['revenues'] })
             dispatch(
                 addNotification({
                     type: 'success',
@@ -43,7 +32,8 @@ export function useRevenue() {
                     message: 'Revenue report created',
                 })
             )
-        } catch {
+        },
+        onError: () => {
             dispatch(
                 addNotification({
                     type: 'error',
@@ -51,13 +41,13 @@ export function useRevenue() {
                     message: 'Failed to create revenue report',
                 })
             )
-            throw new Error('Failed')
         }
-    }
+    })
 
-    const createTransaction = async (payload: CreateTransactionRequest) => {
-        try {
-            await revenueApi.createTransaction(payload)
+    const createTransactionMutation = useMutation({
+        mutationFn: (payload: CreateTransactionRequest) => revenueApi.createTransaction(payload),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['revenues'] })
             dispatch(
                 addNotification({
                     type: 'success',
@@ -65,7 +55,8 @@ export function useRevenue() {
                     message: 'Transaction recorded',
                 })
             )
-        } catch {
+        },
+        onError: () => {
             dispatch(
                 addNotification({
                     type: 'error',
@@ -73,15 +64,25 @@ export function useRevenue() {
                     message: 'Failed to record transaction',
                 })
             )
-            throw new Error('Failed')
         }
-    }
+    })
 
     return {
-        revenues,
-        loading,
-        loadRevenues,
-        createRevenue,
-        createTransaction,
+        // Compatibility
+        loadRevenues: (date: string) => queryClient.prefetchQuery({
+            queryKey: ['revenues', date],
+            queryFn: () => revenueApi.getByDate(date)
+        }),
+
+        // Hooks
+        useRevenues: (date: string) => revenuesQuery(date),
+
+        // Commands
+        createRevenue: createRevenueMutation.mutateAsync,
+        createTransaction: createTransactionMutation.mutateAsync,
+
+        // Legacy states
+        revenues: [],
+        loading: createRevenueMutation.isPending || createTransactionMutation.isPending,
     }
 }

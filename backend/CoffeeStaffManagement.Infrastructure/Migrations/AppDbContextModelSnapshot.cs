@@ -36,27 +36,13 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("action");
 
-                    b.Property<int?>("AdminId")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<string>("Details")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("TargetId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("TargetType")
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("AdminId");
 
                     b.ToTable("activities", (string)null);
                 });
@@ -615,11 +601,7 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
 
             modelBuilder.Entity("CoffeeStaffManagement.Domain.Entities.ActivityLog", b =>
                 {
-                    b.HasOne("CoffeeStaffManagement.Domain.Entities.Admin", "Admin")
-                        .WithMany()
-                        .HasForeignKey("AdminId");
 
-                    b.Navigation("Admin");
                 });
 
             modelBuilder.Entity("CoffeeStaffManagement.Domain.Entities.Attendance", b =>

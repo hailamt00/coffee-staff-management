@@ -45,7 +45,7 @@ export default function Sidebar({
       <div className="flex h-14 items-center justify-between px-4 border-b border-slate-200 dark:border-neutral-800 bg-slate-50/50 dark:bg-black/20">
         {!collapsed && (
           <div className="flex flex-col leading-none">
-            <span className="text-sm font-black tracking-tighter text-slate-900 dark:text-white uppercase">CSM_ELITE</span>
+            <span className="text-sm font-black tracking-tighter text-slate-900 dark:text-white uppercase">CSM Elite</span>
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">V.2.0 PRO</span>
           </div>
         )}

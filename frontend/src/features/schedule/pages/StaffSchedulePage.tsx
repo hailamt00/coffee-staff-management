@@ -27,26 +27,31 @@ import { useMemo } from 'react'
 
 export default function StaffSchedulePage() {
     const navigate = useNavigate()
-    const { schedules, loading: scheduleLoading, loadSchedule, createRequest } = useSchedule()
-    const { positions, loading: posLoading } = usePosition()
-    const loading = scheduleLoading || posLoading
-
     const staffJson = localStorage.getItem('staffInfo')
     const staff = staffJson ? JSON.parse(staffJson) : null
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10))
 
+    const {
+        useSchedules,
+        loading: scheduleMutationLoading,
+        createRequest
+    } = useSchedule()
+    const { positions, loading: posLoading } = usePosition()
+
+    const { data: allSchedules = [], isLoading: scheduleQueryLoading } = useSchedules(date)
+
     useEffect(() => {
         if (!staff) {
             navigate('/staff/login')
-            return
         }
-        loadSchedule(date)
-    }, [date, staff, loadSchedule, navigate])
+    }, [staff, navigate])
+
+    const loading = scheduleMutationLoading || posLoading || scheduleQueryLoading
 
     // Filter for current staff using flat properties
     const mySchedules = useMemo(() => {
-        return schedules.filter(s => s.employeeCode === staff?.code || s.employeeName === staff?.name)
-    }, [schedules, staff])
+        return allSchedules.filter(s => s.employeeCode === staff?.code || s.employeeName === staff?.name)
+    }, [allSchedules, staff])
 
     const allShifts = useMemo(() => {
         return positions.flatMap(p => (p.shifts || []).map(s => ({ ...s, positionName: p.name })))
@@ -94,17 +99,18 @@ export default function StaffSchedulePage() {
                         </DialogHeader>
                         <div className="space-y-4 py-4">
                             <div className="space-y-2">
-                                <Label>Date</Label>
+                                <Label htmlFor="requestDate">Date</Label>
                                 <Input
+                                    id="requestDate"
                                     type="date"
                                     value={reqDate}
                                     onChange={e => setReqDate(e.target.value)}
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label>Shift</Label>
+                                <Label htmlFor="requestShift">Shift</Label>
                                 <Select value={reqShiftId} onValueChange={setReqShiftId}>
-                                    <SelectTrigger>
+                                    <SelectTrigger id="requestShift">
                                         <SelectValue placeholder="Select Shift" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -126,7 +132,9 @@ export default function StaffSchedulePage() {
 
             <div className="flex items-center gap-2 bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
                 <CalendarDays className="h-4 w-4 text-black dark:text-white" />
+                <Label htmlFor="mainScheduleDate" className="sr-only">Schedule Date</Label>
                 <Input
+                    id="mainScheduleDate"
                     type="date"
                     value={date}
                     onChange={e => setDate(e.target.value)}

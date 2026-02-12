@@ -17,26 +17,25 @@ import { DollarSign, ArrowLeft, Loader2, CheckCircle2 } from 'lucide-react'
 
 export default function StaffRevenuePage() {
     const navigate = useNavigate()
-    const { createRevenue, loading: revenueLoading } = useRevenue()
-    const { schedules, loading: scheduleLoading, loadSchedule } = useSchedule()
-
     const staffJson = localStorage.getItem('staffInfo')
     const staff = staffJson ? JSON.parse(staffJson) : null
     const date = new Date().toISOString().slice(0, 10)
 
+    const { createRevenue, loading: revenueMutationLoading } = useRevenue()
+    const { useSchedules, loading: scheduleMutationLoading } = useSchedule()
+
+    const { data: allSchedules = [], isLoading: scheduleQueryLoading } = useSchedules(date)
+
     useEffect(() => {
         if (!staff) {
             navigate('/staff/login')
-            return
         }
-        loadSchedule(date)
-    }, [date, staff, loadSchedule, navigate])
+    }, [staff, navigate])
 
-    const mySchedules = schedules.filter(s => s.employeeId === staff?.id)
+    const mySchedules = allSchedules.filter(s => s.employeeId === staff?.id)
 
     const [revScheduleId, setRevScheduleId] = useState('')
     const [revOpening, setRevOpening] = useState('0')
-    const [revExpected, setRevExpected] = useState('0')
     const [revCash, setRevCash] = useState('0')
     const [revBank, setRevBank] = useState('0')
     const [revNote, setRevNote] = useState('')
@@ -50,7 +49,6 @@ export default function StaffRevenuePage() {
             await createRevenue({
                 scheduleId: Number(revScheduleId),
                 openingBalance: Number(revOpening),
-                expectedRevenue: Number(revExpected),
                 cash: Number(revCash),
                 bank: Number(revBank),
                 note: revNote,
@@ -78,7 +76,7 @@ export default function StaffRevenuePage() {
         )
     }
 
-    const isLoading = revenueLoading || scheduleLoading
+    const isLoading = revenueMutationLoading || scheduleMutationLoading || scheduleQueryLoading
 
     return (
         <div className="space-y-6">
@@ -98,9 +96,9 @@ export default function StaffRevenuePage() {
                 <Card className="shadow-sm border-none">
                     <CardContent className="p-5 space-y-4">
                         <div className="space-y-2">
-                            <Label>Select Shift</Label>
+                            <Label htmlFor="staffShift">Select Shift</Label>
                             <Select value={revScheduleId} onValueChange={setRevScheduleId}>
-                                <SelectTrigger className="h-11">
+                                <SelectTrigger id="staffShift" className="h-11">
                                     <SelectValue placeholder="Select your shift" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -114,10 +112,11 @@ export default function StaffRevenuePage() {
                         </div>
 
                         <div className="space-y-2">
-                            <Label>Opening Balance</Label>
+                            <Label htmlFor="staffOpening">Opening Balance</Label>
                             <div className="relative">
                                 <DollarSign className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                                 <Input
+                                    id="staffOpening"
                                     type="number"
                                     value={revOpening}
                                     onChange={e => setRevOpening(e.target.value)}
@@ -126,23 +125,13 @@ export default function StaffRevenuePage() {
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <Label>Expected Revenue (POS/Goal)</Label>
-                            <div className="relative">
-                                <DollarSign className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                                <Input
-                                    type="number"
-                                    value={revExpected}
-                                    onChange={e => setRevExpected(e.target.value)}
-                                    className="pl-10 h-11 border-slate-200 focus:ring-black dark:focus:ring-white"
-                                />
-                            </div>
-                        </div>
+
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <Label>Cash Collected</Label>
+                                <Label htmlFor="staffCash">Cash Collected</Label>
                                 <Input
+                                    id="staffCash"
                                     type="number"
                                     value={revCash}
                                     onChange={e => setRevCash(e.target.value)}
@@ -150,8 +139,9 @@ export default function StaffRevenuePage() {
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label>Bank/Transfer</Label>
+                                <Label htmlFor="staffBank">Bank/Transfer</Label>
                                 <Input
+                                    id="staffBank"
                                     type="number"
                                     value={revBank}
                                     onChange={e => setRevBank(e.target.value)}
@@ -161,8 +151,9 @@ export default function StaffRevenuePage() {
                         </div>
 
                         <div className="space-y-2">
-                            <Label>Note (Optional)</Label>
+                            <Label htmlFor="staffNote">Note (Optional)</Label>
                             <Input
+                                id="staffNote"
                                 value={revNote}
                                 onChange={e => setRevNote(e.target.value)}
                                 placeholder="Discrepancies, etc..."

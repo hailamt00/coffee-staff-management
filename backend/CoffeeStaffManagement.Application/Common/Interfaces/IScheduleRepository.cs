@@ -9,4 +9,5 @@ public interface IScheduleRepository
     Task<Schedule?> GetAsync(int employeeId, int shiftId, DateOnly workDate);
     Task AddAsync(Schedule schedule);
     Task<bool> ExistsAsync(int employeeId, int shiftId, DateOnly workDate);
+    Task<List<Schedule>> GetByDateRangeAsync(DateOnly fromDate, DateOnly toDate);
 }

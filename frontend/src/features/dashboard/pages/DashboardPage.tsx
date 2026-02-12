@@ -5,6 +5,7 @@ import {
   Clock,
   TrendingUp,
   BarChart3,
+  Loader2,
 } from 'lucide-react'
 import { SummaryCard } from '@/shared/components/ui/summary-card'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
@@ -23,16 +24,8 @@ import {
   Pie,
   Cell,
 } from 'recharts'
-
-const revenueData = [
-  { name: 'Mon', revenue: 4200000, target: 4000000 },
-  { name: 'Tue', revenue: 3800000, target: 4000000 },
-  { name: 'Wed', revenue: 5100000, target: 4000000 },
-  { name: 'Thu', revenue: 4600000, target: 4000000 },
-  { name: 'Fri', revenue: 6200000, target: 5500000 },
-  { name: 'Sat', revenue: 8500000, target: 7000000 },
-  { name: 'Sun', revenue: 7800000, target: 7000000 },
-]
+import { useDashboard } from '../hooks/useDashboard'
+import { formatMoney } from '@/shared/utils/format'
 
 const attendanceData = [
   { name: '06AM', count: 4 },
@@ -45,13 +38,17 @@ const attendanceData = [
   { name: '08PM', count: 8 },
 ]
 
-const staffMixData = [
-  { name: 'Barista', value: 12, color: '#000' },
-  { name: 'Service', value: 8, color: '#333' },
-  { name: 'Manager', value: 4, color: '#666' },
-]
-
 export default function DashboardPage() {
+  const { stats, loading } = useDashboard()
+
+  if (loading) {
+    return (
+      <div className="flex h-[80vh] items-center justify-center">
+        <Loader2 className="h-10 w-10 animate-spin text-slate-400" />
+      </div>
+    )
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -81,16 +78,16 @@ export default function DashboardPage() {
       <section>
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <SummaryCard
-            title="Total Workforce"
-            value={24}
-            description="Active Personnel"
+            title="Total Reports"
+            value={stats?.totalReports || 0}
+            description="Revenue Submissions"
             icon={Users}
             color="cyan"
             trend="+4.2% Growth"
           />
           <SummaryCard
             title="Attendance"
-            value="98.4%"
+            value={`${(stats?.attendanceRate || 0).toFixed(1)}%`}
             description="Shift Compliance"
             icon={UserCheck}
             color="green"
@@ -98,16 +95,16 @@ export default function DashboardPage() {
           />
           <SummaryCard
             title="Live Shifts"
-            value={8}
+            value={stats?.liveShifts || 0}
             description="Current Operations"
             icon={Clock}
             color="orange"
             trend="Stable"
           />
           <SummaryCard
-            title="Security"
-            value={2}
-            description="System Admins"
+            title="Active Staff"
+            value={stats?.activeStaff || 0}
+            description="Clocked In"
             icon={Shield}
             color="blue"
           />
@@ -121,17 +118,17 @@ export default function DashboardPage() {
           <CardHeader className="flex flex-row items-center justify-between px-8 pt-8 pb-4">
             <div>
               <CardTitle className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">
-                Net Revenue Performance
+                Net Profit Performance
               </CardTitle>
-              <h2 className="text-3xl font-black tracking-tighter text-slate-900 dark:text-white">VND 40.2M</h2>
+              <h2 className="text-3xl font-black tracking-tighter text-slate-900 dark:text-white">{formatMoney(stats?.netProfit || 0)}</h2>
             </div>
             <div className="h-12 w-12 rounded-xl bg-slate-100 dark:bg-white/5 text-slate-900 dark:text-white flex items-center justify-center">
               <TrendingUp className="h-6 w-6" />
             </div>
           </CardHeader>
           <CardContent className="h-[340px] w-full px-8 pb-8 pt-4">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={revenueData}>
+            <ResponsiveContainer key="revenue-chart" width="100%" height={340} debounce={50} minWidth={0} minHeight={0}>
+              <AreaChart data={stats?.chartData || []}>
                 <defs>
                   <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#000" stopOpacity={0.15} />
@@ -140,7 +137,7 @@ export default function DashboardPage() {
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} strokeOpacity={0.05} />
                 <XAxis
-                  dataKey="name"
+                  dataKey="date"
                   axisLine={false}
                   tickLine={false}
                   tick={{ fontSize: 10, fontWeight: 800, fill: '#94a3b8', letterSpacing: '0.1em' }}
@@ -182,7 +179,7 @@ export default function DashboardPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="h-[180px] w-full px-6 pb-6">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer key="attendance-chart" width="100%" height={180} debounce={50} minWidth={0} minHeight={0}>
                 <BarChart data={attendanceData}>
                   <Bar
                     dataKey="count"
@@ -195,13 +192,16 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          {/* Staff Mix Pie */}
+          {/* Staff Mix Pie (Static placeholder as backend doesn't provide mix yet) */}
           <Card className="flex-1 border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm overflow-hidden flex flex-col items-center justify-center py-6">
             <div className="h-[140px] w-full relative">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer key="staff-mix-chart" width="100%" height={140} debounce={50} minWidth={0} minHeight={0}>
                 <PieChart>
                   <Pie
-                    data={staffMixData}
+                    data={[
+                      { name: 'Barista', value: Math.ceil((stats?.activeStaff || 2) * 0.6), color: '#000' },
+                      { name: 'Service', value: Math.floor((stats?.activeStaff || 2) * 0.4), color: '#333' },
+                    ]}
                     cx="50%"
                     cy="50%"
                     innerRadius={45}
@@ -209,24 +209,25 @@ export default function DashboardPage() {
                     paddingAngle={8}
                     dataKey="value"
                   >
-                    {staffMixData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
+                    <Cell key="cell-0" fill="#000" />
+                    <Cell key="cell-1" fill="#333" />
                   </Pie>
                 </PieChart>
               </ResponsiveContainer>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-xl font-black tracking-tighter text-slate-900 dark:text-white">24</span>
-                <span className="text-[8px] font-black uppercase text-slate-400 tracking-widest">Total</span>
+                <span className="text-xl font-black tracking-tighter text-slate-900 dark:text-white">{stats?.activeStaff || 0}</span>
+                <span className="text-[8px] font-black uppercase text-slate-400 tracking-widest">Active</span>
               </div>
             </div>
             <div className="mt-4 flex gap-4">
-              {staffMixData.map((item) => (
-                <div key={item.name} className="flex items-center gap-1.5">
-                  <div className="h-2 w-2 rounded-full" style={{ backgroundColor: item.color }} />
-                  <span className="text-[9px] font-black uppercase tracking-tighter text-slate-500">{item.name}</span>
-                </div>
-              ))}
+              <div className="flex items-center gap-1.5">
+                <div className="h-2 w-2 rounded-full bg-black" />
+                <span className="text-[9px] font-black uppercase tracking-tighter text-slate-500">Barista</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="h-2 w-2 rounded-full bg-slate-700" />
+                <span className="text-[9px] font-black uppercase tracking-tighter text-slate-500">Service</span>
+              </div>
             </div>
           </Card>
         </div>

@@ -63,4 +63,22 @@ public class SchedulesController : ControllerBase
             new GetScheduleByDateQuery(date));
         return Ok(result);
     }
+
+    [HttpGet("weekly")]
+    public async Task<IActionResult> GetWeekly(
+        [FromQuery] DateOnly fromDate,
+        [FromQuery] DateOnly toDate)
+    {
+        var result = await _mediator.Send(
+            new GetWeeklyScheduleQuery(fromDate, toDate));
+        return Ok(result);
+    }
+
+    [HttpPost("add")]
+    public async Task<IActionResult> AddSchedule(
+        [FromBody] AddScheduleCommand command)
+    {
+        await _mediator.Send(command);
+        return NoContent();
+    }
 }

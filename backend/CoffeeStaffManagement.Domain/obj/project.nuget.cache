@@ -1,8 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "mUc3qi9MSj8=",
+  "dgSpecHash": "c43wvoGx3jk=",
   "success": true,
   "projectFilePath": "D:\\GitHub\\coffee-staff-management\\backend\\CoffeeStaffManagement.Domain\\CoffeeStaffManagement.Domain.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\haila\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\10.0.0\\microsoft.extensions.dependencyinjection.abstractions.10.0.0.nupkg.sha512",
+    "C:\\Users\\haila\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\10.0.0\\microsoft.extensions.logging.abstractions.10.0.0.nupkg.sha512",
+    "C:\\Users\\haila\\.nuget\\packages\\npgsql\\10.0.0\\npgsql.10.0.0.nupkg.sha512"
+  ],
   "logs": []
 }

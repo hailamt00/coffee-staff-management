@@ -8,6 +8,7 @@ import {
 } from '@/shared/components/ui/dialog'
 import { Input } from '@/shared/components/ui/input'
 import { Button } from '@/shared/components/ui/button'
+import { Label } from '@/shared/components/ui/label'
 import { ShiftEditor } from './ShiftEditor'
 import type {
   CreatePositionRequest,
@@ -18,9 +19,9 @@ import type {
 import { DialogDescription } from '@radix-ui/react-dialog'
 
 const DEFAULT_SHIFTS: SaveShiftRequest[] = [
-  { name: 'Ca sáng', startTime: '06:00', endTime: '12:00', isEnabled: true },
-  { name: 'Ca chiều', startTime: '12:00', endTime: '18:00', isEnabled: true },
-  { name: 'Ca tối', startTime: '18:00', endTime: '22:00', isEnabled: true },
+  { name: 'Morning Shift', startTime: '06:00', endTime: '12:00', isEnabled: true },
+  { name: 'Afternoon Shift', startTime: '12:00', endTime: '18:00', isEnabled: true },
+  { name: 'Evening Shift', startTime: '18:00', endTime: '22:00', isEnabled: true },
 ]
 
 export function PositionDialog({
@@ -90,11 +91,15 @@ export function PositionDialog({
         </DialogHeader>
 
         <div className="space-y-4">
-          <Input
-            placeholder="Position name"
-            value={name}
-            onChange={e => setName(e.target.value)}
-          />
+          <div className="space-y-2">
+            <Label htmlFor="posName">Position Name</Label>
+            <Input
+              id="posName"
+              placeholder="Position name"
+              value={name}
+              onChange={e => setName(e.target.value)}
+            />
+          </div>
 
           <ShiftEditor shifts={shifts} onChange={setShifts} />
         </div>

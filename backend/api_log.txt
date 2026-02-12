@@ -1,0 +1,108 @@
+Using launch settings from CoffeeStaffManagement.API\Properties\launchSettings.json...
+Building...
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (26ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT a.id, a.created_at, a.full_name, a.password_hash, a.username
+      FROM admin AS a
+      WHERE a.username = 'admin'
+      LIMIT 1
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:5136
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.API
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (9ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT e.id, e.barista_salary, e.cid, e.code, e.created_at, e.dob, e.gender, e.hire_date, e.name, e.phone, e.service_salary, e.status
+      FROM employees AS e
+      ORDER BY e.code
+fail: Microsoft.EntityFrameworkCore.Query[10100]
+      An exception occurred while iterating over the results of a query for context type 'CoffeeStaffManagement.Infrastructure.Persistence.AppDbContext'.
+      System.InvalidCastException: Reading as 'System.Int32' is not supported for fields having DataTypeName 'public.gender_enum'
+       ---> System.NotSupportedException: Reading and writing unmapped enums requires an explicit opt-in; call 'EnableUnmappedTypes' on 'NpgsqlDataSourceBuilder' or NpgsqlConnection.GlobalTypeMapper (see https://www.npgsql.org/doc/types/enums_and_composites.html and the 8.0 release notes for more details).
+         at Npgsql.Internal.ResolverFactories.UnsupportedTypeInfoResolver`1.GetTypeInfo(Type type, Nullable`1 dataTypeName, PgSerializerOptions options)
+         at Npgsql.Internal.ChainTypeInfoResolver.GetTypeInfo(Type type, Nullable`1 dataTypeName, PgSerializerOptions options)
+         at Npgsql.Internal.TypeInfoCache`1.<GetOrAddInfo>g__CreateInfo|6_3(Type type, Nullable`1 typeId, PgSerializerOptions options, Boolean validatePgTypeIds)
+         at Npgsql.Internal.TypeInfoCache`1.<GetOrAddInfo>g__AddEntryById|6_2(Type type, TPgTypeId pgTypeId, ValueTuple`2[] infos)
+         at Npgsql.Internal.TypeInfoCache`1.GetOrAddInfo(Type type, Nullable`1 pgTypeId)
+         at Npgsql.Internal.PgSerializerOptions.GetTypeInfoCore(Type type, Nullable`1 pgTypeId)
+         at Npgsql.Internal.PgSerializerOptions.GetTypeInfoInternal(Type type, Nullable`1 pgTypeId)
+         at Npgsql.Internal.AdoSerializerHelpers.GetTypeInfoForReading(Type type, PgTypeId pgTypeId, PgSerializerOptions options)
+         --- End of inner exception stack trace ---
+         at Npgsql.Internal.AdoSerializerHelpers.<GetTypeInfoForReading>g__ThrowReadingNotSupported|0_0(Type type, PgSerializerOptions options, PgTypeId pgTypeId, Exception inner)
+         at Npgsql.Internal.AdoSerializerHelpers.GetTypeInfoForReading(Type type, PgTypeId pgTypeId, PgSerializerOptions options)
+         at Npgsql.BackendMessages.FieldDescription.<GetInfoCore>g__GetInfoSlow|51_0(Type type, ColumnInfo& lastColumnInfo)
+         at Npgsql.BackendMessages.FieldDescription.GetInfoCore(Type type, ColumnInfo& lastColumnInfo)
+         at Npgsql.BackendMessages.FieldDescription.GetInfo(Type type, ColumnInfo& lastColumnInfo)
+         at Npgsql.NpgsqlDataReader.<GetInfo>g__Slow|132_0(ColumnInfo& info, PgConverter& converter, Size& bufferRequirement, Boolean& asObject, <>c__DisplayClass132_0&)
+         at Npgsql.NpgsqlDataReader.GetFieldValueCore[T](Int32 ordinal)
+         at Npgsql.NpgsqlDataReader.GetInt32(Int32 ordinal)
+         at lambda_method60(Closure, QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator)
+         at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+      System.InvalidCastException: Reading as 'System.Int32' is not supported for fields having DataTypeName 'public.gender_enum'
+       ---> System.NotSupportedException: Reading and writing unmapped enums requires an explicit opt-in; call 'EnableUnmappedTypes' on 'NpgsqlDataSourceBuilder' or NpgsqlConnection.GlobalTypeMapper (see https://www.npgsql.org/doc/types/enums_and_composites.html and the 8.0 release notes for more details).
+         at Npgsql.Internal.ResolverFactories.UnsupportedTypeInfoResolver`1.GetTypeInfo(Type type, Nullable`1 dataTypeName, PgSerializerOptions options)
+         at Npgsql.Internal.ChainTypeInfoResolver.GetTypeInfo(Type type, Nullable`1 dataTypeName, PgSerializerOptions options)
+         at Npgsql.Internal.TypeInfoCache`1.<GetOrAddInfo>g__CreateInfo|6_3(Type type, Nullable`1 typeId, PgSerializerOptions options, Boolean validatePgTypeIds)
+         at Npgsql.Internal.TypeInfoCache`1.<GetOrAddInfo>g__AddEntryById|6_2(Type type, TPgTypeId pgTypeId, ValueTuple`2[] infos)
+         at Npgsql.Internal.TypeInfoCache`1.GetOrAddInfo(Type type, Nullable`1 pgTypeId)
+         at Npgsql.Internal.PgSerializerOptions.GetTypeInfoCore(Type type, Nullable`1 pgTypeId)
+         at Npgsql.Internal.PgSerializerOptions.GetTypeInfoInternal(Type type, Nullable`1 pgTypeId)
+         at Npgsql.Internal.AdoSerializerHelpers.GetTypeInfoForReading(Type type, PgTypeId pgTypeId, PgSerializerOptions options)
+         --- End of inner exception stack trace ---
+         at Npgsql.Internal.AdoSerializerHelpers.<GetTypeInfoForReading>g__ThrowReadingNotSupported|0_0(Type type, PgSerializerOptions options, PgTypeId pgTypeId, Exception inner)
+         at Npgsql.Internal.AdoSerializerHelpers.GetTypeInfoForReading(Type type, PgTypeId pgTypeId, PgSerializerOptions options)
+         at Npgsql.BackendMessages.FieldDescription.<GetInfoCore>g__GetInfoSlow|51_0(Type type, ColumnInfo& lastColumnInfo)
+         at Npgsql.BackendMessages.FieldDescription.GetInfoCore(Type type, ColumnInfo& lastColumnInfo)
+         at Npgsql.BackendMessages.FieldDescription.GetInfo(Type type, ColumnInfo& lastColumnInfo)
+         at Npgsql.NpgsqlDataReader.<GetInfo>g__Slow|132_0(ColumnInfo& info, PgConverter& converter, Size& bufferRequirement, Boolean& asObject, <>c__DisplayClass132_0&)
+         at Npgsql.NpgsqlDataReader.GetFieldValueCore[T](Int32 ordinal)
+         at Npgsql.NpgsqlDataReader.GetInt32(Int32 ordinal)
+         at lambda_method60(Closure, QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator)
+         at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+fail: CoffeeStaffManagement.API.Middleware.ExceptionHandlingMiddleware[0]
+      An unhandled exception has occurred.
+      System.InvalidCastException: Reading as 'System.Int32' is not supported for fields having DataTypeName 'public.gender_enum'
+       ---> System.NotSupportedException: Reading and writing unmapped enums requires an explicit opt-in; call 'EnableUnmappedTypes' on 'NpgsqlDataSourceBuilder' or NpgsqlConnection.GlobalTypeMapper (see https://www.npgsql.org/doc/types/enums_and_composites.html and the 8.0 release notes for more details).
+         at Npgsql.Internal.ResolverFactories.UnsupportedTypeInfoResolver`1.GetTypeInfo(Type type, Nullable`1 dataTypeName, PgSerializerOptions options)
+         at Npgsql.Internal.ChainTypeInfoResolver.GetTypeInfo(Type type, Nullable`1 dataTypeName, PgSerializerOptions options)
+         at Npgsql.Internal.TypeInfoCache`1.<GetOrAddInfo>g__CreateInfo|6_3(Type type, Nullable`1 typeId, PgSerializerOptions options, Boolean validatePgTypeIds)
+         at Npgsql.Internal.TypeInfoCache`1.<GetOrAddInfo>g__AddEntryById|6_2(Type type, TPgTypeId pgTypeId, ValueTuple`2[] infos)
+         at Npgsql.Internal.TypeInfoCache`1.GetOrAddInfo(Type type, Nullable`1 pgTypeId)
+         at Npgsql.Internal.PgSerializerOptions.GetTypeInfoCore(Type type, Nullable`1 pgTypeId)
+         at Npgsql.Internal.PgSerializerOptions.GetTypeInfoInternal(Type type, Nullable`1 pgTypeId)
+         at Npgsql.Internal.AdoSerializerHelpers.GetTypeInfoForReading(Type type, PgTypeId pgTypeId, PgSerializerOptions options)
+         --- End of inner exception stack trace ---
+         at Npgsql.Internal.AdoSerializerHelpers.<GetTypeInfoForReading>g__ThrowReadingNotSupported|0_0(Type type, PgSerializerOptions options, PgTypeId pgTypeId, Exception inner)
+         at Npgsql.Internal.AdoSerializerHelpers.GetTypeInfoForReading(Type type, PgTypeId pgTypeId, PgSerializerOptions options)
+         at Npgsql.BackendMessages.FieldDescription.<GetInfoCore>g__GetInfoSlow|51_0(Type type, ColumnInfo& lastColumnInfo)
+         at Npgsql.BackendMessages.FieldDescription.GetInfoCore(Type type, ColumnInfo& lastColumnInfo)
+         at Npgsql.BackendMessages.FieldDescription.GetInfo(Type type, ColumnInfo& lastColumnInfo)
+         at Npgsql.NpgsqlDataReader.<GetInfo>g__Slow|132_0(ColumnInfo& info, PgConverter& converter, Size& bufferRequirement, Boolean& asObject, <>c__DisplayClass132_0&)
+         at Npgsql.NpgsqlDataReader.GetFieldValueCore[T](Int32 ordinal)
+         at Npgsql.NpgsqlDataReader.GetInt32(Int32 ordinal)
+         at lambda_method60(Closure, QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator)
+         at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+         at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+         at CoffeeStaffManagement.Infrastructure.Repositories.EmployeeRepository.GetAllAsync(String search) in D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Infrastructure\Repositories\EmployeeRepository.cs:line 32
+         at CoffeeStaffManagement.Application.Employees.Queries.GetEmployeesQueryHandler.Handle(GetEmployeesQuery request, CancellationToken cancellationToken) in D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Application\Employees\Queries\GetEmployees\GetEmployeesQueryHandler.cs:line 25
+         at CoffeeStaffManagement.Application.Common.Behaviors.ValidationBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Application\Common\Behaviors\ValidationBehavior.cs:line 45
+         at CoffeeStaffManagement.API.Controllers.EmployeesController.GetAll(String search) in D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.API\Controllers\EmployeesController.cs:line 27
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+         at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+         at CoffeeStaffManagement.API.Middleware.ExceptionHandlingMiddleware.InvokeAsync(HttpContext context) in D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.API\Middleware\ExceptionHandlingMiddleware.cs:line 21

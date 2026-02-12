@@ -1,8 +1,5 @@
 using System.Net;
 using System.Text.Json;
-using FluentValidation;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 
 namespace CoffeeStaffManagement.API.Middleware;
 
@@ -32,31 +29,16 @@ public class ExceptionHandlingMiddleware
 
     private static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
-        var code = HttpStatusCode.InternalServerError;
-        object? errors = null;
-
-        if (exception is ValidationException validationException)
-        {
-            code = HttpStatusCode.BadRequest;
-            errors = validationException.Errors
-                .GroupBy(e => e.PropertyName, e => e.ErrorMessage)
-                .ToDictionary(failureGroup => failureGroup.Key, failureGroup => failureGroup.ToArray());
-        }
-        else if (exception is KeyNotFoundException) code = HttpStatusCode.NotFound;
-        else if (exception is UnauthorizedAccessException) code = HttpStatusCode.Unauthorized;
-        else if (exception is ArgumentException) code = HttpStatusCode.BadRequest;
+        context.Response.ContentType = "application/json";
+        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
         var response = new
         {
-            title = code.ToString(),
-            status = (int)code,
-            detail = exception.Message,
-            errors = errors
+            StatusCode = context.Response.StatusCode,
+            Message = "Internal Server Error from the custom middleware.",
+            Detailed = exception.Message // specific for debugging, maybe hide in prod
         };
 
-        var result = JsonSerializer.Serialize(response);
-        context.Response.ContentType = "application/json";
-        context.Response.StatusCode = (int)code;
-        return context.Response.WriteAsync(result);
+        return context.Response.WriteAsync(JsonSerializer.Serialize(response));
     }
 }

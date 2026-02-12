@@ -1,11 +1,9 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { usePayroll } from '../hooks/usePayroll'
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
 } from '@/shared/components/ui/card'
 import { Button } from '@/shared/components/ui/button'
 import {
@@ -18,10 +16,8 @@ import {
 import {
   DollarSign,
   Users,
-  CheckCircle,
   Play,
   Wallet,
-  TrendingUp
 } from 'lucide-react'
 import { formatMoney } from '@/shared/utils/format'
 import { StatCard } from '@/shared/components/StatCard'
@@ -32,14 +28,13 @@ import type { Payroll } from '@/shared/types/api'
 /* ================= PAGE ================= */
 
 export default function PayrollPage() {
-  const { payrolls, loading, loadPayrolls, generatePayroll } = usePayroll()
-
   const [month, setMonth] = useState('02') // Default to current month
   const [year, setYear] = useState('2026')
 
-  useEffect(() => {
-    loadPayrolls(Number(month), Number(year))
-  }, [month, year, loadPayrolls])
+  const { usePayrolls, loading: mutationLoading, generatePayroll } = usePayroll()
+  const { data: payrolls = [], isLoading: queryLoading } = usePayrolls(Number(month), Number(year))
+
+  const loading = mutationLoading || queryLoading
 
   const handleGenerate = async () => {
     await generatePayroll(1, Number(month), Number(year))

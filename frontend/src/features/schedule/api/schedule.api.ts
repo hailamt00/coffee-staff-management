@@ -13,6 +13,11 @@ export const scheduleApi = {
         return data
     },
 
+    getWeeklySchedule: async (fromDate: string, toDate: string): Promise<Schedule[]> => {
+        const { data } = await axios.get('/schedules/weekly', { params: { fromDate, toDate } })
+        return data
+    },
+
     // === REQUESTS ===
     getRequests: async (date: string): Promise<ScheduleRequest[]> => {
         const { data } = await axios.get('/schedules/requests', { params: { date } })
@@ -26,6 +31,10 @@ export const scheduleApi = {
 
     createRequest: async (payload: CreateShiftRequest) => {
         await axios.post('/schedules/request', payload)
+    },
+
+    addSchedule: async (payload: any) => {
+        await axios.post('/schedules/add', payload)
     },
 
     approveRequest: async (payload: ApproveShiftRequest) => {

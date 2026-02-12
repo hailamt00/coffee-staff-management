@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { useRevenue } from '../hooks/useRevenue'
 import { useSchedule } from '@/features/schedule/hooks/useSchedule'
@@ -27,20 +27,19 @@ import { DataTable } from '@/shared/components/ui/data-table'
 import type { ColumnDef } from '@tanstack/react-table'
 
 export default function RevenuePage() {
-    const { revenues, loading, loadRevenues, createRevenue, createTransaction } = useRevenue()
-    const { schedules, loadSchedule } = useSchedule()
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10))
+    const { useRevenues, loading: revenueLoading, createRevenue, createTransaction } = useRevenue()
+    const { useSchedules, loading: scheduleLoading } = useSchedule()
 
-    useEffect(() => {
-        loadRevenues(date)
-        loadSchedule(date)
-    }, [date, loadRevenues, loadSchedule])
+    const { data: revenues = [], isLoading: revenuesQueryLoading } = useRevenues(date)
+    const { data: schedules = [], isLoading: schedulesQueryLoading } = useSchedules(date)
+
+    const loading = revenueLoading || scheduleLoading || revenuesQueryLoading || schedulesQueryLoading
 
     // === CREATE REVENUE FORM ===
     const [openRevenue, setOpenRevenue] = useState(false)
     const [revScheduleId, setRevScheduleId] = useState('')
     const [revOpening, setRevOpening] = useState('0')
-    const [revExpected, setRevExpected] = useState('0')
     const [revCash, setRevCash] = useState('0')
     const [revBank, setRevBank] = useState('0')
     const [revNote, setRevNote] = useState('')
@@ -49,13 +48,11 @@ export default function RevenuePage() {
         await createRevenue({
             scheduleId: Number(revScheduleId),
             openingBalance: Number(revOpening),
-            expectedRevenue: Number(revExpected),
             cash: Number(revCash),
             bank: Number(revBank),
             note: revNote,
         })
         setOpenRevenue(false)
-        loadRevenues(date)
     }
 
     // === CREATE TRANSACTION FORM ===
@@ -73,7 +70,6 @@ export default function RevenuePage() {
             reason: transReason,
         })
         setOpenTransaction(false)
-        loadRevenues(date)
     }
 
     const totalRevenue = revenues.reduce((sum: number, r: any) => sum + r.totalRevenue, 0)
@@ -90,11 +86,7 @@ export default function RevenuePage() {
             header: "Shift",
             cell: ({ row }) => <span className="text-sm">Shift #{row.getValue("scheduleId")}</span>
         },
-        {
-            accessorKey: "expectedRevenue",
-            header: () => <div className="text-right">Expected</div>,
-            cell: ({ row }) => <div className="text-right text-slate-500">{formatMoney(row.getValue("expectedRevenue"))}</div>
-        },
+
         {
             accessorKey: "totalRevenue",
             header: () => <div className="text-right">Actual Sum</div>,
@@ -153,7 +145,9 @@ export default function RevenuePage() {
                 </div>
 
                 <div className="flex items-center gap-2">
+                    <Label htmlFor="revenue-date" className="sr-only">Select Date</Label>
                     <Input
+                        id="revenue-date"
                         type="date"
                         value={date}
                         onChange={e => setDate(e.target.value)}
@@ -186,9 +180,9 @@ export default function RevenuePage() {
                             <div className="space-y-4 py-4">
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
-                                        <Label>Select Shift</Label>
+                                        <Label htmlFor="revShift">Select Shift</Label>
                                         <Select value={revScheduleId} onValueChange={setRevScheduleId}>
-                                            <SelectTrigger>
+                                            <SelectTrigger id="revShift">
                                                 <SelectValue placeholder="Select a shift" />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -201,32 +195,24 @@ export default function RevenuePage() {
                                         </Select>
                                     </div>
                                     <div className="space-y-2">
-                                        <Label>Opening Balance</Label>
-                                        <Input type="number" value={revOpening} onChange={e => setRevOpening(e.target.value)} />
+                                        <Label htmlFor="revOpening">Opening Balance</Label>
+                                        <Input id="revOpening" type="number" value={revOpening} onChange={e => setRevOpening(e.target.value)} />
                                     </div>
                                 </div>
-                                <div className="space-y-2">
-                                    <Label>Expected Revenue (POS)</Label>
-                                    <Input
-                                        type="number"
-                                        value={revExpected}
-                                        onChange={e => setRevExpected(e.target.value)}
-                                        className="border-slate-200 focus:ring-black dark:focus:ring-white"
-                                    />
-                                </div>
+
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
-                                        <Label>Cash Collected</Label>
-                                        <Input type="number" value={revCash} onChange={e => setRevCash(e.target.value)} />
+                                        <Label htmlFor="revCash">Cash Collected</Label>
+                                        <Input id="revCash" type="number" value={revCash} onChange={e => setRevCash(e.target.value)} />
                                     </div>
                                     <div className="space-y-2">
-                                        <Label>Bank/Transfer</Label>
-                                        <Input type="number" value={revBank} onChange={e => setRevBank(e.target.value)} />
+                                        <Label htmlFor="revBank">Bank/Transfer</Label>
+                                        <Input id="revBank" type="number" value={revBank} onChange={e => setRevBank(e.target.value)} />
                                     </div>
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Note</Label>
-                                    <Input value={revNote} onChange={e => setRevNote(e.target.value)} placeholder="Optional note..." />
+                                    <Label htmlFor="revNote">Note</Label>
+                                    <Input id="revNote" value={revNote} onChange={e => setRevNote(e.target.value)} placeholder="Optional note..." />
                                 </div>
                                 <Button onClick={handleCreateRevenue} className="w-full bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-slate-200">Submit Report</Button>
                             </div>
@@ -246,13 +232,13 @@ export default function RevenuePage() {
                             </DialogHeader>
                             <div className="space-y-4 py-4">
                                 <div className="space-y-2">
-                                    <Label>Revenue Report ID</Label>
-                                    <Input value={transRevenueId} onChange={e => setTransRevenueId(e.target.value)} placeholder="Link to Report ID" />
+                                    <Label htmlFor="transRevId">Revenue Report ID</Label>
+                                    <Input id="transRevId" value={transRevenueId} onChange={e => setTransRevenueId(e.target.value)} placeholder="Link to Report ID" />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Type</Label>
+                                    <Label htmlFor="transType">Type</Label>
                                     <Select value={transType} onValueChange={(v: any) => setTransType(v)}>
-                                        <SelectTrigger>
+                                        <SelectTrigger id="transType">
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -262,12 +248,12 @@ export default function RevenuePage() {
                                     </Select>
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Amount</Label>
-                                    <Input type="number" value={transAmount} onChange={e => setTransAmount(e.target.value)} />
+                                    <Label htmlFor="transAmount">Amount</Label>
+                                    <Input id="transAmount" type="number" value={transAmount} onChange={e => setTransAmount(e.target.value)} />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Reason</Label>
-                                    <Input value={transReason} onChange={e => setTransReason(e.target.value)} placeholder="e.g. Buying milk" />
+                                    <Label htmlFor="transReason">Reason</Label>
+                                    <Input id="transReason" value={transReason} onChange={e => setTransReason(e.target.value)} placeholder="e.g. Buying milk" />
                                 </div>
                                 <Button onClick={handleCreateTransaction} className="w-full bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-slate-200">Record</Button>
                             </div>

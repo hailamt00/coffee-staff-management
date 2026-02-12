@@ -45,11 +45,7 @@ public class CreateEmployeeCommandHandler
         await _repo.AddAsync(employee);
 
         await _logger.LogAsync(
-            _currentUserService.UserId,
-            "Create",
-            "Employee",
-            employee.Id,
-            $"Created employee {employee.Name} ({employee.Code})",
+            $"Create Employee: {employee.Name} ({employee.Code}) (ID: {employee.Id}) - user: {_currentUserService.UserId}",
             cancellationToken);
 
         return employee.Id;

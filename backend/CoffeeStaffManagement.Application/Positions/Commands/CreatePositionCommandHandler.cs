@@ -32,9 +32,10 @@ public class CreatePositionCommandHandler
             position.Shifts.Add(new Shift
             {
                 Name = shiftDto.Name,
-                StartTime = TimeSpan.Parse(shiftDto.StartTime), // Ensure type compatibility
+                StartTime = TimeSpan.Parse(shiftDto.StartTime),
                 EndTime = TimeSpan.Parse(shiftDto.EndTime),
-                Status = true // Was IsEnabled
+                Status = shiftDto.Status,
+                IsEnabled = shiftDto.IsEnabled
             });
         }
 
@@ -48,14 +49,15 @@ public class CreatePositionCommandHandler
         {
             Id = p.Id,
             Name = p.Name,
-            Status = p.Status, // Was IsActive
+            Status = p.Status,
             Shifts = p.Shifts.Select(s => new ShiftDto
             {
                 Id = s.Id,
                 Name = s.Name ?? "Unknown",
                 StartTime = s.StartTime?.ToString(@"hh\:mm") ?? "",
                 EndTime = s.EndTime?.ToString(@"hh\:mm") ?? "",
-                Status = s.Status // Was IsEnabled
+                Status = s.Status,
+                IsEnabled = s.IsEnabled
             }).ToList()
         };
 }

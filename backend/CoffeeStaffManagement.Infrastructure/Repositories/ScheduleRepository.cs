@@ -19,6 +19,7 @@ public class ScheduleRepository : IScheduleRepository
         return await _context.Schedules
             .Include(s => s.Employee)
             .Include(s => s.Shift)
+                .ThenInclude(sh => sh.Position)
             .FirstOrDefaultAsync(s => s.Id == id);
     }
 
@@ -27,6 +28,7 @@ public class ScheduleRepository : IScheduleRepository
         return await _context.Schedules
             .Include(x => x.Employee)
             .Include(x => x.Shift)
+                .ThenInclude(sh => sh.Position)
             .Where(x => x.WorkDate == date)
             .OrderBy(x => x.Shift != null ? x.Shift.StartTime : null)
             .ToListAsync();
@@ -55,5 +57,16 @@ public class ScheduleRepository : IScheduleRepository
             s.ShiftId == shiftId &&
             s.WorkDate == workDate
         );
+    }
+
+    public async Task<List<Schedule>> GetByDateRangeAsync(DateOnly fromDate, DateOnly toDate)
+    {
+        return await _context.Schedules
+            .Include(x => x.Employee)
+            .Include(x => x.Shift)
+                .ThenInclude(sh => sh.Position)
+            .Where(x => x.WorkDate >= fromDate && x.WorkDate <= toDate)
+            .OrderBy(x => x.WorkDate)
+            .ToListAsync();
     }
 }

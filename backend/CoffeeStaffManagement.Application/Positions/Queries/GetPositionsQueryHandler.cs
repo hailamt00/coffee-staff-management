@@ -34,7 +34,8 @@ public class GetPositionsQueryHandler
                     Name = s.Name ?? "Unknown",
                     StartTime = s.StartTime?.ToString(@"hh\:mm") ?? "",
                     EndTime = s.EndTime?.ToString(@"hh\:mm") ?? "",
-                    Status = s.Status
+                    Status = s.Status,
+                    IsEnabled = s.IsEnabled
                 })
                 .ToList()
         }).ToList();

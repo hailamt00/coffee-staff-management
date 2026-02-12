@@ -29,7 +29,7 @@ public class CheckInCommandHandler
             request.Request.WorkDate);
 
         if (schedule == null)
-            throw new Exception("No schedule found for this shift/date");
+            throw new KeyNotFoundException("No schedule found for this shift/date");
 
         // 2. Check if already checked in
         var existing = await _attendanceRepo.GetAsync(
@@ -38,7 +38,7 @@ public class CheckInCommandHandler
             request.Request.WorkDate); // Note: Repo might need update to search by ScheduleId, but sticking to existing params for now if unique enough
 
         if (existing != null)
-            throw new Exception("Already checked in");
+            throw new ArgumentException("Already checked in");
 
         // 3. Create Attendance
         var now = DateTime.Now;

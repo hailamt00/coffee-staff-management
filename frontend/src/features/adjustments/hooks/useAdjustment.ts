@@ -1,37 +1,40 @@
-import { useState, useCallback } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from '@/shared/api/axios'
-import { useDispatch } from 'react-redux'
-import { addNotification } from '@/features/ui/slices/uiSlice'
 import type { Adjustment } from '../types'
 
 export function useAdjustment() {
-    const dispatch = useDispatch()
-    const [adjustments, setAdjustments] = useState<Adjustment[]>([])
-    const [loading, setLoading] = useState(false)
+    const queryClient = useQueryClient()
 
-    const loadAdjustments = useCallback(async (month: number, year: number) => {
-        setLoading(true)
-        try {
-            const response = await axios.get<Adjustment[]>('/rewardspenalties', {
+    /* ================= QUERIES ================= */
+
+    const adjustmentsQuery = (month: number, year: number) => useQuery({
+        queryKey: ['adjustments', month, year],
+        queryFn: async () => {
+            const response = await axios.get<Adjustment[]>('/rewardspenalties/all', {
                 params: { month, year }
             })
-            setAdjustments(response.data)
-        } catch {
-            dispatch(
-                addNotification({
-                    type: 'error',
-                    title: 'Load failed',
-                    message: 'Cannot load adjustments',
-                })
-            )
-        } finally {
-            setLoading(false)
-        }
-    }, [dispatch])
+            return response.data
+        },
+        enabled: !!month && !!year,
+    })
 
     return {
-        adjustments,
-        loading,
-        loadAdjustments
+        // Compatibility
+        loadAdjustments: (month: number, year: number) => queryClient.prefetchQuery({
+            queryKey: ['adjustments', month, year],
+            queryFn: async () => {
+                const response = await axios.get<Adjustment[]>('/rewardspenalties/all', {
+                    params: { month, year }
+                })
+                return response.data
+            }
+        }),
+
+        // Hooks
+        useAdjustments: (month: number, year: number) => adjustmentsQuery(month, year),
+
+        // Legacy states
+        adjustments: [],
+        loading: false,
     }
 }

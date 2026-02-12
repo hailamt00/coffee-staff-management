@@ -161,9 +161,28 @@
           }
         }
       },
+      "Npgsql/10.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.0"
+        },
+        "compile": {
+          "lib/net10.0/Npgsql.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/Npgsql.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "CoffeeStaffManagement.Domain/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Npgsql": "10.0.0"
+        },
         "compile": {
           "bin/placeholder/CoffeeStaffManagement.Domain.dll": {}
         },
@@ -441,6 +460,25 @@
         "microsoft.identitymodel.tokens.nuspec"
       ]
     },
+    "Npgsql/10.0.0": {
+      "sha512": "xZAYhPOU2rUIFpV48xsqhCx9vXs6Y+0jX2LCoSEfDFYMw9jtAOUk3iQsCnDLrFIv9NT3JGMihn7nnuZsPKqJmA==",
+      "type": "package",
+      "path": "npgsql/10.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net10.0/Npgsql.dll",
+        "lib/net10.0/Npgsql.xml",
+        "lib/net8.0/Npgsql.dll",
+        "lib/net8.0/Npgsql.xml",
+        "lib/net9.0/Npgsql.dll",
+        "lib/net9.0/Npgsql.xml",
+        "npgsql.10.0.0.nupkg.sha512",
+        "npgsql.nuspec",
+        "postgresql.png"
+      ]
+    },
     "CoffeeStaffManagement.Domain/1.0.0": {
       "type": "project",
       "path": "../CoffeeStaffManagement.Domain/CoffeeStaffManagement.Domain.csproj",
@@ -461,11 +499,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "d:\\GitHub\\coffee-staff-management\\backend\\CoffeeStaffManagement.Application\\CoffeeStaffManagement.Application.csproj",
+      "projectUniqueName": "D:\\GitHub\\coffee-staff-management\\backend\\CoffeeStaffManagement.Application\\CoffeeStaffManagement.Application.csproj",
       "projectName": "CoffeeStaffManagement.Application",
-      "projectPath": "d:\\GitHub\\coffee-staff-management\\backend\\CoffeeStaffManagement.Application\\CoffeeStaffManagement.Application.csproj",
+      "projectPath": "D:\\GitHub\\coffee-staff-management\\backend\\CoffeeStaffManagement.Application\\CoffeeStaffManagement.Application.csproj",
       "packagesPath": "C:\\Users\\haila\\.nuget\\packages\\",
-      "outputPath": "d:\\GitHub\\coffee-staff-management\\backend\\CoffeeStaffManagement.Application\\obj\\",
+      "outputPath": "D:\\GitHub\\coffee-staff-management\\backend\\CoffeeStaffManagement.Application\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

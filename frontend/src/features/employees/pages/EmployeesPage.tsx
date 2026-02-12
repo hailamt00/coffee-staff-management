@@ -149,10 +149,10 @@ export default function EmployeesPage() {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">
-              Personnel
+              Employees
             </h1>
             <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-              Staff Management System
+              Coffee Staff Management
             </p>
           </div>
 

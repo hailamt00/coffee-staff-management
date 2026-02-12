@@ -28,16 +28,12 @@ public class DeleteEmployeeCommandHandler
         CancellationToken cancellationToken)
     {
         var employee = await _repo.GetByIdAsync(request.Id)
-            ?? throw new Exception("Employee not found");
+            ?? throw new KeyNotFoundException("Employee not found");
 
         await _repo.DeleteAsync(employee);
 
         await _logger.LogAsync(
-            _currentUserService.UserId,
-            "Delete",
-            "Employee",
-            employee.Id,
-            $"Deleted employee {employee.Name} ({employee.Code})",
+            $"Delete Employee: {employee.Name} ({employee.Code}) (ID: {employee.Id}) - user: {_currentUserService.UserId}",
             cancellationToken);
 
         return Unit.Value;

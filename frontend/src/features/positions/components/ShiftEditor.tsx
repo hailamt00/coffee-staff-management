@@ -33,8 +33,15 @@ export function ShiftEditor({
                 >
                     {/* header */}
                     <div className="flex items-center gap-4">
-                        <Input value={s.name} readOnly/>
+                        <Input
+                            id={`shift-name-${i}`}
+                            aria-label={`Shift name ${i + 1}`}
+                            value={s.name}
+                            readOnly
+                        />
                         <Switch
+                            id={`shift-toggle-${i}`}
+                            aria-label={`Enable shift ${i + 1}`}
                             checked={s.isEnabled}
                             onCheckedChange={v => update(i, 'isEnabled', v)}
                         />
@@ -43,12 +50,16 @@ export function ShiftEditor({
                     {/* time */}
                     <div className="flex gap-3 mt-3">
                         <Input
+                            id={`shift-start-${i}`}
+                            aria-label={`Start time for ${s.name}`}
                             type="time"
                             value={s.startTime}
                             disabled={!s.isEnabled}
                             onChange={e => update(i, 'startTime', e.target.value)}
                         />
                         <Input
+                            id={`shift-end-${i}`}
+                            aria-label={`End time for ${s.name}`}
                             type="time"
                             value={s.endTime}
                             disabled={!s.isEnabled}

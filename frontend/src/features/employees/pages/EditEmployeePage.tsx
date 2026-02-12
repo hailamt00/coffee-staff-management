@@ -102,13 +102,11 @@ export default function EditEmployeePage() {
 
     await updateEmployee(Number(id), {
       name: form.name.trim(),
-      phone: form.phone.trim(),
+      phone: form.phone.replace(/\D/g, ''),
       cid: form.cid || null,
       gender: form.gender || null,
       dob: form.dob || null,
-      hireDate: form.hireDate
-        ? new Date(form.hireDate).toISOString()
-        : null,
+      hireDate: form.hireDate || null,
       serviceSalary: Number(form.serviceSalary) || 0,
       baristaSalary: Number(form.baristaSalary) || 0,
     })
@@ -140,29 +138,33 @@ export default function EditEmployeePage() {
           {/* ===== BASIC INFO ===== */}
           <Section title="Basic Information">
             <Grid>
-              <Field label="Employee Name" required>
+              <Field id="editEmpName" label="Employee Name" required>
                 <Input
+                  id="editEmpName"
                   value={form.name}
                   onChange={handleChange('name')}
                 />
               </Field>
 
-              <Field label="Phone Number" required>
+              <Field id="editEmpPhone" label="Phone Number" required>
                 <Input
+                  id="editEmpPhone"
                   value={form.phone}
                   onChange={handleChange('phone')}
                 />
               </Field>
 
-              <Field label="Citizen ID (CID)">
+              <Field id="editEmpCid" label="Citizen ID (CID)">
                 <Input
+                  id="editEmpCid"
                   value={form.cid}
                   onChange={handleChange('cid')}
                 />
               </Field>
 
-              <Field label="Gender">
+              <Field id="editEmpGender" label="Gender">
                 <select
+                  id="editEmpGender"
                   value={form.gender}
                   onChange={handleChange('gender')}
                   className="
@@ -187,16 +189,18 @@ export default function EditEmployeePage() {
           {/* ===== SALARY ===== */}
           <Section title="Salary Information">
             <Grid>
-              <Field label="Salary Service">
+              <Field id="editEmpServiceSalary" label="Salary Service">
                 <Input
+                  id="editEmpServiceSalary"
                   type="number"
                   value={form.serviceSalary}
                   onChange={handleChange('serviceSalary')}
                 />
               </Field>
 
-              <Field label="Salary Bar">
+              <Field id="editEmpBaristaSalary" label="Salary Bar">
                 <Input
+                  id="editEmpBaristaSalary"
                   type="number"
                   value={form.baristaSalary}
                   onChange={handleChange('baristaSalary')}
@@ -208,16 +212,18 @@ export default function EditEmployeePage() {
           {/* ===== DATE ===== */}
           <Section title="Date Information">
             <Grid>
-              <Field label="Date of Birth">
+              <Field id="editEmpDob" label="Date of Birth">
                 <Input
+                  id="editEmpDob"
                   type="date"
                   value={form.dob}
                   onChange={handleChange('dob')}
                 />
               </Field>
 
-              <Field label="Hire Date">
+              <Field id="editEmpHireDate" label="Hire Date">
                 <Input
+                  id="editEmpHireDate"
                   type="date"
                   value={form.hireDate}
                   onChange={handleChange('hireDate')}
@@ -272,17 +278,19 @@ function Grid({ children }: { children: React.ReactNode }) {
 }
 
 function Field({
+  id,
   label,
   required,
   children,
 }: {
+  id: string
   label: string
   required?: boolean
   children: React.ReactNode
 }) {
   return (
     <div className="space-y-1.5">
-      <Label className="text-sm">
+      <Label htmlFor={id} className="text-sm cursor-pointer">
         {label}
         {required && (
           <span className="ml-1 text-red-500">*</span>

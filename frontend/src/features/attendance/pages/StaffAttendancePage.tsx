@@ -9,23 +9,23 @@ import { Clock, MapPin, CheckCircle, ArrowLeft, Loader2 } from 'lucide-react'
 
 export default function StaffAttendancePage() {
     const navigate = useNavigate()
-    const { schedules, loading: scheduleLoading, loadSchedule } = useSchedule()
-    const { checkIn, checkOut, loading: attendanceLoading } = useAttendance()
-
     const staffJson = localStorage.getItem('staffInfo')
     const staff = staffJson ? JSON.parse(staffJson) : null
     const date = new Date().toISOString().slice(0, 10)
 
+    const { useSchedules, loading: scheduleMutationLoading } = useSchedule()
+    const { checkIn, checkOut, loading: attendanceMutationLoading } = useAttendance()
+
+    const { data: allSchedules = [], isLoading: scheduleQueryLoading } = useSchedules(date)
+
     useEffect(() => {
         if (!staff) {
             navigate('/staff/login')
-            return
         }
-        loadSchedule(date)
-    }, [date, staff, loadSchedule, navigate])
+    }, [staff, navigate])
 
     // Filter only schedules for THIS staff member
-    const mySchedules = schedules.filter(s => s.employeeId === staff?.id)
+    const mySchedules = allSchedules.filter(s => s.employeeId === staff?.id)
 
     const handleCheckIn = async (s: any) => {
         try {
@@ -52,7 +52,7 @@ export default function StaffAttendancePage() {
         }
     }
 
-    const isLoading = scheduleLoading || attendanceLoading
+    const isLoading = scheduleMutationLoading || attendanceMutationLoading || scheduleQueryLoading
 
     return (
         <div className="space-y-6">
@@ -88,10 +88,10 @@ export default function StaffAttendancePage() {
                         <CardHeader className="pb-2">
                             <div className="flex justify-between items-start">
                                 <div>
-                                    <CardTitle className="text-lg">{s.shift?.name || 'Assigned Shift'}</CardTitle>
+                                    <CardTitle className="text-lg">{s.shiftName || 'Assigned Shift'}</CardTitle>
                                     <CardDescription className="flex items-center gap-1 mt-1">
                                         <Clock className="h-3 w-3" />
-                                        {s.shift?.startTime} - {s.shift?.endTime}
+                                        {s.shiftStartTime} - {s.shiftEndTime}
                                     </CardDescription>
                                 </div>
                                 <Badge variant="outline" className="bg-slate-50 text-slate-700 border-slate-100">

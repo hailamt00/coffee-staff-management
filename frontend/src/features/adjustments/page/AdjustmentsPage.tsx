@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import {
   DollarSign,
   TrendingUp,
@@ -18,13 +18,13 @@ import {
 } from '@/shared/components/ui/select'
 
 export default function AdjustmentsPage() {
-  const { adjustments, loading, loadAdjustments } = useAdjustment()
   const [month, setMonth] = useState('02') // Default Feb
   const [year, setYear] = useState('2026')
 
-  useEffect(() => {
-    loadAdjustments(Number(month), Number(year))
-  }, [month, year, loadAdjustments])
+  const { useAdjustments, loading: mutationLoading } = useAdjustment()
+  const { data: adjustments = [], isLoading: queryLoading } = useAdjustments(Number(month), Number(year))
+
+  const loading = mutationLoading || queryLoading
 
   const stats = useMemo(() => {
     const totalCount = adjustments.length

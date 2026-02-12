@@ -1,0 +1,14 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  CoffeeStaffManagement.Domain -> D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Domain\bin\Debug\net10.0\CoffeeStaffManagement.Domain.dll
+D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Application\Dashboard\Queries\GetDashboardStatsQuery.cs(49,23): error CS1002: ; expected [D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Application\CoffeeStaffManagement.Application.csproj]
+D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Application\Dashboard\Queries\GetDashboardStatsQuery.cs(50,22): error CS1002: ; expected [D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Application\CoffeeStaffManagement.Application.csproj]
+
+Build FAILED.
+
+D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Application\Dashboard\Queries\GetDashboardStatsQuery.cs(49,23): error CS1002: ; expected [D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Application\CoffeeStaffManagement.Application.csproj]
+D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Application\Dashboard\Queries\GetDashboardStatsQuery.cs(50,22): error CS1002: ; expected [D:\GitHub\coffee-staff-management\backend\CoffeeStaffManagement.Application\CoffeeStaffManagement.Application.csproj]
+    0 Warning(s)
+    2 Error(s)
+
+Time Elapsed 00:00:02.57

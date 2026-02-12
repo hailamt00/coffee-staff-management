@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import {
-  Employee,
   CreateEmployeeRequest,
   UpdateEmployeeRequest,
 } from '@/shared/types/api'
@@ -10,65 +10,21 @@ import { addNotification } from '@/features/ui/slices/uiSlice'
 
 export function useEmployee() {
   const dispatch = useDispatch()
+  const queryClient = useQueryClient()
 
-  const [employees, setEmployees] = useState<Employee[]>([])
-  const [selectedEmployee, setSelectedEmployee] =
-    useState<Employee | null>(null)
-  const [loading, setLoading] = useState(false)
+  /* ================= QUERIES ================= */
 
-  /* ================= QUERY ================= */
+  const employeesQuery = useQuery({
+    queryKey: ['employees'],
+    queryFn: () => employeeApi.getAll(),
+  })
 
-  const fetchEmployees = useCallback(async () => {
-    setLoading(true)
-    try {
-      const data = await employeeApi.getAll()
-      setEmployees(data)
-    } catch {
-      dispatch(
-        addNotification({
-          type: 'error',
-          title: 'Load Failed',
-          message: 'Failed to Load Employees',
-        })
-      )
-    } finally {
-      setLoading(false)
-    }
-  }, [dispatch])
+  /* ================= COMMANDS ================= */
 
-  const fetchEmployeeById = useCallback(
-    async (id: number) => {
-      setLoading(true)
-      try {
-        const data = await employeeApi.getById(id)
-        setSelectedEmployee(data)
-        return data
-      } catch {
-        dispatch(
-          addNotification({
-            type: 'error',
-            title: 'Not Found',
-            message: 'Employee Not Found',
-          })
-        )
-        return null
-      } finally {
-        setLoading(false)
-      }
-    },
-    [dispatch]
-  )
-
-  /* ================= COMMAND ================= */
-
-  const createEmployee = async (
-    payload: CreateEmployeeRequest
-  ) => {
-    setLoading(true)
-    try {
-      const created = await employeeApi.create(payload)
-      setEmployees(prev => [...prev, created])
-
+  const createMutation = useMutation({
+    mutationFn: (payload: CreateEmployeeRequest) => employeeApi.create(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['employees'] })
       dispatch(
         addNotification({
           type: 'success',
@@ -76,7 +32,8 @@ export function useEmployee() {
           message: 'Employee Created Successfully',
         })
       )
-    } catch {
+    },
+    onError: () => {
       dispatch(
         addNotification({
           type: 'error',
@@ -84,28 +41,15 @@ export function useEmployee() {
           message: 'Failed to Create Employee',
         })
       )
-      throw new Error('Create employee failed')
-    } finally {
-      setLoading(false)
     }
-  }
+  })
 
-  const updateEmployee = async (
-    id: number,
-    payload: UpdateEmployeeRequest
-  ) => {
-    setLoading(true)
-    try {
-      const updated = await employeeApi.update(id, payload)
-
-      setEmployees(prev =>
-        prev.map(e => (e.id === id ? updated : e))
-      )
-
-      if (selectedEmployee?.id === id) {
-        setSelectedEmployee(updated)
-      }
-
+  const updateMutation = useMutation({
+    mutationFn: ({ id, payload }: { id: number; payload: UpdateEmployeeRequest }) =>
+      employeeApi.update(id, payload),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['employees'] })
+      queryClient.invalidateQueries({ queryKey: ['employees', data.id] })
       dispatch(
         addNotification({
           type: 'success',
@@ -113,7 +57,8 @@ export function useEmployee() {
           message: 'Employee Updated Successfully',
         })
       )
-    } catch {
+    },
+    onError: () => {
       dispatch(
         addNotification({
           type: 'error',
@@ -121,23 +66,13 @@ export function useEmployee() {
           message: 'Failed to Update Employee',
         })
       )
-      throw new Error('Update employee failed')
-    } finally {
-      setLoading(false)
     }
-  }
+  })
 
-  const deleteEmployee = async (id: number) => {
-    setLoading(true)
-    try {
-      await employeeApi.delete(id)
-
-      setEmployees(prev => prev.filter(e => e.id !== id))
-
-      if (selectedEmployee?.id === id) {
-        setSelectedEmployee(null)
-      }
-
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => employeeApi.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['employees'] })
       dispatch(
         addNotification({
           type: 'success',
@@ -145,7 +80,8 @@ export function useEmployee() {
           message: 'Employee Deleted Successfully',
         })
       )
-    } catch {
+    },
+    onError: () => {
       dispatch(
         addNotification({
           type: 'error',
@@ -153,28 +89,28 @@ export function useEmployee() {
           message: 'Failed to Delete Employee',
         })
       )
-      throw new Error('Delete employee failed')
-    } finally {
-      setLoading(false)
     }
-  }
-
-  /* ================= INIT ================= */
-
-  useEffect(() => {
-    fetchEmployees()
-  }, [fetchEmployees])
+  })
 
   return {
-    employees,
-    selectedEmployee,
-    loading,
+    employees: employeesQuery.data || [],
+    loading: employeesQuery.isLoading || createMutation.isPending || updateMutation.isPending || deleteMutation.isPending,
 
-    fetchEmployees,
-    fetchEmployeeById,
+    // Commands
+    createEmployee: createMutation.mutateAsync,
+    updateEmployee: useCallback(
+      (id: number, payload: UpdateEmployeeRequest) =>
+        updateMutation.mutateAsync({ id, payload }),
+      [updateMutation]
+    ),
+    deleteEmployee: deleteMutation.mutateAsync,
 
-    createEmployee,
-    updateEmployee,
-    deleteEmployee,
+    // For specific fetching if needed
+    fetchEmployeeById: useCallback(async (id: number) => {
+      return await queryClient.fetchQuery({
+        queryKey: ['employees', id],
+        queryFn: () => employeeApi.getById(id)
+      })
+    }, [queryClient])
   }
 }

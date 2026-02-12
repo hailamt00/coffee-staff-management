@@ -99,13 +99,14 @@ export default function StaffLoginPage() {
 
                                 {/* Phone field */}
                                 <div className="space-y-2">
-                                    <label className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                                    <label htmlFor="phone" className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider">
                                         Phone Number
                                     </label>
                                     <div className="relative group">
                                         <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-slate-900 dark:group-focus-within:text-white transition-colors" />
                                         <Input
                                             id="phone"
+                                            name="phone"
                                             type="tel"
                                             placeholder="0xxx xxx xxx"
                                             value={phone}

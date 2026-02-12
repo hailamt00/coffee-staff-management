@@ -30,25 +30,21 @@ public class UpdateEmployeeCommandHandler
         CancellationToken cancellationToken)
     {
         var employee = await _repo.GetByIdAsync(request.Id)
-            ?? throw new Exception("Employee not found");
+            ?? throw new KeyNotFoundException("Employee not found");
 
         employee.Name = request.Request.Name;
         employee.Phone = request.Request.Phone;
         employee.Cid = request.Request.Cid;
         employee.Gender = request.Request.Gender;
-        employee.ServiceSalary = request.Request.ServiceSalary ?? employee.ServiceSalary;
-        employee.BaristaSalary = request.Request.BaristaSalary ?? employee.BaristaSalary;
+        employee.ServiceSalary = request.Request.ServiceSalary;
+        employee.BaristaSalary = request.Request.BaristaSalary;
         employee.Dob = request.Request.Dob;
-        employee.HireDate = request.Request.HireDate ?? employee.HireDate;
+        employee.HireDate = request.Request.HireDate;
 
         await _repo.UpdateAsync(employee);
 
         await _logger.LogAsync(
-            _currentUserService.UserId,
-            "Update",
-            "Employee",
-            employee.Id,
-            $"Updated employee {employee.Name} ({employee.Code})",
+            $"Update Employee: {employee.Name} ({employee.Code}) (ID: {employee.Id}) - user: {_currentUserService.UserId}",
             cancellationToken);
 
         return Unit.Value;

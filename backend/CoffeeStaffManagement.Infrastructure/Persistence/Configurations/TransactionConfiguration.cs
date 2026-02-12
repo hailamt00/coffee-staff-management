@@ -18,7 +18,7 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
         builder.Property(x => x.Type)
             .HasColumnName("type")
             .HasConversion<string>()
-            .HasMaxLength(15);
+            .HasMaxLength(50);
         builder.Property(x => x.Amount).HasColumnName("amount").HasPrecision(12, 2);
         builder.Property(x => x.Reason).HasColumnName("reason");
         builder.Property(x => x.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("CURRENT_TIMESTAMP");

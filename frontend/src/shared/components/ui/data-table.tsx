@@ -22,6 +22,7 @@ import {
 } from '@/shared/components/ui/table'
 import { Pagination } from '@/shared/components/ui/pagination'
 import { Input } from '@/shared/components/ui/input'
+import { Label } from '@/shared/components/ui/label'
 import {
     Select,
     SelectContent,
@@ -41,14 +42,14 @@ interface DataTableProps<TData, TValue> {
     getRowCanExpand?: (row: any) => boolean
 }
 
-export function DataTable<TData, TValue>({
+export const DataTable = <TData, TValue>({
     columns,
     data,
     searchKey,
     loading = false,
     renderSubComponent,
     getRowCanExpand,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TData, TValue>) => {
     const [sorting, setSorting] = useState<SortingState>([])
     const [globalFilter, setGlobalFilter] = useState('')
     const [expanded, setExpanded] = useState<ExpandedState>({})
@@ -93,14 +94,14 @@ export function DataTable<TData, TValue>({
                         <SlidersHorizontal size={14} />
                     </div>
                     <div className="flex items-center gap-3">
-                        <span className="text-[11px] font-bold uppercase text-slate-500 tracking-widest">Entry /</span>
+                        <Label htmlFor="pageSize" className="text-[11px] font-bold uppercase text-slate-500 tracking-widest cursor-pointer">Entry /</Label>
                         <Select
                             value={`${table.getState().pagination.pageSize}`}
                             onValueChange={(value) => {
                                 table.setPageSize(Number(value))
                             }}
                         >
-                            <SelectTrigger className="h-8 w-[65px] text-xs font-black border-none bg-transparent hover:bg-slate-200/50 dark:hover:bg-white/5 rounded-lg transition-colors">
+                            <SelectTrigger id="pageSize" className="h-8 w-[65px] text-xs font-black border-none bg-transparent hover:bg-slate-200/50 dark:hover:bg-white/5 rounded-lg transition-colors">
                                 <SelectValue placeholder={table.getState().pagination.pageSize} />
                             </SelectTrigger>
                             <SelectContent side="top">
@@ -118,6 +119,8 @@ export function DataTable<TData, TValue>({
                     <div className="relative group flex-1 max-w-sm">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-black dark:group-focus-within:text-white transition-colors" />
                         <Input
+                            id="globalSearch"
+                            aria-label="Search data"
                             placeholder="Type to filter data..."
                             value={globalFilter ?? ''}
                             onChange={(event) => setGlobalFilter(event.target.value)}
@@ -147,7 +150,7 @@ export function DataTable<TData, TValue>({
                         ))}
                     </TableHeader>
                     <TableBody>
-                        <AnimatePresence mode="wait">
+                        <AnimatePresence>
                             {loading ? (
                                 <TableRow>
                                     <TableCell colSpan={columns.length} className="h-24 text-center">

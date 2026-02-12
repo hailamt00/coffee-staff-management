@@ -21,9 +21,15 @@ public class GetScheduleByDateQueryHandler
         var schedules = await _repo.GetByDateAsync(request.Date);
 
         return schedules.Select(x => new ScheduleDto(
+            x.Id,
+            x.EmployeeId,
             x.Employee?.Code ?? "",
             x.Employee?.Name ?? "",
+            x.ShiftId,
             x.Shift?.Name ?? "",
+            x.Shift?.Position?.Name ?? "",
+            x.Shift?.StartTime.ToString() ?? "",
+            x.Shift?.EndTime.ToString() ?? "",
             x.WorkDate
         )).ToList();
     }

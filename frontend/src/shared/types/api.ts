@@ -45,26 +45,26 @@ export type ApiErrorResponse = {
 export type Gender = 'Male' | 'Female' | 'Other' | null
 
 /**
- * Employee trả về từ backend (EmployeeDto)
+ * Employee returned from backend (EmployeeDto)
  */
 export interface Employee {
   id: number
   code: string
   name: string
   phone: string
-  cid?: string | null
-  gender?: Gender
+  cid: string | null
+  gender: Gender
   serviceSalary: number
   baristaSalary: number
-  dob?: string | null
+  dob: string | null
   hireDate: string
   createdAt: string
 }
 
 /**
- * Request tạo employee
- * - KHÔNG có code (server tự sinh)
- * - name + phone bắt buộc
+ * Request to create an employee
+ * - NO code (server-generated)
+ * - name + phone required
  */
 export interface CreateEmployeeRequest {
   name: string
@@ -78,8 +78,8 @@ export interface CreateEmployeeRequest {
 }
 
 /**
- * Request update employee
- * - Dùng cho PUT /employees/{id}
+ * Request to update an employee
+ * - Used for PUT /employees/{id}
  */
 export interface UpdateEmployeeRequest {
   name: string
@@ -195,10 +195,7 @@ export type ActivityAction =
 
 export interface ActivityLog {
   id: number
-  adminId: number
   action: ActivityAction
-  targetTable?: string
-  targetId?: number
   createdAt: string
 }
 
@@ -207,9 +204,22 @@ export interface ActivityLog {
 ====================================================== */
 
 export interface Schedule {
+  id: number
+  employeeId: number
   employeeCode: string
   employeeName: string
+  shiftId: number
   shiftName: string
+  positionName: string
+  shiftStartTime: string
+  shiftEndTime: string
+  workDate: string
+  shift?: Shift
+}
+
+export interface AddScheduleRequest {
+  employeeId: number
+  shiftIds: number[]
   workDate: string
 }
 
@@ -222,6 +232,8 @@ export interface ScheduleRequest {
   shiftName: string
   workDate: string
   status: string
+  shiftStartTime: string
+  shiftEndTime: string
 }
 
 export interface CreateShiftRequest {
@@ -276,4 +288,23 @@ export interface CreateRevenueRequest {
   cash: number
   bank: number
   note?: string
+}
+/* ======================================================
+   DASHBOARD
+====================================================== */
+
+export interface DailyRevenue {
+  date: string
+  revenue: number
+  target: number
+}
+
+export interface DashboardStats {
+  totalRevenue: number
+  netProfit: number
+  attendanceRate: number
+  activeStaff: number
+  liveShifts: number
+  totalReports: number
+  chartData: DailyRevenue[]
 }

@@ -30,10 +30,10 @@ public class ApplyRewardPenaltyCommandHandler : IRequestHandler<ApplyRewardPenal
     public async Task<int> Handle(ApplyRewardPenaltyCommand request, CancellationToken ct)
     {
         var employee = await _employeeRepo.GetByIdAsync(request.Request.EmployeeId)
-            ?? throw new Exception("Employee not found");
+            ?? throw new KeyNotFoundException("Employee not found");
 
         var rpType = await _rewardPenaltyRepo.GetTypeByIdAsync(request.Request.TypeId)
-            ?? throw new Exception("Reward/Penalty type not found");
+            ?? throw new KeyNotFoundException("Reward/Penalty type not found");
 
         var rewardPenalty = new RewardPenalty
         {
@@ -45,11 +45,7 @@ public class ApplyRewardPenaltyCommandHandler : IRequestHandler<ApplyRewardPenal
         await _rewardPenaltyRepo.AddAsync(rewardPenalty);
 
         await _logger.LogAsync(
-            _currentUserService.UserId,
-            "Apply",
-            "RewardPenalty",
-            rewardPenalty.Id,
-            $"Applied {rpType.Name} for {employee.Name}: {rewardPenalty.Amount:N0} VND",
+            $"Apply RewardPenalty: {rpType.Name} for {employee.Name}: {rewardPenalty.Amount:N0} VND - user: {_currentUserService.UserId}",
             ct);
 
         return rewardPenalty.Id;

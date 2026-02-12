@@ -46,7 +46,7 @@ export default function StaffMenuPage() {
         <div className="space-y-6">
             <div className="bg-white dark:bg-neutral-950 p-6 rounded-xl border border-slate-200 dark:border-neutral-800 shadow-sm overflow-hidden relative group">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 dark:bg-white/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110" />
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest relative z-10">Employee Pulse_</p>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest relative z-10">CSM_ELITE Staff_</p>
                 <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter uppercase relative z-10">{staff.name}</h2>
                 <div className="mt-3 flex items-center gap-2 text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-tighter relative z-10">
                     <Clock size={12} />

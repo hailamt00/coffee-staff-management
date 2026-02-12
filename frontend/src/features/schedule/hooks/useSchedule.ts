@@ -1,8 +1,6 @@
-import { useState, useCallback } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { scheduleApi } from '../api/schedule.api'
 import type {
-    Schedule,
-    ScheduleRequest,
     CreateShiftRequest,
     ApproveShiftRequest,
 } from '@/shared/types/api'
@@ -11,49 +9,34 @@ import { addNotification } from '@/features/ui/slices/uiSlice'
 
 export function useSchedule() {
     const dispatch = useDispatch()
-    const [schedules, setSchedules] = useState<Schedule[]>([])
-    const [requests, setRequests] = useState<ScheduleRequest[]>([])
-    const [loading, setLoading] = useState(false)
+    const queryClient = useQueryClient()
 
-    const loadSchedule = useCallback(async (date: string) => {
-        setLoading(true)
-        try {
-            const data = await scheduleApi.getSchedule(date)
-            setSchedules(data)
-        } catch {
-            dispatch(
-                addNotification({
-                    type: 'error',
-                    title: 'Load failed',
-                    message: 'Cannot load schedule',
-                })
-            )
-        } finally {
-            setLoading(false)
-        }
-    }, [dispatch])
+    /* ================= QUERIES ================= */
 
-    const loadRequests = useCallback(async (date: string) => {
-        setLoading(true)
-        try {
-            const data = await scheduleApi.getRequests(date)
-            setRequests(data)
-        } catch {
-            dispatch(
-                addNotification({
-                    type: 'error',
-                    title: 'Load failed',
-                    message: 'Cannot load requests',
-                })
-            )
-        } finally {
-            setLoading(false)
-        }
-    }, [dispatch])
+    const schedulesQuery = (date: string) => useQuery({
+        queryKey: ['schedules', date],
+        queryFn: () => scheduleApi.getSchedule(date),
+        enabled: !!date,
+    })
 
-    const createRequest = async (payload: CreateShiftRequest) => {
-        try {
-            await scheduleApi.createRequest(payload)
+    const requestsQuery = (date: string) => useQuery({
+        queryKey: ['schedule-requests', date],
+        queryFn: () => scheduleApi.getRequests(date),
+        enabled: !!date,
+    })
+
+    const weeklySchedulesQuery = (fromDate: string, toDate: string) => useQuery({
+        queryKey: ['schedules-weekly', fromDate, toDate],
+        queryFn: () => scheduleApi.getWeeklySchedule(fromDate, toDate),
+        enabled: !!fromDate && !!toDate,
+    })
+
+    /* ================= COMMANDS ================= */
+
+    const createMutation = useMutation({
+        mutationFn: (payload: CreateShiftRequest) => scheduleApi.createRequest(payload),
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: ['schedule-requests', variables.workDate] })
             dispatch(
                 addNotification({
                     type: 'success',
@@ -61,7 +44,8 @@ export function useSchedule() {
                     message: 'Request sent',
                 })
             )
-        } catch {
+        },
+        onError: () => {
             dispatch(
                 addNotification({
                     type: 'error',
@@ -69,29 +53,23 @@ export function useSchedule() {
                     message: 'Cannot create request',
                 })
             )
-            throw new Error('Failed')
         }
-    }
+    })
 
-    const approveRequest = async (payload: ApproveShiftRequest) => {
-        try {
-            await scheduleApi.approveRequest(payload)
+    const approveMutation = useMutation({
+        mutationFn: (payload: ApproveShiftRequest) => scheduleApi.approveRequest(payload),
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: ['schedule-requests'] })
+            queryClient.invalidateQueries({ queryKey: ['schedules'] })
             dispatch(
                 addNotification({
                     type: 'success',
                     title: 'Success',
-                    message: payload.isApproved ? 'Approved' : 'Rejected',
+                    message: variables.isApproved ? 'Approved' : 'Rejected',
                 })
             )
-            // Optimistic update or reload
-            setRequests(prev =>
-                prev.map(r =>
-                    r.requestId === payload.requestId
-                        ? { ...r, status: payload.isApproved ? 'approved' : 'rejected' }
-                        : r
-                )
-            )
-        } catch {
+        },
+        onError: () => {
             dispatch(
                 addNotification({
                     type: 'error',
@@ -100,15 +78,58 @@ export function useSchedule() {
                 })
             )
         }
-    }
+    })
+
+    const addScheduleMutation = useMutation({
+        mutationFn: (payload: any) => scheduleApi.addSchedule(payload),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['schedules'] })
+            queryClient.invalidateQueries({ queryKey: ['schedules-weekly'] })
+            dispatch(
+                addNotification({
+                    type: 'success',
+                    title: 'Success',
+                    message: 'Schedules added successfully',
+                })
+            )
+        },
+        onError: () => {
+            dispatch(
+                addNotification({
+                    type: 'error',
+                    title: 'Error',
+                    message: 'Cannot add schedules',
+                })
+            )
+        }
+    })
 
     return {
-        schedules,
-        requests,
-        loading,
-        loadSchedule,
-        loadRequests,
-        createRequest,
-        approveRequest,
+        // We'll provide methods to get query results to maintain hook-like usage
+        // but it's cleaner to just return the results if we pass parameters to useSchedule
+        // For now, to keep it compatible with existing pages:
+        loadSchedule: (date: string) => queryClient.prefetchQuery({
+            queryKey: ['schedules', date],
+            queryFn: () => scheduleApi.getSchedule(date)
+        }),
+        loadRequests: (date: string) => queryClient.prefetchQuery({
+            queryKey: ['schedule-requests', date],
+            queryFn: () => scheduleApi.getRequests(date)
+        }),
+
+        // These are meant to be used in components
+        useSchedules: (date: string) => schedulesQuery(date),
+        useWeeklySchedule: (fromDate: string, toDate: string) => weeklySchedulesQuery(fromDate, toDate),
+        useRequests: (date: string) => requestsQuery(date),
+
+        // Command methods
+        createRequest: createMutation.mutateAsync,
+        addSchedule: addScheduleMutation.mutateAsync,
+        approveRequest: approveMutation.mutateAsync,
+
+        // Legacy compatibility properties (will be empty/false unless using the new useSchedules/useRequests inside component)
+        schedules: [],
+        requests: [],
+        loading: createMutation.isPending || approveMutation.isPending || addScheduleMutation.isPending,
     }
 }

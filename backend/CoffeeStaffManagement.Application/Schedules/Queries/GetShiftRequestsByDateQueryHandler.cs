@@ -27,7 +27,9 @@ public class GetShiftRequestsByDateQueryHandler
             x.Employee?.Name ?? "",
             x.Shift?.Name ?? "",
             x.WorkDate,
-            x.Status.ToString().ToLower()
+            x.Status.ToString().ToLower(),
+            x.Shift?.StartTime ?? TimeSpan.Zero,
+            x.Shift?.EndTime ?? TimeSpan.Zero
         )).ToList();
     }
 }

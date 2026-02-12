@@ -12,7 +12,7 @@ export default function PublicRoute({ children }: Props) {
     (state: RootState) => state.auth.isAuthenticated
   )
 
-  // ✅ Đã login thì không được vào /login
+  // ✅ Already logged in, redirect to dashboard
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />
   }

@@ -115,24 +115,24 @@ export default function ActivityLogPage() {
         <CardContent className="p-6">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-5">
             <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase text-slate-400 tracking-widest">From Date</Label>
-              <Input type="date" className="h-11 rounded-xl bg-slate-50 dark:bg-white/5 border-slate-100 dark:border-white/10" />
+              <Label htmlFor="from-date" className="text-[10px] font-black uppercase text-slate-400 tracking-widest">From Date</Label>
+              <Input id="from-date" type="date" className="h-11 rounded-xl bg-slate-50 dark:bg-white/5 border-slate-100 dark:border-white/10" />
             </div>
 
             <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase text-slate-400 tracking-widest">To Date</Label>
-              <Input type="date" className="h-11 rounded-xl bg-slate-50 dark:bg-white/5 border-slate-100 dark:border-white/10" />
+              <Label htmlFor="to-date" className="text-[10px] font-black uppercase text-slate-400 tracking-widest">To Date</Label>
+              <Input id="to-date" type="date" className="h-11 rounded-xl bg-slate-50 dark:bg-white/5 border-slate-100 dark:border-white/10" />
             </div>
 
             <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase text-slate-400 tracking-widest">User Identity</Label>
-              <Input placeholder="Search identity..." className="h-11 rounded-xl bg-slate-50 dark:bg-white/5 border-slate-100 dark:border-white/10" />
+              <Label htmlFor="identity-search" className="text-[10px] font-black uppercase text-slate-400 tracking-widest">User / Employee</Label>
+              <Input id="identity-search" placeholder="Search identity..." className="h-11 rounded-xl bg-slate-50 dark:bg-white/5 border-slate-100 dark:border-white/10" />
             </div>
 
             <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Action Type</Label>
+              <Label htmlFor="action-type" className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Action Type</Label>
               <Select defaultValue="ALL">
-                <SelectTrigger className="h-11 rounded-xl bg-slate-50 dark:bg-white/5 border-slate-100 dark:border-white/10">
+                <SelectTrigger id="action-type" className="h-11 rounded-xl bg-slate-50 dark:bg-white/5 border-slate-100 dark:border-white/10">
                   <SelectValue placeholder="Select action" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl border-slate-100 dark:border-white/10">

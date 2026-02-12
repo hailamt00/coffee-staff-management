@@ -1,22 +1,19 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { useAttendance } from '../hooks/useAttendance'
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
 } from '@/shared/components/ui/card'
 import { Badge } from '@/shared/components/ui/badge'
 import { Input } from '@/shared/components/ui/input'
 import {
-  Clock,
   CheckCircle,
   XCircle,
   Users,
   AlertCircle,
 } from 'lucide-react'
-import { formatDate } from '@/shared/utils/format'
+import { Label } from '@/shared/components/ui/label'
 import { StatCard } from '@/shared/components/StatCard'
 import { DataTable } from '@/shared/components/ui/data-table'
 import type { ColumnDef } from '@tanstack/react-table'
@@ -40,15 +37,13 @@ function StatusBadge({ status }: { status: string }) {
 /* ================= PAGE ================= */
 
 export default function AttendancePage() {
-  const { attendances, loading, loadAttendance } = useAttendance()
-
   const [date, setDate] = useState(() =>
     new Date().toISOString().slice(0, 10)
   )
+  const { useAttendance: useAttendanceQuery, loading: mutationLoading } = useAttendance()
 
-  useEffect(() => {
-    loadAttendance(date)
-  }, [date, loadAttendance])
+  const { data: attendances = [], isLoading: queryLoading } = useAttendanceQuery(date)
+  const loading = mutationLoading || queryLoading
 
   // Stats calculation
   const stats = useMemo(() => {
@@ -116,12 +111,16 @@ export default function AttendancePage() {
           </p>
         </div>
 
-        <Input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          className="w-40 h-10 rounded-lg border-slate-200 dark:border-neutral-800"
-        />
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="attendance-date" className="sr-only">Select Date</Label>
+          <Input
+            id="attendance-date"
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="w-40 h-10 rounded-lg border-slate-200 dark:border-neutral-800"
+          />
+        </div>
       </div>
 
       {/* STATS SECTION */}

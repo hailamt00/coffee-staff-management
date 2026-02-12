@@ -15,6 +15,7 @@ public class ActivityLogConfiguration
         builder.Property(x => x.Id).HasColumnName("id");
 
         builder.Property(x => x.Action).HasColumnName("action");
+
         builder.Property(a => a.CreatedAt)
             .HasColumnName("created_at")
             .HasDefaultValueSql("CURRENT_TIMESTAMP");

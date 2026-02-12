@@ -1,39 +1,27 @@
-import { useState, useCallback } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { payrollApi } from '../api/payroll.api'
-import type { Payroll } from '@/shared/types/api'
 import { useDispatch } from 'react-redux'
 import { addNotification } from '@/features/ui/slices/uiSlice'
 
 export function usePayroll() {
     const dispatch = useDispatch()
-    const [payrolls, setPayrolls] = useState<Payroll[]>([])
-    const [loading, setLoading] = useState(false)
+    const queryClient = useQueryClient()
 
-    const loadPayrolls = useCallback(async (month: number, year: number) => {
-        setLoading(true)
-        try {
-            const data = await payrollApi.getByMonth(month, year)
-            setPayrolls(data)
-        } catch {
-            dispatch(
-                addNotification({
-                    type: 'error',
-                    title: 'Load failed',
-                    message: 'Cannot load payrolls',
-                })
-            )
-        } finally {
-            setLoading(false)
-        }
-    }, [dispatch])
+    /* ================= QUERIES ================= */
 
-    const generatePayroll = async (
-        employeeId: number,
-        month: number,
-        year: number
-    ) => {
-        try {
-            await payrollApi.generate(employeeId, month, year)
+    const payrollsQuery = (month: number, year: number) => useQuery({
+        queryKey: ['payrolls', month, year],
+        queryFn: () => payrollApi.getByMonth(month, year),
+        enabled: month > 0 && year > 0,
+    })
+
+    /* ================= COMMANDS ================= */
+
+    const generateMutation = useMutation({
+        mutationFn: ({ employeeId, month, year }: { employeeId: number, month: number, year: number }) =>
+            payrollApi.generate(employeeId, month, year),
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: ['payrolls', variables.month, variables.year] })
             dispatch(
                 addNotification({
                     type: 'success',
@@ -41,9 +29,8 @@ export function usePayroll() {
                     message: 'Payroll generated',
                 })
             )
-            // Reload list
-            await loadPayrolls(month, year)
-        } catch {
+        },
+        onError: () => {
             dispatch(
                 addNotification({
                     type: 'error',
@@ -52,12 +39,24 @@ export function usePayroll() {
                 })
             )
         }
-    }
+    })
 
     return {
-        payrolls,
-        loading,
-        loadPayrolls,
-        generatePayroll,
+        // Compatibility
+        loadPayrolls: (month: number, year: number) => queryClient.prefetchQuery({
+            queryKey: ['payrolls', month, year],
+            queryFn: () => payrollApi.getByMonth(month, year)
+        }),
+
+        // Hooks
+        usePayrolls: (month: number, year: number) => payrollsQuery(month, year),
+
+        // Commands
+        generatePayroll: (employeeId: number, month: number, year: number) =>
+            generateMutation.mutateAsync({ employeeId, month, year }),
+
+        // Legacy states
+        payrolls: [],
+        loading: generateMutation.isPending,
     }
 }

@@ -26,12 +26,12 @@ public class CreateRevenueCommandHandler : IRequestHandler<CreateRevenueCommand,
     public async Task<RevenueDto> Handle(CreateRevenueCommand request, CancellationToken ct)
     {
         var schedule = await _scheduleRepo.GetByIdAsync(request.Request.ScheduleId)
-            ?? throw new Exception("Schedule not found");
+            ?? throw new KeyNotFoundException("Schedule not found");
 
         var existingRevenue = await _revenueRepo.GetByScheduleIdAsync(request.Request.ScheduleId, ct);
         if (existingRevenue != null)
         {
-            throw new Exception("Revenue report already exists for this schedule");
+            throw new ArgumentException("Revenue report already exists for this schedule");
         }
 
         // 1. Calculate Total Revenue = Cash + Bank

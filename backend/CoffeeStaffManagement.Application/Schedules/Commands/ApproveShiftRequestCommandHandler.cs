@@ -25,10 +25,10 @@ public class ApproveShiftRequestCommandHandler
     {
         var shiftRequest = await _requestRepo.GetByIdAsync(request.RequestId);
         if (shiftRequest == null)
-            throw new Exception("Shift request not found");
+            throw new KeyNotFoundException("Shift request not found");
 
         if (shiftRequest.Status != ScheduleRequestStatus.Pending)
-            throw new Exception("Shift request already processed");
+            throw new ArgumentException("Shift request already processed");
 
         if (request.IsApproved)
         {
@@ -38,7 +38,7 @@ public class ApproveShiftRequestCommandHandler
                 shiftRequest.WorkDate);
 
             if (exists)
-                throw new Exception("Schedule already exists");
+                throw new ArgumentException("Schedule already exists");
 
             shiftRequest.Status = ScheduleRequestStatus.Approved;
 

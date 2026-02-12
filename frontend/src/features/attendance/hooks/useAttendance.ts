@@ -1,7 +1,6 @@
-import { useState, useCallback } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { attendanceApi } from '../api/attendance.api'
 import type {
-    Attendance,
     CheckInRequest,
     CheckOutRequest,
 } from '@/shared/types/api'
@@ -10,30 +9,22 @@ import { addNotification } from '@/features/ui/slices/uiSlice'
 
 export function useAttendance() {
     const dispatch = useDispatch()
-    const [attendances, setAttendances] = useState<Attendance[]>([])
-    const [loading, setLoading] = useState(false)
+    const queryClient = useQueryClient()
 
-    const loadAttendance = useCallback(async (date: string) => {
-        setLoading(true)
-        try {
-            const data = await attendanceApi.getByDate(date)
-            setAttendances(data)
-        } catch {
-            dispatch(
-                addNotification({
-                    type: 'error',
-                    title: 'Load failed',
-                    message: 'Cannot load attendance list',
-                })
-            )
-        } finally {
-            setLoading(false)
-        }
-    }, [dispatch])
+    /* ================= QUERIES ================= */
 
-    const checkIn = async (payload: CheckInRequest) => {
-        try {
-            await attendanceApi.checkIn(payload)
+    const attendanceQuery = (date: string) => useQuery({
+        queryKey: ['attendance', date],
+        queryFn: () => attendanceApi.getByDate(date),
+        enabled: !!date,
+    })
+
+    /* ================= COMMANDS ================= */
+
+    const checkInMutation = useMutation({
+        mutationFn: (payload: CheckInRequest) => attendanceApi.checkIn(payload),
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: ['attendance', variables.workDate] })
             dispatch(
                 addNotification({
                     type: 'success',
@@ -41,7 +32,8 @@ export function useAttendance() {
                     message: 'Checked in successfully',
                 })
             )
-        } catch {
+        },
+        onError: () => {
             dispatch(
                 addNotification({
                     type: 'error',
@@ -49,13 +41,13 @@ export function useAttendance() {
                     message: 'Check-in failed',
                 })
             )
-            throw new Error('Failed')
         }
-    }
+    })
 
-    const checkOut = async (payload: CheckOutRequest) => {
-        try {
-            await attendanceApi.checkOut(payload)
+    const checkOutMutation = useMutation({
+        mutationFn: (payload: CheckOutRequest) => attendanceApi.checkOut(payload),
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: ['attendance', variables.workDate] })
             dispatch(
                 addNotification({
                     type: 'success',
@@ -63,7 +55,8 @@ export function useAttendance() {
                     message: 'Checked out successfully',
                 })
             )
-        } catch {
+        },
+        onError: () => {
             dispatch(
                 addNotification({
                     type: 'error',
@@ -71,15 +64,25 @@ export function useAttendance() {
                     message: 'Check-out failed',
                 })
             )
-            throw new Error('Failed')
         }
-    }
+    })
 
     return {
-        attendances,
-        loading,
-        loadAttendance,
-        checkIn,
-        checkOut,
+        // Compatibility
+        loadAttendance: (date: string) => queryClient.prefetchQuery({
+            queryKey: ['attendance', date],
+            queryFn: () => attendanceApi.getByDate(date)
+        }),
+
+        // Hooks
+        useAttendance: (date: string) => attendanceQuery(date),
+
+        // Commands
+        checkIn: checkInMutation.mutateAsync,
+        checkOut: checkOutMutation.mutateAsync,
+
+        // Legacy states
+        attendances: [],
+        loading: checkInMutation.isPending || checkOutMutation.isPending,
     }
 }
