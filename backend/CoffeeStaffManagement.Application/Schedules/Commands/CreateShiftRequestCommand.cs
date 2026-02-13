@@ -3,5 +3,6 @@ using MediatR;
 public record CreateShiftRequestCommand(
     int EmployeeId,
     int ShiftId,
-    DateOnly WorkDate
+    DateOnly WorkDate,
+    string? Note = null
 ) : IRequest;

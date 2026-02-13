@@ -22,7 +22,11 @@ public class GetMyShiftRequestsQueryHandler
             x.Id,
             x.WorkDate,
             x.Shift?.Name ?? "",
-            x.Status.ToString().ToLower()
+            x.Shift?.Position?.Name ?? "",
+            (x.Shift?.StartTime ?? TimeSpan.Zero).ToString(@"hh\:mm"),
+            (x.Shift?.EndTime ?? TimeSpan.Zero).ToString(@"hh\:mm"),
+            x.Status.ToString().ToLower(),
+            x.Note
         )).ToList();
     }
 }

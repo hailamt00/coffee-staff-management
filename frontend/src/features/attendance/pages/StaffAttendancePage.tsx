@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/shared/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
 import { Button } from '@/shared/components/ui/button'
 import { Badge } from '@/shared/components/ui/badge'
 import { useSchedule } from '@/features/schedule/hooks/useSchedule'
 import { useAttendance } from '@/features/attendance/hooks/useAttendance'
-import { Clock, MapPin, CheckCircle, ArrowLeft, Loader2 } from 'lucide-react'
+import { Clock, MapPin, CheckCircle, Loader2 } from 'lucide-react'
 
 export default function StaffAttendancePage() {
     const navigate = useNavigate()
@@ -56,16 +56,19 @@ export default function StaffAttendancePage() {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center gap-2">
-                <Button variant="ghost" size="sm" onClick={() => navigate('/staff/menu')}>
-                    <ArrowLeft className="h-4 w-4 mr-1" />
-                    Back
+            <div className="flex items-center gap-2 px-2">
+                <Button variant="ghost" size="sm" onClick={() => navigate('/staff/menu')} className="hover:bg-slate-100 dark:hover:bg-neutral-800 rounded-lg h-10 px-4 font-bold uppercase tracking-widest text-[10px]">
+                    &larr; Back
                 </Button>
             </div>
 
-            <div>
-                <h1 className="text-2xl font-bold text-slate-800">Attendance</h1>
-                <p className="text-sm text-slate-500">Check in/out for your shifts today</p>
+            <div className="px-2">
+                <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none uppercase">
+                    Attendance
+                </h1>
+                <p className="mt-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    Shift_Check_In_Out
+                </p>
             </div>
 
             <div className="space-y-4">
@@ -84,17 +87,17 @@ export default function StaffAttendancePage() {
                 )}
 
                 {mySchedules.map((s) => (
-                    <Card key={s.id} className="overflow-hidden border-l-4 border-l-black shadow-sm">
-                        <CardHeader className="pb-2">
+                    <Card key={s.id} className="overflow-hidden border border-slate-200/60 dark:border-neutral-800/60 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-sm rounded-2xl">
+                        <CardHeader className="pb-3 border-b border-slate-50 dark:border-neutral-800/30">
                             <div className="flex justify-between items-start">
                                 <div>
-                                    <CardTitle className="text-lg">{s.shiftName || 'Assigned Shift'}</CardTitle>
-                                    <CardDescription className="flex items-center gap-1 mt-1">
-                                        <Clock className="h-3 w-3" />
-                                        {s.shiftStartTime} - {s.shiftEndTime}
-                                    </CardDescription>
+                                    <CardTitle className="text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight">{s.shiftName || 'Assigned Shift'}</CardTitle>
+                                    <div className="flex items-center gap-2 mt-1 px-2 py-0.5 bg-slate-100 dark:bg-neutral-800 rounded-full w-fit">
+                                        <Clock className="h-3 w-3 text-slate-500" />
+                                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{s.shiftStartTime} - {s.shiftEndTime}</span>
+                                    </div>
                                 </div>
-                                <Badge variant="outline" className="bg-slate-50 text-slate-700 border-slate-100">
+                                <Badge variant="outline" className="bg-white/50 dark:bg-black/50 text-[9px] font-black uppercase tracking-widest border-slate-200 dark:border-neutral-800 rounded-lg h-6">
                                     Scheduled
                                 </Badge>
                             </div>
@@ -107,7 +110,7 @@ export default function StaffAttendancePage() {
 
                             <div className="grid grid-cols-2 gap-3">
                                 <Button
-                                    className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-slate-200 font-bold"
+                                    className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 font-black uppercase tracking-widest text-[10px] h-12 rounded-xl active:scale-[0.98] transition-all"
                                     onClick={() => handleCheckIn(s)}
                                     disabled={isLoading}
                                 >
@@ -116,7 +119,7 @@ export default function StaffAttendancePage() {
                                 </Button>
                                 <Button
                                     variant="outline"
-                                    className="border-slate-200 text-slate-600 font-bold"
+                                    className="border-slate-200/60 dark:border-neutral-800/60 text-slate-600 dark:text-slate-400 font-black uppercase tracking-widest text-[10px] h-12 rounded-xl active:scale-[0.98] transition-all bg-transparent hover:bg-slate-50 dark:hover:bg-neutral-800"
                                     onClick={() => handleCheckOut(s)}
                                     disabled={isLoading}
                                 >

@@ -8,6 +8,7 @@ import {
     DialogContent,
     DialogHeader,
     DialogTitle,
+    DialogDescription,
     DialogTrigger,
 } from '@/shared/components/ui/dialog'
 import { Label } from '@/shared/components/ui/label'
@@ -28,6 +29,7 @@ import { WeeklyRequestTable } from '../components/WeeklyRequestTable'
 export default function SchedulePage() {
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10))
     const [activeTab, setActiveTab] = useState('weekly')
+    const [filterPosition, setFilterPosition] = useState('all')
 
     const {
         addSchedule,
@@ -41,6 +43,7 @@ export default function SchedulePage() {
     const [addPositionId, setAddPositionId] = useState('')
     const [addSelectedShifts, setAddSelectedShifts] = useState<number[]>([])
     const [addDate, setAddDate] = useState(date)
+    const [addNote, setAddNote] = useState('')
 
     const handleAdd = async () => {
         if (!addEmployeeId || addSelectedShifts.length === 0) return
@@ -48,11 +51,13 @@ export default function SchedulePage() {
             employeeId: Number(addEmployeeId),
             shiftIds: addSelectedShifts,
             workDate: addDate,
+            note: addNote,
         })
         setOpenAdd(false)
         setAddEmployeeId('')
         setAddPositionId('')
         setAddSelectedShifts([])
+        setAddNote('')
     }
 
     const availableShifts = useMemo(() => {
@@ -65,17 +70,46 @@ export default function SchedulePage() {
         return positions.flatMap(p => (p.shifts || []).map(s => ({ ...s, positionName: p.name })))
     }, [positions])
 
+    const handleQuickAdd = (clickedDate: string, shift: any) => {
+        setAddDate(clickedDate)
+        // Find position ID for this shift
+        const pos = positions.find(p => p.name === shift.positionName)
+        if (pos) {
+            setAddPositionId(pos.id.toString())
+            setAddSelectedShifts([shift.id])
+        }
+        setOpenAdd(true)
+    }
+
     return (
         <div className="space-y-6">
             {/* HEADER */}
             <div className="flex flex-wrap items-end justify-between gap-4 px-2">
-                <div>
-                    <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
-                        Schedule
-                    </h1>
-                    <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                        Shift_Operations
-                    </p>
+                <div className="flex items-end gap-12">
+                    <div>
+                        <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
+                            Schedule
+                        </h1>
+                        <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                            Shift_Operations
+                        </p>
+                    </div>
+
+                    {/* Filter UI */}
+                    <div className="flex items-center gap-3">
+                        <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Filter_By:</Label>
+                        <Select value={filterPosition} onValueChange={setFilterPosition}>
+                            <SelectTrigger className="w-[180px] h-9 bg-slate-50 border-slate-200 dark:bg-neutral-800 dark:border-neutral-700 text-xs font-bold">
+                                <SelectValue placeholder="All Positions" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">All Positions</SelectItem>
+                                {positions.map(p => (
+                                    <SelectItem key={p.id} value={p.name}>{p.name}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
                 </div>
 
                 <div className="flex items-center gap-4">
@@ -137,6 +171,9 @@ export default function SchedulePage() {
                     <DialogContent className="max-w-md">
                         <DialogHeader>
                             <DialogTitle>Add to Schedule</DialogTitle>
+                            <DialogDescription>
+                                Select employee, position, and shifts for the roster.
+                            </DialogDescription>
                         </DialogHeader>
                         <div className="space-y-4 py-4">
                             <div className="space-y-2">
@@ -207,6 +244,16 @@ export default function SchedulePage() {
                                 </div>
                             )}
 
+                            <div className="space-y-2">
+                                <Label htmlFor="addNote">Note (Optional)</Label>
+                                <Input
+                                    id="addNote"
+                                    value={addNote}
+                                    onChange={e => setAddNote(e.target.value)}
+                                    placeholder="Add a note..."
+                                />
+                            </div>
+
                             <Button onClick={handleAdd} className="w-full bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-slate-200 uppercase font-black text-[10px] tracking-[0.2em] py-6 rounded-xl">
                                 Add to Schedule
                             </Button>
@@ -219,12 +266,21 @@ export default function SchedulePage() {
             <Tabs value={activeTab} className="w-full">
                 {/* ===== TAB: WEEKLY ===== */}
                 <TabsContent value="weekly" className="space-y-4">
-                    <WeeklyScheduleTable date={date} shifts={allWeeklyShifts} />
+                    <WeeklyScheduleTable
+                        date={date}
+                        shifts={allWeeklyShifts}
+                        filterPosition={filterPosition}
+                        onCellClick={handleQuickAdd}
+                    />
                 </TabsContent>
 
                 {/* ===== TAB: REQUESTS ===== */}
                 <TabsContent value="requests" className="space-y-4">
-                    <WeeklyRequestTable date={date} shifts={allWeeklyShifts} />
+                    <WeeklyRequestTable
+                        date={date}
+                        shifts={allWeeklyShifts}
+                        filterPosition={filterPosition}
+                    />
                 </TabsContent>
             </Tabs>
         </div>

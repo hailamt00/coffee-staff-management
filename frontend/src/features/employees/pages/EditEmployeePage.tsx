@@ -118,20 +118,24 @@ export default function EditEmployeePage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-2">
-        <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
-          Back
+      <div className="flex items-center gap-2 px-2">
+        <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="hover:bg-slate-100 dark:hover:bg-neutral-800 rounded-lg h-10 px-4 font-bold uppercase tracking-widest text-[10px]">
+          &larr; Back
         </Button>
       </div>
 
-      <Card className="mx-auto max-w-4xl border-t-4 border-black dark:border-white shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-xl font-semibold text-slate-800 dark:text-slate-100 border-l-4 border-black dark:border-white pl-3">
-            Edit Employee
-          </CardTitle>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Update employee information
-          </p>
+      <Card className="mx-auto max-w-4xl border border-slate-200/60 dark:border-neutral-800/60 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-sm rounded-xl overflow-hidden">
+        <CardHeader className="border-b border-slate-100 dark:border-neutral-800/50 p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter uppercase">
+                Edit_Employee
+              </CardTitle>
+              <p className="mt-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                Update_Information
+              </p>
+            </div>
+          </div>
         </CardHeader>
 
         <CardContent className="space-y-8">
@@ -260,8 +264,8 @@ function Section({
   children: React.ReactNode
 }) {
   return (
-    <section>
-      <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">
+    <section className="space-y-4">
+      <h3 className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] border-l-2 border-slate-200 dark:border-neutral-700 pl-3">
         {title}
       </h3>
       {children}

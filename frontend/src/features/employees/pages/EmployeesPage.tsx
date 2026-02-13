@@ -146,13 +146,13 @@ export default function EmployeesPage() {
         className="space-y-6"
       >
         {/* HEADER */}
-        <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-wrap items-end justify-between gap-4 px-2">
           <div>
-            <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">
+            <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
               Employees
             </h1>
             <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-              Coffee Staff Management
+              Staff_Directory
             </p>
           </div>
 
@@ -196,19 +196,22 @@ export default function EmployeesPage() {
           />
         </div>
 
-        {/* CONTENT */}
-        <Card className="border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm">
-          <CardContent className="p-6">
-            <h2 className="mb-4 text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
-              Employee Directory
-            </h2>
+        <Card className="border border-slate-200/60 dark:border-neutral-800/60 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-sm rounded-xl overflow-hidden">
+          <CardContent className="p-0">
+            <div className="p-6 border-b border-slate-100 dark:border-neutral-800/50 flex items-center justify-between">
+              <h2 className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">
+                Employee_Roster
+              </h2>
+            </div>
 
-            <DataTable
-              columns={columns}
-              data={employees}
-              searchKey="name"
-              loading={loading}
-            />
+            <div className="p-2">
+              <DataTable
+                columns={columns}
+                data={employees}
+                searchKey="name"
+                loading={loading}
+              />
+            </div>
           </CardContent>
         </Card>
       </motion.div>

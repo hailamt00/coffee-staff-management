@@ -28,7 +28,7 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
             RevenueId = request.Request.RevenueId,
             Type = request.Request.Type,
             Amount = request.Request.Amount,
-            Reason = request.Request.Reason,
+            Description = request.Request.Reason,
             CreatedAt = DateTime.UtcNow
         };
 
@@ -48,7 +48,7 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
             RevenueId = transaction.RevenueId,
             Type = transaction.Type.ToString(),
             Amount = transaction.Amount,
-            Reason = transaction.Reason,
+            Reason = transaction.Description,
             CreatedAt = transaction.CreatedAt
         };
     }

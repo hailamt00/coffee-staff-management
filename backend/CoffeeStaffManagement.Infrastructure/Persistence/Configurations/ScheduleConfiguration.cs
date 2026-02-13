@@ -29,6 +29,9 @@ public class ScheduleConfiguration : IEntityTypeConfiguration<Schedule>
         builder.Property(x => x.ApprovedAt)
             .HasColumnName("approved_at");
 
+        builder.Property(x => x.Note)
+            .HasColumnName("note");
+
         builder.HasIndex(x => new { x.EmployeeId, x.ShiftId, x.WorkDate })
             .IsUnique();
     }

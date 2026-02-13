@@ -20,7 +20,7 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
             .HasConversion<string>()
             .HasMaxLength(50);
         builder.Property(x => x.Amount).HasColumnName("amount").HasPrecision(12, 2);
-        builder.Property(x => x.Reason).HasColumnName("reason");
+        builder.Property(x => x.Description).HasColumnName("description");
         builder.Property(x => x.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         builder.HasOne(x => x.Revenue).WithMany(r => r.Transactions).HasForeignKey(x => x.RevenueId);

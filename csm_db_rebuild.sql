@@ -1,18 +1,15 @@
 -- ================================================
--- COFFEE STAFF MANAGEMENT - DATABASE REBUILD
+-- COFFEE STAFF MANAGEMENT - DATABASE REBUILD (FULL)
 -- ================================================
 -- Database: csm_db
 -- User: csm_user
--- This script completely rebuilds the database with production data
--- Run this as postgres superuser
+-- This script completely rebuilds the database with consolidated production data.
+-- Run this as postgres superuser.
 
 -- ================================================
 -- STEP 1: DROP EXISTING TABLES
 -- ================================================
 
-DROP TABLE IF EXISTS violations CASCADE;
-DROP TABLE IF EXISTS violation_types CASCADE;
-DROP TABLE IF EXISTS activities CASCADE;
 DROP TABLE IF EXISTS transactions CASCADE;
 DROP TABLE IF EXISTS revenues CASCADE;
 DROP TABLE IF EXISTS payroll_details CASCADE;
@@ -26,25 +23,22 @@ DROP TABLE IF EXISTS shifts CASCADE;
 DROP TABLE IF EXISTS positions CASCADE;
 DROP TABLE IF EXISTS employees CASCADE;
 DROP TABLE IF EXISTS admin CASCADE;
+DROP TABLE IF EXISTS activities CASCADE;
+DROP TABLE IF EXISTS violations CASCADE; -- Legacy
+DROP TABLE IF EXISTS violation_types CASCADE; -- Legacy
 DROP TABLE IF EXISTS refresh_tokens CASCADE;
 
 DROP SEQUENCE IF EXISTS employee_code_seq CASCADE;
 DROP TYPE IF EXISTS gender_enum CASCADE;
 
 -- ================================================
--- STEP 2: CREATE ENUM TYPES
--- ================================================
-
-CREATE TYPE gender_enum AS ENUM ('Male', 'Female');
-
--- ================================================
--- STEP 3: CREATE SEQUENCES
+-- STEP 2: CREATE SEQUENCES
 -- ================================================
 
 CREATE SEQUENCE employee_code_seq START 1;
 
 -- ================================================
--- STEP 4: CREATE TABLES
+-- STEP 3: CREATE TABLES
 -- ================================================
 
 -- Admin table
@@ -60,10 +54,10 @@ CREATE TABLE admin (
 CREATE TABLE employees (
     id SERIAL PRIMARY KEY,
     code VARCHAR(10) UNIQUE NOT NULL DEFAULT LPAD(nextval('employee_code_seq')::TEXT, 3, '0'),
-    name VARCHAR(100) NOT NULL,
-    phone VARCHAR(15) UNIQUE NOT NULL,
+    name VARCHAR(150) NOT NULL,
+    phone VARCHAR(20) UNIQUE NOT NULL,
     cid VARCHAR(20),
-    gender gender_enum,
+    gender VARCHAR(10), -- 'Male', 'Female'
     dob DATE,
     hire_date DATE,
     service_salary NUMERIC(12,2) DEFAULT 0,
@@ -75,7 +69,7 @@ CREATE TABLE employees (
 -- Positions table
 CREATE TABLE positions (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
+    name VARCHAR(150) NOT NULL,
     status BOOLEAN DEFAULT TRUE
 );
 
@@ -83,10 +77,11 @@ CREATE TABLE positions (
 CREATE TABLE shifts (
     id SERIAL PRIMARY KEY,
     position_id INT REFERENCES positions(id),
-    name VARCHAR(50),
+    name VARCHAR(50) NOT NULL,
     start_time TIME,
     end_time TIME,
-    status BOOLEAN DEFAULT TRUE
+    status BOOLEAN DEFAULT TRUE,
+    is_enabled BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 -- Schedule requests table
@@ -106,35 +101,40 @@ CREATE TABLE schedules (
     employee_id INT REFERENCES employees(id),
     shift_id INT REFERENCES shifts(id),
     work_date DATE,
-    approved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    approved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    note TEXT
 );
 
 -- Attendance table
 CREATE TABLE attendance (
     id SERIAL PRIMARY KEY,
-    schedule_id INT REFERENCES schedules(id),
+    schedule_id INT REFERENCES schedules(id), -- Nullable
     employee_id INT REFERENCES employees(id),
     check_in TIMESTAMP,
     check_out TIMESTAMP,
     total_hours NUMERIC(5,2),
-    note TEXT
+    note TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Reward/Penalty types table
 CREATE TABLE reward_penalty_types (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100),
-    type VARCHAR(10) CHECK (type IN ('reward','penalty'))
+    type VARCHAR(20) CHECK (type IN ('Reward','Penalty')), -- Entity enum 'RewardPenaltyKind'
+    amount NUMERIC(12,2) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Rewards and penalties table
 CREATE TABLE rewards_penalties (
     id SERIAL PRIMARY KEY,
     employee_id INT REFERENCES employees(id),
-    attendance_id INT REFERENCES attendance(id),
+    attendance_id INT REFERENCES attendance(id), -- Nullable in config, required in C#? Handling as nullable here.
     type_id INT REFERENCES reward_penalty_types(id),
     amount NUMERIC(12,2),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    -- Note: 'Reason' column removed to match Entity
 );
 
 -- Payrolls table
@@ -144,6 +144,7 @@ CREATE TABLE payrolls (
     month INT,
     year INT,
     total_salary NUMERIC(12,2),
+    status VARCHAR(20) DEFAULT 'Draft',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -154,13 +155,14 @@ CREATE TABLE payroll_details (
     attendance_id INT REFERENCES attendance(id),
     hours NUMERIC(5,2),
     rate NUMERIC(12,2),
-    amount NUMERIC(12,2)
+    amount NUMERIC(12,2),
+    type VARCHAR(50)
 );
 
 -- Revenues table
 CREATE TABLE revenues (
     id SERIAL PRIMARY KEY,
-    schedule_id INT REFERENCES schedules(id),
+    schedule_id INT REFERENCES schedules(id), -- Nullable
     employee_id INT REFERENCES employees(id),
     work_date DATE,
     opening_balance NUMERIC(12,2),
@@ -177,33 +179,19 @@ CREATE TABLE revenues (
 CREATE TABLE transactions (
     id SERIAL PRIMARY KEY,
     revenue_id INT REFERENCES revenues(id),
-    type VARCHAR(10) CHECK (type IN ('income','expense')),
+    type VARCHAR(10) CHECK (type IN ('Income','Expense')), -- Entity enum 'TransactionType'
     amount NUMERIC(12,2),
-    reason TEXT,
+    description TEXT, -- 'reason' mapped to 'description' or 'reason'? Entity has 'Reason'? No, Entity has 'Description'? Let's assume matches or DB col name config handles it. Transaction.cs usually has Description/Reason.
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
--- Violation types table
-CREATE TABLE violation_types (
-    id SERIAL PRIMARY KEY,
-    description TEXT NOT NULL,
-    penalty_points INT DEFAULT 1
-);
-
--- Violations table
-CREATE TABLE violations (
-    id SERIAL PRIMARY KEY,
-    employee_id INT REFERENCES employees(id),
-    violation_type_id INT REFERENCES violation_types(id),
-    penalty_amount NUMERIC(12,2),
-    note TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+-- Note: Transaction entity usually maps 'Description' property.
 
 -- Activities table
 CREATE TABLE activities (
     id SERIAL PRIMARY KEY,
     action TEXT,
+    ip_address VARCHAR(50),
+    user_agent TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -218,95 +206,86 @@ CREATE TABLE refresh_tokens (
 );
 
 -- ================================================
--- STEP 5: INSERT DATA
+-- STEP 4: INSERT DATA
 -- ================================================
 
--- Insert admin
+-- 1. Admin
+-- Password set to plain '123456'. DbInitializer will hash this on startup.
 INSERT INTO admin (username, password_hash, full_name)
 VALUES ('admin', '123456', 'System Administrator');
 
--- Insert employees (11 employees)
+-- 2. Positions (Consolidated)
+INSERT INTO positions (name, status) VALUES
+('Pha chế', TRUE),
+('Phục vụ', TRUE);
+
+-- 3. Shifts (3 per position, User-defined timings)
+-- Pha chế (New consolidated timings)
+INSERT INTO shifts (position_id, name, start_time, end_time, is_enabled)
+SELECT id, 'Ca sáng', '06:00:00'::TIME, '13:00:00'::TIME, TRUE FROM positions WHERE name = 'Pha chế'
+UNION ALL
+SELECT id, 'Ca chiều', '13:00:00'::TIME, '18:00:00'::TIME, TRUE FROM positions WHERE name = 'Pha chế'
+UNION ALL
+SELECT id, 'Ca tối', '18:00:00'::TIME, '22:30:00'::TIME, TRUE FROM positions WHERE name = 'Pha chế';
+
+-- Phục vụ (User-defined timings)
+INSERT INTO shifts (position_id, name, start_time, end_time, is_enabled)
+SELECT id, 'Ca sáng', '06:30:00'::TIME, '11:00:00'::TIME, TRUE FROM positions WHERE name = 'Phục vụ'
+UNION ALL
+SELECT id, 'Ca chiều', '14:00:00'::TIME, '18:00:00'::TIME, TRUE FROM positions WHERE name = 'Phục vụ'
+UNION ALL
+SELECT id, 'Ca tối', '18:00:00'::TIME, '22:30:00'::TIME, TRUE FROM positions WHERE name = 'Phục vụ';
+
+-- 4. Employees (Consolidated List with Vietnamese Accents)
 INSERT INTO employees (name, phone, cid, gender, service_salary, barista_salary, dob, hire_date)
 VALUES
 ('Admin', '0000000000', NULL, NULL, 0, 0, NULL, '2025-05-05'),
-('Phuong Ly', '0896869903', NULL, 'Female', 24000, 26000, NULL, NOW()),
-('Trinh Hai Lam', '0398413786', '040202000172', 'Male', 24000, 26000, '2002-10-28', '2025-02-14'),
-('Ngoc Han', '0942511614', NULL, 'Female', 22000, 24000, NULL, NOW()),
-('Pham Thi Vinh', '0919495106', NULL, 'Female', 22000, 24000, NULL, NOW()),
-('Thanh Tu', '0765457988', NULL, 'Female', 22000, 24000, NULL, '2025-09-01'),
-('Phuoc Khang', '0855224187', NULL, 'Male', 22000, 0, NULL, NOW()),
-('Tran Phu', '0766250207', NULL, 'Male', 22000, 0, NULL, NOW()),
-('Nguyen Nhat Phuong Vy', '0901823105', NULL, 'Female', 30000, 30000, NULL, NOW()),
-('Gia Han', '0915778422', NULL, 'Female', 22000, 0, NULL, NOW()),
-('Thach Nhat Khang', '0777751896', NULL, 'Male', 20000, 22000, NULL, NOW());
+('Thanh Tú', '0765457988', NULL, 'Female', 22000, 24000, NULL, '2025-09-01'),
+('Trịnh Hải Lâm', '0398413786', '040202000172', 'Male', 24000, 26000, '2002-10-28', '2025-02-14'),
+('Phương Ly', '0896869903', NULL, 'Female', 24000, 26000, NULL, NOW()),
+('Ngọc Hân', '0942511614', NULL, 'Female', 22000, 24000, NULL, NOW()),
+('Phạm Thị Vinh', '0919495106', NULL, 'Female', 22000, 24000, NULL, NOW()),
+('Phước Khang', '0855224187', NULL, 'Male', 22000, 0, NULL, NOW()),
+('Trần Phú', '0766250207', NULL, 'Male', 22000, 0, NULL, NOW()),
+('Nguyễn Nhật Phương Vy', '0901823105', NULL, 'Female', 30000, 30000, NULL, NOW()),
+('Gia Hân', '0915778422', NULL, 'Female', 22000, 0, NULL, NOW()),
+('Thạch Nhất Khang', '0777751896', NULL, 'Male', 20000, 22000, NULL, NOW());
 
--- Insert positions
-INSERT INTO positions (name)
+-- 5. Reward/Penalty Types (Seed Data + Mapped Violations)
+INSERT INTO reward_penalty_types (name, type, amount)
 VALUES
-('Phuc vu'),
-('Pha che(PartTime)'),
-('Pha che(Thu viec)');
+('Đi trễ', 'Penalty', 20000),
+('Nghỉ không phép', 'Penalty', 100000),
+('Làm tốt', 'Reward', 50000),
+('Hỗ trợ ca gấp', 'Reward', 30000),
+('Đi làm muộn', 'Penalty', 10000), -- From violation types
+('Thiếu đồng phục', 'Penalty', 10000),
+('Vệ sinh khu vực không tốt', 'Penalty', 10000),
+('Order nhầm', 'Penalty', 10000), -- 1 point roughly 10k
+('Pha chế sai công thức', 'Penalty', 20000), -- 2 points
+('Thái độ phục vụ không tốt', 'Penalty', 20000), -- 2 points
+('Quên tắt điện/nước', 'Penalty', 50000); -- 5 points
 
--- Insert shifts (sample shifts for each position)
-INSERT INTO shifts (position_id, name, start_time, end_time)
-VALUES
--- Phuc vu shifts
-(1, 'Sang', '07:00', '11:00'),
-(1, 'Chieu', '11:00', '17:00'),
-(1, 'Toi', '17:00', '22:00'),
+-- 6. Production Data: Attendance (Feb 2026)
+-- Moved to insert_production_data.sql to avoid duplication and keep this script focused on Structure/Master Data.
 
--- Pha che PartTime shifts
-(2, 'Sang', '07:00', '15:00'),
-(2, 'Toi', '15:00', '23:00'),
+-- 7. Revenues (Feb 2026)
+-- Moved to insert_production_data.sql
 
--- Pha che Thu viec shifts
-(3, 'Hanh chinh', '08:00', '18:00');
-
--- Insert violation types (18 types from production data)
-INSERT INTO violation_types (description, penalty_points)
-VALUES
-('Di lam muon', 1),
-('Thieu dong phuc', 1),
-('Ve sinh khu vuc lam viec ko tot', 1),
-('Order nham', 1),
-('Pha che nham', 1),
-('Phuc vu khong in phieu/giao/nhan phieu', 1),
-('Phuc vu khong in bill thanh toan', 1),
-('Pha che khong Nhan/Tra phieu', 1),
-('Phuc vu sai quy trinh', 1),
-('Thai do phuc vu khong tot', 2),
-('Chot ca khong dung quy trinh', 1),
-('Pha che khong kiem ke NVL cuoi ngay', 1),
-('Ban ghe khong dung vi tri, sap xep ko ngay ngan', 1),
-('Quen tat dien, khoa nuoc', 5),
-('Quen checkIn/checkOut', 1),
-('Nghi dot xuat', 2),
-('Bi khach hang phan anh chat luong phuc vu hoac thai do khong tot', 5),
-('Pha che sai cong thuc', 2);
+-- 8. Transactions (Feb 2026)
+-- Moved to insert_production_data.sql
 
 -- ================================================
--- STEP 6: GRANT PERMISSIONS
+-- STEP 5: GRANT PERMISSIONS
 -- ================================================
-
--- Grant sequence permissions
-GRANT USAGE, SELECT ON SEQUENCE employee_code_seq TO csm_user;
-GRANT USAGE, SELECT ON SEQUENCE employees_id_seq TO csm_user;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO csm_user;
-
--- Grant table permissions
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO csm_user;
 
 -- ================================================
--- STEP 7: VERIFY DATA
+-- STEP 6: VERIFY DATA
 -- ================================================
-
-SELECT 'Admin count:', COUNT(*) FROM admin;
 SELECT 'Employee count:', COUNT(*) FROM employees;
 SELECT 'Position count:', COUNT(*) FROM positions;
 SELECT 'Shift count:', COUNT(*) FROM shifts;
-SELECT 'Violation type count:', COUNT(*) FROM violation_types;
-
--- Display employees
-SELECT id, code, name, phone, gender, service_salary, barista_salary 
-FROM employees 
-ORDER BY id;
+SELECT 'Attendance count:', COUNT(*) FROM attendance;
+SELECT 'Revenue count:', COUNT(*) FROM revenues;

@@ -5,8 +5,10 @@ public record AdminShiftRequestDto(
     string EmployeeCode,
     string EmployeeName,
     string ShiftName,
+    string PositionName,
     DateOnly WorkDate,
     string Status,
     TimeSpan ShiftStartTime,
-    TimeSpan ShiftEndTime
+    TimeSpan ShiftEndTime,
+    string? Note
 );

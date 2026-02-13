@@ -49,7 +49,13 @@ public class LoginCommandHandler
         return new LoginResponse
         {
             Token = token,
-            Username = admin.Username,
+            RefreshToken = token, // Placeholder: reusing JWT as refresh token for now
+            Admin = new AdminDto
+            {
+                Id = admin.Id,
+                Username = admin.Username,
+                Role = "Admin"
+            }
         };
     }
 }

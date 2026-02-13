@@ -100,6 +100,7 @@ export interface Shift {
   startTime: string
   endTime: string
   isEnabled: boolean
+  positionName?: string
 }
 
 /* ========= POSITION ========= */
@@ -214,6 +215,7 @@ export interface Schedule {
   shiftStartTime: string
   shiftEndTime: string
   workDate: string
+  note?: string
   shift?: Shift
 }
 
@@ -221,19 +223,28 @@ export interface AddScheduleRequest {
   employeeId: number
   shiftIds: number[]
   workDate: string
+  note?: string
+}
+
+export interface UpdateScheduleRequest {
+  shiftId: number
+  workDate: string
+  note?: string
 }
 
 export type ScheduleStatus = 'pending' | 'approved' | 'rejected'
 
 export interface ScheduleRequest {
   requestId: number
-  employeeCode: string
-  employeeName: string
-  shiftName: string
   workDate: string
+  shiftName: string
+  positionName: string
+  startTime: string
+  endTime: string
   status: string
-  shiftStartTime: string
-  shiftEndTime: string
+  employeeName?: string
+  employeeCode?: string
+  note?: string
 }
 
 export interface CreateShiftRequest {

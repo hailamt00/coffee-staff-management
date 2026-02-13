@@ -1,110 +1,88 @@
 -- ================================================
--- UPDATE POSITIONS AND SHIFTS
+-- CONSOLIDATE BARISTA POSITIONS (ROBUST MIGRATION)
 -- ================================================
--- This script updates positions and shifts to match csm_positions.sql and csm_shifts.sql
--- Run this in pgAdmin or with postgres user
-
--- Step 1: Delete existing shifts (cascade will handle foreign keys if any)
-DELETE FROM shifts;
-
--- Step 2: Delete existing positions
-DELETE FROM positions;
-
--- Step 3: Reset position sequence
-ALTER SEQUENCE positions_id_seq RESTART WITH 1;
-
--- Step 4: Reset shift sequence
-ALTER SEQUENCE shifts_id_seq RESTART WITH 1;
-
--- Step 5: Insert positions with Vietnamese diacritics
+-- 1. Ensure "Pha chế" position exists
 INSERT INTO positions (name, status)
-VALUES
-  ('Phục vụ', TRUE),
-  ('Pha chế (PartTime)', TRUE),
-  ('Pha chế (Thử việc)', TRUE);
+SELECT 'Pha chế', TRUE
+WHERE NOT EXISTS (SELECT 1 FROM positions WHERE name = 'Pha chế');
 
--- Step 6: Add is_enabled column to shifts if it doesn't exist
-ALTER TABLE shifts 
-ADD COLUMN IF NOT EXISTS is_enabled BOOLEAN NOT NULL DEFAULT TRUE;
-
--- Step 7: Insert all 9 shifts (3 per position)
+-- 2. Create Shifts for "Pha chế" if they don't exist
 INSERT INTO shifts (position_id, name, start_time, end_time, is_enabled)
-VALUES
--- Phục vụ shifts
-(
-    (SELECT id FROM positions WHERE name = 'Phục vụ'),
-    'Ca sáng',
-    '06:30',
-    '11:00',
-    TRUE
-),
-(
-    (SELECT id FROM positions WHERE name = 'Phục vụ'),
-    'Ca chiều',
-    '14:00',
-    '18:00',
-    TRUE
-),
-(
-    (SELECT id FROM positions WHERE name = 'Phục vụ'),
-    'Ca tối',
-    '18:00',
-    '22:30',
-    TRUE
-),
-
--- Pha chế (PartTime) shifts
-(
-    (SELECT id FROM positions WHERE name = 'Pha chế (PartTime)'),
-    'Ca sáng',
-    '06:00',
-    '13:00',
-    TRUE
-),
-(
-    (SELECT id FROM positions WHERE name = 'Pha chế (PartTime)'),
-    'Ca chiều',
-    '13:00',
-    '18:00',
-    TRUE
-),
-(
-    (SELECT id FROM positions WHERE name = 'Pha chế (PartTime)'),
-    'Ca tối',
-    '18:00',
-    '22:30',
-    TRUE
-),
-
--- Pha chế (Thử việc) shifts
-(
-    (SELECT id FROM positions WHERE name = 'Pha chế (Thử việc)'),
-    'Ca sáng',
-    '06:00',
-    '13:00',
-    TRUE
-),
-(
-    (SELECT id FROM positions WHERE name = 'Pha chế (Thử việc)'),
-    'Ca chiều',
-    '13:00',
-    '18:00',
-    TRUE
-),
-(
-    (SELECT id FROM positions WHERE name = 'Pha chế (Thử việc)'),
-    'Ca tối',
-    '18:00',
-    '22:30',
-    TRUE
+SELECT p.id, s.name, s.start_time::time, s.end_time::time, TRUE
+FROM positions p
+CROSS JOIN (
+    VALUES 
+        ('Ca sáng', '06:00:00', '13:00:00'),
+        ('Ca chiều', '13:00:00', '18:00:00'),
+        ('Ca tối', '18:00:00', '22:30:00')
+) AS s(name, start_time, end_time)
+WHERE p.name = 'Pha chế'
+AND NOT EXISTS (
+    SELECT 1 FROM shifts 
+    WHERE position_id = p.id AND name = s.name
 );
 
--- Step 8: Verify results
-SELECT 'Position Count:' as check_name, COUNT(*) as count FROM positions;
-SELECT id, name, status FROM positions ORDER BY id;
+-- 3. Migrate Schedules
+WITH NewShifts AS (
+    SELECT s.id, s.name
+    FROM shifts s
+    JOIN positions p ON s.position_id = p.id
+    WHERE p.name = 'Pha chế'
+),
+OldShifts AS (
+    SELECT s.id, s.name
+    FROM shifts s
+    JOIN positions p ON s.position_id = p.id
+    WHERE p.name IN ('Pha chế (PartTime)', 'Pha chế (Thử việc)')
+)
+UPDATE schedules sch
+SET shift_id = ns.id
+FROM OldShifts os
+JOIN NewShifts ns ON os.name = ns.name
+WHERE sch.shift_id = os.id;
 
-SELECT 'Shift Count:' as check_name, COUNT(*) as count FROM shifts;
-SELECT s.id, p.name as position_name, s.name as shift_name, s.start_time, s.end_time, s.is_enabled
-FROM shifts s
-JOIN positions p ON s.position_id = p.id
-ORDER BY p.id, s.id;
+-- 4. Migrate ScheduleRequests (NEW)
+-- Same logic: map old shifts to new shifts for requests
+WITH NewShifts AS (
+    SELECT s.id, s.name
+    FROM shifts s
+    JOIN positions p ON s.position_id = p.id
+    WHERE p.name = 'Pha chế'
+),
+OldShifts AS (
+    SELECT s.id, s.name
+    FROM shifts s
+    JOIN positions p ON s.position_id = p.id
+    WHERE p.name IN ('Pha chế (PartTime)', 'Pha chế (Thử việc)')
+)
+UPDATE schedule_requests sr
+SET shift_id = ns.id
+FROM OldShifts os
+JOIN NewShifts ns ON os.name = ns.name
+WHERE sr.shift_id = os.id;
+
+-- 5. Delete Old Shifts (Safely)
+-- Only delete if NO schedules OR schedule_requests reference them
+DELETE FROM shifts 
+WHERE position_id IN (
+    SELECT id FROM positions WHERE name IN ('Pha chế (PartTime)', 'Pha chế (Thử việc)')
+)
+AND id NOT IN (SELECT shift_id FROM schedules)
+AND id NOT IN (SELECT shift_id FROM schedule_requests);
+
+-- 6. Delete Old Positions (Safely)
+-- Only delete if NO shifts reference them
+DELETE FROM positions 
+WHERE name IN ('Pha chế (PartTime)', 'Pha chế (Thử việc)')
+AND NOT EXISTS (
+    SELECT 1 FROM shifts WHERE position_id = positions.id
+);
+
+-- 6. Verification
+SELECT 'Migration Status' as check_name;
+SELECT p.name, COUNT(s.id) as shift_count, 
+       (SELECT COUNT(*) FROM schedules sch WHERE sch.shift_id = s.id) as schedule_count
+FROM positions p
+LEFT JOIN shifts s ON p.id = s.position_id
+WHERE p.name LIKE 'Pha chế%'
+GROUP BY p.name, s.id;

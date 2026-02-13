@@ -21,6 +21,7 @@ public class CreateShiftRequestCommandHandler
             EmployeeId = request.EmployeeId,
             ShiftId = request.ShiftId,
             WorkDate = request.WorkDate,
+            Note = request.Note,
             CreatedAt = DateTime.UtcNow
         };
 

@@ -31,12 +31,24 @@ export function useSchedule() {
         enabled: !!fromDate && !!toDate,
     })
 
+    const myRequestsQuery = (employeeId: number) => useQuery({
+        queryKey: ['schedule-requests', 'my', employeeId],
+        queryFn: () => scheduleApi.getMyRequests(employeeId),
+        enabled: !!employeeId,
+    })
+
+    const weeklyRequestsQuery = (fromDate: string, toDate: string) => useQuery({
+        queryKey: ['schedule-requests', 'weekly', fromDate, toDate],
+        queryFn: () => scheduleApi.getWeeklyRequests(fromDate, toDate),
+        enabled: !!fromDate && !!toDate,
+    })
+
     /* ================= COMMANDS ================= */
 
     const createMutation = useMutation({
         mutationFn: (payload: CreateShiftRequest) => scheduleApi.createRequest(payload),
-        onSuccess: (_, variables) => {
-            queryClient.invalidateQueries({ queryKey: ['schedule-requests', variables.workDate] })
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['schedule-requests'] })
             dispatch(
                 addNotification({
                     type: 'success',
@@ -56,11 +68,34 @@ export function useSchedule() {
         }
     })
 
+    const updateRequestMutation = useMutation({
+        mutationFn: ({ id, data }: { id: number; data: any }) => scheduleApi.updateRequest(id, data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['schedule-requests'] })
+            dispatch(addNotification({ type: 'success', title: 'Success', message: 'Request updated' }))
+        },
+        onError: () => {
+            dispatch(addNotification({ type: 'error', title: 'Error', message: 'Cannot update request' }))
+        }
+    })
+
+    const deleteRequestMutation = useMutation({
+        mutationFn: (id: number) => scheduleApi.deleteRequest(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['schedule-requests'] })
+            dispatch(addNotification({ type: 'success', title: 'Success', message: 'Request deleted' }))
+        },
+        onError: () => {
+            dispatch(addNotification({ type: 'error', title: 'Error', message: 'Cannot delete request' }))
+        }
+    })
+
     const approveMutation = useMutation({
         mutationFn: (payload: ApproveShiftRequest) => scheduleApi.approveRequest(payload),
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({ queryKey: ['schedule-requests'] })
             queryClient.invalidateQueries({ queryKey: ['schedules'] })
+            queryClient.invalidateQueries({ queryKey: ['schedules-weekly'] })
             dispatch(
                 addNotification({
                     type: 'success',
@@ -104,6 +139,30 @@ export function useSchedule() {
         }
     })
 
+    const updateMutation = useMutation({
+        mutationFn: ({ id, data }: { id: number; data: any }) => scheduleApi.updateSchedule(id, data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['schedules'] })
+            queryClient.invalidateQueries({ queryKey: ['schedules-weekly'] })
+            dispatch(addNotification({ type: 'success', title: 'Success', message: 'Schedule updated' }))
+        },
+        onError: () => {
+            dispatch(addNotification({ type: 'error', title: 'Error', message: 'Cannot update schedule' }))
+        }
+    })
+
+    const deleteMutation = useMutation({
+        mutationFn: (id: number) => scheduleApi.deleteSchedule(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['schedules'] })
+            queryClient.invalidateQueries({ queryKey: ['schedules-weekly'] })
+            dispatch(addNotification({ type: 'success', title: 'Success', message: 'Schedule deleted' }))
+        },
+        onError: () => {
+            dispatch(addNotification({ type: 'error', title: 'Error', message: 'Cannot delete schedule' }))
+        }
+    })
+
     return {
         // We'll provide methods to get query results to maintain hook-like usage
         // but it's cleaner to just return the results if we pass parameters to useSchedule
@@ -121,15 +180,21 @@ export function useSchedule() {
         useSchedules: (date: string) => schedulesQuery(date),
         useWeeklySchedule: (fromDate: string, toDate: string) => weeklySchedulesQuery(fromDate, toDate),
         useRequests: (date: string) => requestsQuery(date),
+        useWeeklyRequests: (fromDate: string, toDate: string) => weeklyRequestsQuery(fromDate, toDate),
+        useMyRequests: (employeeId: number) => myRequestsQuery(employeeId),
 
         // Command methods
         createRequest: createMutation.mutateAsync,
+        updateRequest: updateRequestMutation.mutateAsync,
+        deleteRequest: deleteRequestMutation.mutateAsync,
         addSchedule: addScheduleMutation.mutateAsync,
         approveRequest: approveMutation.mutateAsync,
+        updateSchedule: updateMutation.mutateAsync,
+        deleteSchedule: deleteMutation.mutateAsync,
 
         // Legacy compatibility properties (will be empty/false unless using the new useSchedules/useRequests inside component)
         schedules: [],
         requests: [],
-        loading: createMutation.isPending || approveMutation.isPending || addScheduleMutation.isPending,
+        loading: createMutation.isPending || updateRequestMutation.isPending || deleteRequestMutation.isPending || approveMutation.isPending || addScheduleMutation.isPending,
     }
 }

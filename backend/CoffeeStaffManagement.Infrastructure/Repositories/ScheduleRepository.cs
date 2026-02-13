@@ -19,7 +19,7 @@ public class ScheduleRepository : IScheduleRepository
         return await _context.Schedules
             .Include(s => s.Employee)
             .Include(s => s.Shift)
-                .ThenInclude(sh => sh.Position)
+                .ThenInclude(sh => sh!.Position)
             .FirstOrDefaultAsync(s => s.Id == id);
     }
 
@@ -28,7 +28,7 @@ public class ScheduleRepository : IScheduleRepository
         return await _context.Schedules
             .Include(x => x.Employee)
             .Include(x => x.Shift)
-                .ThenInclude(sh => sh.Position)
+                .ThenInclude(sh => sh!.Position)
             .Where(x => x.WorkDate == date)
             .OrderBy(x => x.Shift != null ? x.Shift.StartTime : null)
             .ToListAsync();
@@ -45,6 +45,22 @@ public class ScheduleRepository : IScheduleRepository
     {
         _context.Schedules.Add(schedule);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateAsync(Schedule schedule)
+    {
+        _context.Schedules.Update(schedule);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(int id)
+    {
+        var schedule = await _context.Schedules.FindAsync(id);
+        if (schedule != null)
+        {
+            _context.Schedules.Remove(schedule);
+            await _context.SaveChangesAsync();
+        }
     }
 
     public async Task<bool> ExistsAsync(
@@ -64,9 +80,17 @@ public class ScheduleRepository : IScheduleRepository
         return await _context.Schedules
             .Include(x => x.Employee)
             .Include(x => x.Shift)
-                .ThenInclude(sh => sh.Position)
+                .ThenInclude(sh => sh!.Position)
             .Where(x => x.WorkDate >= fromDate && x.WorkDate <= toDate)
             .OrderBy(x => x.WorkDate)
+            .ToListAsync();
+    }
+
+    public async Task<List<Schedule>> GetByEmployeeAndDateAsync(int employeeId, DateOnly date)
+    {
+        return await _context.Schedules
+            .Include(x => x.Shift)
+            .Where(x => x.EmployeeId == employeeId && x.WorkDate == date)
             .ToListAsync();
     }
 }

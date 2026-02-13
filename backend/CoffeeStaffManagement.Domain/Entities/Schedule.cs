@@ -9,6 +9,7 @@ public class Schedule : BaseEntity
 
     public DateOnly WorkDate { get; set; }
     public DateTime? ApprovedAt { get; set; }
+    public string? Note { get; set; }
 
     public Employee? Employee { get; set; }
     public Shift? Shift { get; set; }

@@ -62,11 +62,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\GitHub\\coffee-staff-management\\backend\\HashGenerator\\HashGenerator.csproj",
+      "projectUniqueName": "d:\\GitHub\\coffee-staff-management\\backend\\HashGenerator\\HashGenerator.csproj",
       "projectName": "HashGenerator",
-      "projectPath": "D:\\GitHub\\coffee-staff-management\\backend\\HashGenerator\\HashGenerator.csproj",
+      "projectPath": "d:\\GitHub\\coffee-staff-management\\backend\\HashGenerator\\HashGenerator.csproj",
       "packagesPath": "C:\\Users\\haila\\.nuget\\packages\\",
-      "outputPath": "D:\\GitHub\\coffee-staff-management\\backend\\HashGenerator\\obj\\",
+      "outputPath": "d:\\GitHub\\coffee-staff-management\\backend\\HashGenerator\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -81,6 +81,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

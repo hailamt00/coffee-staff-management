@@ -19,6 +19,7 @@ public class ScheduleRequestRepository
     {
         return await _context.ScheduleRequests
             .Include(x => x.Shift)
+                .ThenInclude(s => s!.Position)
             .Where(x => x.EmployeeId == employeeId)
             .OrderBy(x => x.WorkDate)
             .ToListAsync();
@@ -29,13 +30,25 @@ public class ScheduleRequestRepository
         return await _context.ScheduleRequests
             .Include(x => x.Employee)
             .Include(x => x.Shift)
+                .ThenInclude(sh => sh!.Position)
             .Where(x => x.WorkDate == date)
+            .ToListAsync();
+    }
+
+    public async Task<List<ScheduleRequest>> GetByDateRangeAsync(DateOnly fromDate, DateOnly toDate)
+    {
+        return await _context.ScheduleRequests
+            .Include(x => x.Employee)
+            .Include(x => x.Shift)
+                .ThenInclude(sh => sh!.Position)
+            .Where(x => x.WorkDate >= fromDate && x.WorkDate <= toDate)
             .ToListAsync();
     }
 
     public async Task<ScheduleRequest?> GetByIdAsync(long id)
     {
         return await _context.ScheduleRequests
+            .Include(x => x.Shift)
             .FirstOrDefaultAsync(x => x.Id == id);
     }
 
@@ -48,6 +61,12 @@ public class ScheduleRequestRepository
     public async Task UpdateAsync(ScheduleRequest request)
     {
         _context.ScheduleRequests.Update(request);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(ScheduleRequest request)
+    {
+        _context.ScheduleRequests.Remove(request);
         await _context.SaveChangesAsync();
     }
 }

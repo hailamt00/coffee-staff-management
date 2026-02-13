@@ -1,10 +1,14 @@
 namespace CoffeeStaffManagement.Application.Schedules.DTOs;
 
 public record ScheduleRequestDto(
-    int Id,
+    int RequestId,
     DateOnly WorkDate,
     string ShiftName,
-    string Status
+    string PositionName,
+    string ShiftStartTime,
+    string ShiftEndTime,
+    string Status,
+    string? Note
 );
 
 public record ScheduleDto(
@@ -17,5 +21,6 @@ public record ScheduleDto(
     string PositionName,
     string ShiftStartTime,
     string ShiftEndTime,
-    DateOnly WorkDate
+    DateOnly WorkDate,
+    string? Note
 );

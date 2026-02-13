@@ -13,6 +13,7 @@ public static class DbInitializer
         var admin = context.Admins.FirstOrDefault(a => a.Username == "admin");
         if (admin != null)
         {
+
             // Check if password is plain text "123456" (from SQL seed) or invalid
             // BCrypt hashes start with $2a$, $2b$, or $2y$.
             if (admin.PasswordHash == "123456" || !admin.PasswordHash.StartsWith("$"))
@@ -21,5 +22,45 @@ public static class DbInitializer
                 context.SaveChanges();
             }
         }
+
+        // --- MIGRATION: Consolidate Barista Positions ---
+        // 1. Ensure "Pha chế" exists
+        var baristaPosition = context.Positions.FirstOrDefault(p => p.Name == "Pha chế");
+        if (baristaPosition == null)
+        {
+            baristaPosition = new Position { Name = "Pha chế", Status = true };
+            context.Positions.Add(baristaPosition);
+            context.SaveChanges();
+        }
+
+        // 2. Find old positions
+        var oldPositions = context.Positions
+            .Where(p => p.Name == "Pha chế (Parttime)" || p.Name == "Pha chế (Thử việc)")
+            .Include(p => p.Shifts)
+            .ToList();
+
+        if (oldPositions.Any())
+        {
+            foreach (var oldPos in oldPositions)
+            {
+                // 3. Move Shifts to new position
+                // Scheduls link to Shift, so moving Shift is enough.
+                if (oldPos.Shifts.Any())
+                {
+                    foreach (var shift in oldPos.Shifts)
+                    {
+                        shift.PositionId = baristaPosition.Id;
+                    }
+                }
+            }
+
+            // Save changes to update Foreign Keys first
+            context.SaveChanges();
+
+            // 4. Delete old positions
+            context.Positions.RemoveRange(oldPositions);
+            context.SaveChanges();
+        }
+        // ------------------------------------------------
     }
 }

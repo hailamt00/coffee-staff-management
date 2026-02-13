@@ -24,6 +24,11 @@ export const scheduleApi = {
         return data
     },
 
+    getWeeklyRequests: async (fromDate: string, toDate: string): Promise<ScheduleRequest[]> => {
+        const { data } = await axios.get('/schedules/requests/weekly', { params: { fromDate, toDate } })
+        return data
+    },
+
     getMyRequests: async (employeeId: number): Promise<ScheduleRequest[]> => {
         const { data } = await axios.get(`/schedules/my-requests/${employeeId}`)
         return data
@@ -33,11 +38,27 @@ export const scheduleApi = {
         await axios.post('/schedules/request', payload)
     },
 
+    updateRequest: async (id: number, payload: any) => {
+        await axios.put(`/schedules/request/${id}`, payload)
+    },
+
+    deleteRequest: async (id: number) => {
+        await axios.delete(`/schedules/request/${id}`)
+    },
+
     addSchedule: async (payload: any) => {
         await axios.post('/schedules/add', payload)
     },
 
     approveRequest: async (payload: ApproveShiftRequest) => {
         await axios.post('/schedules/approve', payload)
+    },
+
+    updateSchedule: async (id: number, payload: any) => {
+        await axios.put(`/schedules/${id}`, payload)
+    },
+
+    deleteSchedule: async (id: number) => {
+        await axios.delete(`/schedules/${id}`)
     },
 }
