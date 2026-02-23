@@ -9,7 +9,7 @@ export function usePayroll() {
 
     /* ================= QUERIES ================= */
 
-    const payrollsQuery = (month: number, year: number) => useQuery({
+    const usePayrollsQuery = (month: number, year: number) => useQuery({
         queryKey: ['payrolls', month, year],
         queryFn: () => payrollApi.getByMonth(month, year),
         enabled: month > 0 && year > 0,
@@ -49,7 +49,7 @@ export function usePayroll() {
         }),
 
         // Hooks
-        usePayrolls: (month: number, year: number) => payrollsQuery(month, year),
+        usePayrolls: (month: number, year: number) => usePayrollsQuery(month, year),
 
         // Commands
         generatePayroll: (employeeId: number, month: number, year: number) =>

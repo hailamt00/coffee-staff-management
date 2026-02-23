@@ -13,31 +13,31 @@ export function useSchedule() {
 
     /* ================= QUERIES ================= */
 
-    const schedulesQuery = (date: string) => useQuery({
+    const useSchedulesQuery = (date: string) => useQuery({
         queryKey: ['schedules', date],
         queryFn: () => scheduleApi.getSchedule(date),
         enabled: !!date,
     })
 
-    const requestsQuery = (date: string) => useQuery({
+    const useRequestsQuery = (date: string) => useQuery({
         queryKey: ['schedule-requests', date],
         queryFn: () => scheduleApi.getRequests(date),
         enabled: !!date,
     })
 
-    const weeklySchedulesQuery = (fromDate: string, toDate: string) => useQuery({
+    const useWeeklySchedulesQuery = (fromDate: string, toDate: string) => useQuery({
         queryKey: ['schedules-weekly', fromDate, toDate],
         queryFn: () => scheduleApi.getWeeklySchedule(fromDate, toDate),
         enabled: !!fromDate && !!toDate,
     })
 
-    const myRequestsQuery = (employeeId: number) => useQuery({
+    const useMyRequestsQuery = (employeeId: number) => useQuery({
         queryKey: ['schedule-requests', 'my', employeeId],
         queryFn: () => scheduleApi.getMyRequests(employeeId),
         enabled: !!employeeId,
     })
 
-    const weeklyRequestsQuery = (fromDate: string, toDate: string) => useQuery({
+    const useWeeklyRequestsQuery = (fromDate: string, toDate: string) => useQuery({
         queryKey: ['schedule-requests', 'weekly', fromDate, toDate],
         queryFn: () => scheduleApi.getWeeklyRequests(fromDate, toDate),
         enabled: !!fromDate && !!toDate,
@@ -177,11 +177,11 @@ export function useSchedule() {
         }),
 
         // These are meant to be used in components
-        useSchedules: (date: string) => schedulesQuery(date),
-        useWeeklySchedule: (fromDate: string, toDate: string) => weeklySchedulesQuery(fromDate, toDate),
-        useRequests: (date: string) => requestsQuery(date),
-        useWeeklyRequests: (fromDate: string, toDate: string) => weeklyRequestsQuery(fromDate, toDate),
-        useMyRequests: (employeeId: number) => myRequestsQuery(employeeId),
+        useSchedules: (date: string) => useSchedulesQuery(date),
+        useWeeklySchedule: (fromDate: string, toDate: string) => useWeeklySchedulesQuery(fromDate, toDate),
+        useRequests: (date: string) => useRequestsQuery(date),
+        useWeeklyRequests: (fromDate: string, toDate: string) => useWeeklyRequestsQuery(fromDate, toDate),
+        useMyRequests: (employeeId: number) => useMyRequestsQuery(employeeId),
 
         // Command methods
         createRequest: createMutation.mutateAsync,

@@ -13,7 +13,7 @@ export function useAttendance() {
 
     /* ================= QUERIES ================= */
 
-    const attendanceQuery = (date: string) => useQuery({
+    const useAttendanceQuery = (date: string) => useQuery({
         queryKey: ['attendance', date],
         queryFn: () => attendanceApi.getByDate(date),
         enabled: !!date,
@@ -75,7 +75,7 @@ export function useAttendance() {
         }),
 
         // Hooks
-        useAttendance: (date: string) => attendanceQuery(date),
+        useAttendance: (date: string) => useAttendanceQuery(date),
 
         // Commands
         checkIn: checkInMutation.mutateAsync,

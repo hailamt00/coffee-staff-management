@@ -7,7 +7,7 @@ export function useAdjustment() {
 
     /* ================= QUERIES ================= */
 
-    const adjustmentsQuery = (month: number, year: number) => useQuery({
+    const useAdjustmentsQuery = (month: number, year: number) => useQuery({
         queryKey: ['adjustments', month, year],
         queryFn: async () => {
             const response = await axios.get<Adjustment[]>('/rewardspenalties/all', {
@@ -31,7 +31,7 @@ export function useAdjustment() {
         }),
 
         // Hooks
-        useAdjustments: (month: number, year: number) => adjustmentsQuery(month, year),
+        useAdjustments: (month: number, year: number) => useAdjustmentsQuery(month, year),
 
         // Legacy states
         adjustments: [],

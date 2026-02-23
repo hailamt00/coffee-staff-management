@@ -13,7 +13,7 @@ export function useRevenue() {
 
     /* ================= QUERIES ================= */
 
-    const revenuesQuery = (date: string) => useQuery({
+    const useRevenuesQuery = (date: string) => useQuery({
         queryKey: ['revenues', date],
         queryFn: () => revenueApi.getByDate(date),
         enabled: !!date,
@@ -75,7 +75,7 @@ export function useRevenue() {
         }),
 
         // Hooks
-        useRevenues: (date: string) => revenuesQuery(date),
+        useRevenues: (date: string) => useRevenuesQuery(date),
 
         // Commands
         createRevenue: createRevenueMutation.mutateAsync,

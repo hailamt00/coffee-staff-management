@@ -334,7 +334,7 @@ export default function StaffSchedulePage() {
                                         // Status visualization
                                         let statusLabel = 'Empty'
                                         let statusStyles = 'opacity-10'
-                                        let dotColor = 'bg-slate-300 dark:bg-neutral-600'
+                                        const dotColor = 'bg-slate-300 dark:bg-neutral-600'
 
                                         if (item) {
                                             if (item.type === 'official') {
