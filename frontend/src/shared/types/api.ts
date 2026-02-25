@@ -103,6 +103,22 @@ export interface Shift {
   positionName?: string
 }
 
+export interface CreateAttendancePayload {
+  employeeId: number
+  shiftId: number
+  workDate: string
+  checkIn?: string
+  checkOut?: string
+  note?: string
+}
+
+export interface UpdateAttendancePayload {
+  attendanceId: number
+  checkIn?: string
+  checkOut?: string
+  note?: string
+}
+
 /* ========= POSITION ========= */
 export interface Position {
   id: number
@@ -139,12 +155,18 @@ export type AttendanceStatus = 'present' | 'absent' | 'late'
 export interface Attendance {
   id: number
   employeeId: number
+  employeeName?: string
+  employeePhone?: string
   shiftId: number
+  shiftName?: string
+  positionName?: string
   workDate: string
   checkIn?: string | null
   checkOut?: string | null
+  totalHours?: number
+  note?: string
   status: AttendanceStatus
-  createdAt: string
+  createdAt?: string
 }
 
 export interface CheckInRequest {
@@ -217,6 +239,8 @@ export interface Schedule {
   workDate: string
   note?: string
   shift?: Shift
+  checkIn?: string | null
+  checkOut?: string | null
 }
 
 export interface AddScheduleRequest {
@@ -227,6 +251,7 @@ export interface AddScheduleRequest {
 }
 
 export interface UpdateScheduleRequest {
+  id: number
   shiftId: number
   workDate: string
   note?: string
@@ -244,6 +269,7 @@ export interface ScheduleRequest {
   status: string
   employeeName?: string
   employeeCode?: string
+  employeePhone?: string
   note?: string
 }
 
@@ -278,6 +304,8 @@ export interface Revenue {
   openingBalance: number
   cash: number
   bank: number
+  income: number
+  expenses: number
   net: number
   totalRevenue: number
   deviation: number
@@ -298,6 +326,8 @@ export interface CreateRevenueRequest {
   openingBalance: number
   cash: number
   bank: number
+  income: number
+  expenses: number
   note?: string
 }
 /* ======================================================

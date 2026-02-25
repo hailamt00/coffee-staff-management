@@ -45,8 +45,8 @@ export default function Sidebar({
       <div className="flex h-14 items-center justify-between px-4 border-b border-slate-200 dark:border-neutral-800 bg-slate-50/50 dark:bg-black/20">
         {!collapsed && (
           <div className="flex flex-col leading-none">
-            <span className="text-sm font-black tracking-tighter text-slate-900 dark:text-white uppercase">CSM Elite</span>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">V.2.0 PRO</span>
+            <span className="text-sm font-black tracking-tight text-slate-900 dark:text-white">CSM Elite</span>
+            <span className="text-[11px] font-bold text-slate-500 tracking-wide mt-0.5">V.2.0 Pro</span>
           </div>
         )}
         {collapsed && (
@@ -85,7 +85,7 @@ export default function Sidebar({
                 {/* Section label */}
                 {section.label && !collapsed && (
                   <div className="px-3 mb-2">
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+                    <span className="text-[11px] font-bold tracking-wide text-slate-400">
                       {section.label}
                     </span>
                   </div>
@@ -133,7 +133,7 @@ export default function Sidebar({
                     return collapsed ? (
                       <Tooltip key={item.path}>
                         <TooltipTrigger asChild>{button}</TooltipTrigger>
-                        <TooltipContent side="right" className="bg-slate-900 text-white border-slate-800 text-[10px] font-bold uppercase tracking-widest">
+                        <TooltipContent side="right" className="bg-slate-900 text-white border-slate-800 text-[11px] font-bold tracking-wide">
                           {item.label}
                         </TooltipContent>
                       </Tooltip>
@@ -161,8 +161,8 @@ export default function Sidebar({
 
           {!collapsed && (
             <div className="flex-1 min-w-0">
-              <p className="text-[12px] font-black text-white truncate uppercase tracking-tighter">Administrator</p>
-              <p className="text-[9px] font-bold text-slate-500 truncate uppercase tracking-widest mt-0.5">System Root</p>
+              <p className="text-xs font-black text-white truncate tracking-tight">Administrator</p>
+              <p className="text-[11px] font-bold text-slate-400 truncate tracking-wide mt-0.5">System Root</p>
             </div>
           )}
 

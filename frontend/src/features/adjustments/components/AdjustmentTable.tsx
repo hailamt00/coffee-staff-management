@@ -12,15 +12,20 @@ interface Props {
 }
 
 export default function AdjustmentTable({ data, loading }: Props) {
-  const columns = useMemo<ColumnDef<Adjustment>[]>(() => [
+  const columns = useMemo<ColumnDef<any>[]>(() => [
+    {
+      accessorKey: "createdAt",
+      header: "Ngày",
+      cell: ({ row }) => <span className="text-sm font-medium text-slate-700">{formatDate(row.getValue("createdAt"))}</span>
+    },
     {
       accessorKey: "employeeName",
-      header: "Employee",
-      cell: ({ row }) => <div className="font-medium text-slate-900 dark:text-slate-100">{row.getValue("employeeName")}</div>
+      header: "Nhân Viên",
+      cell: ({ row }) => <div className="font-semibold text-slate-900 dark:text-slate-100">{row.getValue("employeeName")}</div>
     },
     {
       accessorKey: "typeName",
-      header: "Type",
+      header: "Lỗi vi phạm",
       cell: ({ row }) => {
         const type = row.getValue("typeName") as string
         const isBonus = type.toLowerCase().includes('thưởng') || type.toLowerCase().includes('bonus')
@@ -35,42 +40,31 @@ export default function AdjustmentTable({ data, loading }: Props) {
       }
     },
     {
-      accessorKey: "createdAt",
-      header: "Date",
-      cell: ({ row }) => <span className="text-sm text-slate-500">{formatDate(row.getValue("createdAt"))}</span>
-    },
-    {
       accessorKey: "amount",
-      header: () => <div className="text-right">Amount</div>,
+      header: () => <div className="text-right">Số điểm (Tiền)</div>,
       cell: ({ row }) => {
         const amount = row.getValue("amount") as number
         const type = row.original.typeName
         const isBonus = type.toLowerCase().includes('thưởng') || type.toLowerCase().includes('bonus')
         return (
           <div className={`text-right font-mono font-bold ${isBonus ? 'text-emerald-600' : 'text-red-600'}`}>
-            {isBonus ? '+' : '-'}{formatMoney(amount)}
+            {isBonus ? '+' : '-'}{formatMoney(Math.abs(amount))}
           </div>
         )
       }
     },
     {
-      // We don't have explicit "Reason" field in DTO yet, unless Type Name covers it or we add it. 
-      // DTO has TypeName.
-      // Let's hide Reason for now or use TypeName as Reason.
-      accessorKey: "typeName",
-      header: "Reason/Type",
-      id: "reason"
-    },
-    // We don't have Status in Adjustment DTO. It's usually "Applied" or "Pending" but here we fetch applied ones?
-    // RewardsPenaltiesController Apply -> Immediately applied.
-    // So status is effectively "Approved/Applied".
+      id: "note",
+      header: "Ghi Chú",
+      cell: ({ row }) => <div className="text-xs text-muted-foreground">{row.original.note || "—"}</div>
+    }
   ], [])
 
   return (
     <Card className="border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm overflow-hidden">
       <CardHeader className="bg-slate-50/50 dark:bg-black/20 border-b border-slate-100 dark:border-neutral-800">
         <CardTitle className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-          Recent Adjustments
+          Lịch sử vi phạm / khen thưởng
         </CardTitle>
       </CardHeader>
 

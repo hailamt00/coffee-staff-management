@@ -168,6 +168,8 @@ CREATE TABLE revenues (
     opening_balance NUMERIC(12,2),
     cash NUMERIC(12,2),
     bank NUMERIC(12,2),
+    income NUMERIC(12,2) DEFAULT 0,
+    expenses NUMERIC(12,2) DEFAULT 0,
     net NUMERIC(12,2),
     revenue NUMERIC(12,2),
     deviation NUMERIC(12,2),

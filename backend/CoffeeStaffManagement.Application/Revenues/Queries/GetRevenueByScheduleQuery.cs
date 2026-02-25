@@ -29,6 +29,8 @@ public class GetRevenueByScheduleQueryHandler : IRequestHandler<GetRevenueBySche
             OpeningBalance = revenue.OpeningBalance,
             Cash = revenue.Cash,
             Bank = revenue.Bank,
+            Income = revenue.Income,
+            Expenses = revenue.Expenses,
             TotalRevenue = revenue.TotalRevenue,
             Net = revenue.Net,
             Deviation = revenue.Deviation,

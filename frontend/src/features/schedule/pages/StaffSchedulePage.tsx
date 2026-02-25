@@ -25,17 +25,20 @@ import {
     TableHeader,
     TableRow,
 } from '@/shared/components/ui/table'
+import { Checkbox } from '@/shared/components/ui/checkbox'
 import { useSchedule } from '@/features/schedule/hooks/useSchedule'
 import { usePosition } from '@/features/positions/hooks/usePosition'
-import { Clock, Plus, CalendarDays, Info } from 'lucide-react'
+import { Clock, Plus, Info } from 'lucide-react'
 import { formatDate } from '@/shared/utils/format'
 import { useMemo } from 'react'
+import { DeleteConfirmDialog } from '@/shared/components/ui/delete-confirm-dialog'
 
 export default function StaffSchedulePage() {
     const navigate = useNavigate()
     const staffJson = localStorage.getItem('staffInfo')
     const staff = staffJson ? JSON.parse(staffJson) : null
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10))
+    const [filterPosition, setFilterPosition] = useState('all')
 
     const {
         useWeeklySchedule,
@@ -103,17 +106,21 @@ export default function StaffSchedulePage() {
     const allPositions = useMemo(() => positions || [], [positions])
 
     const allShifts = useMemo(() => {
-        return allPositions.flatMap(p => (p.shifts || []).map(s => ({ ...s, positionName: p.name, positionId: p.id })))
-    }, [allPositions])
+        let filtered = allPositions
+        if (filterPosition !== 'all') {
+            filtered = allPositions.filter(p => p.name === filterPosition)
+        }
+        return filtered.flatMap(p => (p.shifts || []).map(s => ({ ...s, positionName: p.name, positionId: p.id })))
+    }, [allPositions, filterPosition])
 
     /* ================= REQUEST DIALOG ================= */
     const [openRequest, setOpenRequest] = useState(false)
     const [editMode, setEditMode] = useState(false)
     const [selectedRequestId, setSelectedRequestId] = useState<number | null>(null)
     const [reqPositionId, setReqPositionId] = useState('')
-    const [reqShiftId, setReqShiftId] = useState('')
-    const [reqDate, setReqDate] = useState(date)
+    const [selectedCells, setSelectedCells] = useState<string[]>([])
     const [reqNote, setReqNote] = useState('')
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
 
     const filteredShifts = useMemo(() => {
         if (!reqPositionId) return []
@@ -124,31 +131,37 @@ export default function StaffSchedulePage() {
         setOpenRequest(false)
         setEditMode(false)
         setSelectedRequestId(null)
-        setReqShiftId('')
         setReqPositionId('')
+        setSelectedCells([])
         setReqNote('')
+        setIsDeleteDialogOpen(false)
     }
 
     const handleCreateRequest = async () => {
-        if (!reqShiftId) return
+        if (selectedCells.length === 0) return
 
         if (editMode && selectedRequestId) {
+            const [shiftId, dateStr] = selectedCells[0].split('|')
             await updateRequest({
                 id: selectedRequestId,
                 data: {
                     id: selectedRequestId,
-                    shiftId: Number(reqShiftId),
-                    workDate: reqDate,
+                    shiftId: Number(shiftId),
+                    workDate: dateStr,
                     note: reqNote
                 }
             })
         } else {
-            await createRequest({
-                employeeId: staff.id,
-                shiftId: Number(reqShiftId),
-                workDate: reqDate,
-                note: reqNote
-            })
+            // Process sequentially for safety
+            for (const cell of selectedCells) {
+                const [shiftId, dateStr] = cell.split('|')
+                await createRequest({
+                    employeeId: staff.id,
+                    shiftId: Number(shiftId),
+                    workDate: dateStr,
+                    note: reqNote
+                })
+            }
         }
         resetDialog()
     }
@@ -156,29 +169,34 @@ export default function StaffSchedulePage() {
     const handleDeleteRequest = async () => {
         if (selectedRequestId) {
             await deleteRequest(selectedRequestId)
+            setIsDeleteDialogOpen(false)
             resetDialog()
         }
     }
 
     const handleCellClick = (item: any, dateStr: string) => {
-        setReqDate(dateStr)
         if (!item) {
             // Empty cell - create new request
             setEditMode(false)
+            setReqPositionId('')
+            setSelectedCells([])
+            setReqNote('')
             setOpenRequest(true)
         } else if (item.type === 'request') {
             // Pending/Rejected request - edit/delete
             setEditMode(true)
             setSelectedRequestId(item.requestId)
             setReqPositionId(String(allPositions.find(p => p.name === item.positionName)?.id || ''))
-            setReqShiftId(String(allShifts.find(s => s.name === item.shiftName && s.positionName === item.positionName)?.id || ''))
+            const shiftId = String(allShifts.find(s => s.name === item.shiftName && s.positionName === item.positionName)?.id || '')
+            setSelectedCells([`${shiftId}|${dateStr}`])
             setReqNote(item.note || '')
             setOpenRequest(true)
         } else if (item.type === 'official') {
             // Approved schedule - Re-request (edit)
-            setEditMode(false) // It's a new request but based on old one
+            setEditMode(false)
             setReqPositionId(String(allPositions.find(p => p.name === item.positionName)?.id || ''))
-            setReqShiftId(String(item.shiftId || allShifts.find(s => s.name === item.shiftName && s.positionName === item.positionName)?.id || ''))
+            const shiftId = String(item.shiftId || allShifts.find(s => s.name === item.shiftName && s.positionName === item.positionName)?.id || '')
+            setSelectedCells([`${shiftId}|${dateStr}`])
             setReqNote(item.note || '')
             setOpenRequest(true)
         }
@@ -193,40 +211,90 @@ export default function StaffSchedulePage() {
             </div>
 
             <div className="flex items-center justify-between px-2">
-                <div>
-                    <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none uppercase">
-                        My_Schedule
-                    </h1>
-                    <p className="mt-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                        Roster_Management
-                    </p>
+                <div className="flex flex-wrap items-end gap-12">
+                    <div>
+                        <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
+                            My Schedule
+                        </h1>
+                        <p className="mt-1 text-[11px] font-bold text-slate-500 tracking-wide">
+                            Roster Management
+                        </p>
+                    </div>
+
+                    {/* Filter UI */}
+                    <div className="flex items-center gap-3">
+                        <Label className="text-[11px] font-bold tracking-wide text-slate-400">Filter By:</Label>
+                        <Select value={filterPosition} onValueChange={setFilterPosition}>
+                            <SelectTrigger className="w-[180px] h-9 bg-slate-50 border-slate-200 dark:bg-neutral-800 dark:border-neutral-700 text-xs font-bold">
+                                <SelectValue placeholder="All Positions" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">All Positions</SelectItem>
+                                {allPositions.map(p => (
+                                    <SelectItem key={p.id} value={p.name}>{p.name}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
                 </div>
 
+                <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2 bg-slate-100 dark:bg-neutral-800 p-1 rounded-lg">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0"
+                            onClick={() => {
+                                const d = new Date(date)
+                                d.setDate(d.getDate() - 7)
+                                setDate(d.toISOString().slice(0, 10))
+                            }}
+                        >
+                            &lt;
+                        </Button>
+                        <div className="px-2 text-sm font-bold min-w-[140px] text-center">
+                            {(() => {
+                                const curr = new Date(date)
+                                const day = curr.getDay()
+                                const diff = curr.getDate() - day + (day === 0 ? -6 : 1)
+                                const monday = new Date(curr.setDate(diff))
+                                const sunday = new Date(curr.setDate(diff + 6))
+                                return `${formatDate(monday.toISOString().slice(0, 10))} - ${formatDate(sunday.toISOString().slice(0, 10))}`
+                            })()}
+                        </div>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0"
+                            onClick={() => {
+                                const d = new Date(date)
+                                d.setDate(d.getDate() + 7)
+                                setDate(d.toISOString().slice(0, 10))
+                            }}
+                        >
+                            &gt;
+                        </Button>
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex items-center justify-end px-2">
                 <Dialog open={openRequest} onOpenChange={setOpenRequest}>
                     <DialogTrigger asChild>
-                        <Button className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 size-12 rounded-xl p-0 flex items-center justify-center shadow-lg transition-transform hover:scale-105 active:scale-95 group">
-                            <Plus className="h-6 w-6 transition-transform group-hover:rotate-90" />
+                        <Button className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 border-none h-10 px-6 rounded-lg font-bold tracking-wide text-sm">
+                            <Plus className="mr-2 h-4 w-4" />
+                            Request Shift
                         </Button>
                     </DialogTrigger>
                     <DialogContent className="max-w-[400px] rounded-2xl border border-slate-200/60 dark:border-neutral-800/60 backdrop-blur-xl bg-white/90 dark:bg-neutral-900/90 shadow-2xl p-0 overflow-hidden">
                         <DialogHeader className="p-6 border-b border-slate-100 dark:border-neutral-800/50">
-                            <DialogTitle className="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight">
-                                {editMode ? 'Edit_Request' : 'Request_Shift'}
+                            <DialogTitle className="text-xl font-black text-slate-900 dark:text-white tracking-tight">
+                                {editMode ? 'Edit Request' : 'Request Shift'}
                             </DialogTitle>
                         </DialogHeader>
-                        <div className="p-6 space-y-4">
+                        <div className="p-6 space-y-4 max-h-[85vh] overflow-y-auto custom-scrollbar">
                             <div className="space-y-2">
-                                <Label htmlFor="requestDate" className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Date</Label>
-                                <Input
-                                    id="requestDate"
-                                    type="date"
-                                    value={reqDate}
-                                    onChange={e => setReqDate(e.target.value)}
-                                    className="h-11 rounded-xl border-slate-200/60 dark:border-neutral-800/60 bg-white/50 dark:bg-neutral-900/50"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="requestPosition" className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Position</Label>
+                                <Label htmlFor="requestPosition" className="text-[11px] font-bold text-slate-500 tracking-wide">Position</Label>
                                 <Select value={reqPositionId} onValueChange={setReqPositionId}>
                                     <SelectTrigger id="requestPosition" className="h-11 rounded-xl border-slate-200/60 dark:border-neutral-800/60 bg-white/50 dark:bg-neutral-900/50">
                                         <SelectValue placeholder="Select Position" />
@@ -238,23 +306,83 @@ export default function StaffSchedulePage() {
                                     </SelectContent>
                                 </Select>
                             </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="requestShift" className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Shift</Label>
-                                <Select value={reqShiftId} onValueChange={setReqShiftId} disabled={!reqPositionId}>
-                                    <SelectTrigger id="requestShift" className="h-11 rounded-xl border-slate-200/60 dark:border-neutral-800/60 bg-white/50 dark:bg-neutral-900/50">
-                                        <SelectValue placeholder={reqPositionId ? "Select Shift" : "Choose Position First"} />
-                                    </SelectTrigger>
-                                    <SelectContent className="rounded-xl">
-                                        {filteredShifts.map(s => (
-                                            <SelectItem key={s.id} value={String(s.id)}>
-                                                {s.name} ({s.startTime?.slice(0, 5)} - {s.endTime?.slice(0, 5)})
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
+
+                            <div className="space-y-2 pt-2">
+                                <Label className="text-[11px] font-bold text-slate-500 tracking-wide">Select Shifts {editMode && '(Edit limits to single selection)'}</Label>
+                                {reqPositionId ? (
+                                    <div className="border border-slate-200 dark:border-neutral-800 rounded-xl overflow-hidden overflow-x-auto shadow-sm">
+                                        <Table>
+                                            <TableHeader className="bg-slate-50 dark:bg-white/5 border-b border-slate-100 dark:border-neutral-800">
+                                                <TableRow>
+                                                    <TableHead className="text-[10px] w-[90px] p-3 text-center border-r border-slate-100 dark:border-neutral-800 text-slate-400 font-bold uppercase tracking-widest">Shift / Day</TableHead>
+                                                    {weekDates.map(d => (
+                                                        <TableHead key={d.toISOString()} className="text-[10px] text-center p-2 border-r border-slate-100 dark:border-neutral-800 last:border-r-0">
+                                                            <div className="font-bold text-slate-800 dark:text-slate-200">{d.toLocaleDateString('vi-VN', { weekday: 'short' })}</div>
+                                                            <div className="text-slate-400 font-medium">{d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' })}</div>
+                                                        </TableHead>
+                                                    ))}
+                                                </TableRow>
+                                            </TableHeader>
+                                            <TableBody>
+                                                {filteredShifts.map((s, idx) => (
+                                                    <TableRow key={s.id} className={idx !== filteredShifts.length - 1 ? "border-b border-slate-50 dark:border-neutral-800/50" : ""}>
+                                                        <TableCell className="text-[10px] font-black text-slate-700 dark:text-slate-300 p-3 text-center border-r border-slate-100 dark:border-neutral-800 bg-slate-50/30 dark:bg-white/5">
+                                                            {s.name}
+                                                        </TableCell>
+                                                        {weekDates.map(d => {
+                                                            const dateStr = d.toISOString().slice(0, 10)
+                                                            const key = `${s.id}|${dateStr}`
+                                                            const isSelected = selectedCells.includes(key)
+
+                                                            const existing = myScheduleMap.get(`${s.name}-${dateStr}`)
+                                                            const isAssigned = existing?.type === 'official'
+                                                            const isPending = existing?.type === 'request' && existing.status.toLowerCase() === 'pending'
+
+                                                            // For edit mode, we can only update the single request we clicked. For create mode, disable assigned/pending slots.
+                                                            const isDisabled = (editMode && !isSelected) || (!editMode && (isAssigned || isPending))
+
+                                                            return (
+                                                                <TableCell key={dateStr} className={`text-center p-2 border-r border-slate-100 dark:border-neutral-800 last:border-r-0 ${isSelected ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}`}>
+                                                                    {isAssigned ? (
+                                                                        <div className="w-4 h-4 rounded-full bg-emerald-100 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center mx-auto" title="Already officially assigned">
+                                                                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                                        </div>
+                                                                    ) : (isPending && !isSelected) ? (
+                                                                        <div className="w-4 h-4 rounded-full bg-slate-100 dark:bg-neutral-800 border-2 border-dashed border-slate-300 dark:border-neutral-600 flex items-center justify-center mx-auto" title="Pending request" />
+                                                                    ) : (
+                                                                        <div className="flex justify-center">
+                                                                            <Checkbox
+                                                                                checked={isSelected}
+                                                                                onCheckedChange={(checked) => {
+                                                                                    if (editMode) {
+                                                                                        if (checked) setSelectedCells([key]) // Toggle radio-like behavior
+                                                                                        else setSelectedCells([]) // Allow unselecting, technically they should select *something* if submitting
+                                                                                    } else {
+                                                                                        if (checked) setSelectedCells(prev => [...prev, key])
+                                                                                        else setSelectedCells(prev => prev.filter(k => k !== key))
+                                                                                    }
+                                                                                }}
+                                                                                disabled={isDisabled}
+                                                                                className={`w-5 h-5 ${editMode ? 'rounded-full' : 'rounded-md shadow-sm'}`}
+                                                                            />
+                                                                        </div>
+                                                                    )}
+                                                                </TableCell>
+                                                            )
+                                                        })}
+                                                    </TableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    </div>
+                                ) : (
+                                    <div className="text-center p-8 border border-dashed border-slate-200 dark:border-neutral-800 rounded-xl text-slate-400 text-[11px] font-bold uppercase tracking-widest bg-slate-50/50 dark:bg-white/5">
+                                        Please select a position first
+                                    </div>
+                                )}
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="requestNote" className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Note (Optional)</Label>
+                                <Label htmlFor="requestNote" className="text-[11px] font-bold text-slate-500 tracking-wide">Note (Optional)</Label>
                                 <Input
                                     id="requestNote"
                                     value={reqNote}
@@ -265,39 +393,34 @@ export default function StaffSchedulePage() {
                             </div>
                             <div className="flex gap-2 pt-2">
                                 {editMode && (
-                                    <Button
-                                        onClick={handleDeleteRequest}
-                                        variant="ghost"
-                                        className="flex-1 h-12 rounded-xl border border-red-200/50 text-red-500 hover:bg-red-50 uppercase font-black text-[10px] tracking-widest"
-                                    >
-                                        Delete
-                                    </Button>
+                                    <>
+                                        <DeleteConfirmDialog
+                                            open={isDeleteDialogOpen}
+                                            onOpenChange={setIsDeleteDialogOpen}
+                                            onConfirm={handleDeleteRequest}
+                                            title="Delete Shift Request"
+                                            description="Are you sure you want to delete this shift request? This action cannot be undone."
+                                        />
+                                        <Button
+                                            onClick={(e) => { e.preventDefault(); setIsDeleteDialogOpen(true); }}
+                                            variant="ghost"
+                                            className="flex-1 h-12 rounded-xl border border-red-200/50 text-red-500 hover:bg-red-50 font-bold text-xs tracking-wide w-full"
+                                        >
+                                            Delete
+                                        </Button>
+                                    </>
                                 )}
                                 <Button
                                     onClick={handleCreateRequest}
-                                    className="flex-[2] bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 h-12 rounded-xl uppercase font-black text-[10px] tracking-widest"
+                                    disabled={selectedCells.length === 0}
+                                    className="flex-[2] bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 h-12 rounded-xl font-bold text-xs tracking-wide"
                                 >
-                                    {editMode ? 'Update_Request' : 'Submit_Request'}
+                                    {editMode ? 'Update Request' : `Submit Request (${selectedCells.length})`}
                                 </Button>
                             </div>
                         </div>
                     </DialogContent>
                 </Dialog>
-            </div>
-
-            <div className="flex items-center gap-3 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-md p-4 rounded-xl border border-slate-200/60 dark:border-neutral-800/60 shadow-sm mx-2 group hover:border-slate-300 dark:hover:border-neutral-700 transition-all">
-                <CalendarDays className="h-4 w-4 text-slate-400 group-hover:text-black dark:group-hover:text-white transition-colors" />
-                <Label htmlFor="mainScheduleDate" className="sr-only">Schedule Date</Label>
-                <Input
-                    id="mainScheduleDate"
-                    type="date"
-                    value={date}
-                    onChange={e => setDate(e.target.value)}
-                    className="border-none shadow-none focus-visible:ring-0 p-0 h-auto font-black text-[10px] uppercase tracking-widest bg-transparent cursor-pointer"
-                />
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-auto">
-                    Week View
-                </span>
             </div>
 
             <div className="mx-2 overflow-hidden border border-slate-200/60 dark:border-neutral-800/60 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-sm rounded-2xl">
@@ -310,10 +433,10 @@ export default function StaffSchedulePage() {
                                     <TableHead key={d.toISOString()} className="text-center p-3 border-r border-slate-100 dark:border-neutral-800 last:border-r-0">
                                         <div className="flex flex-col items-center gap-0.5">
                                             <span className="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-widest">
-                                                {d.toLocaleDateString('en-US', { weekday: 'short' })}
+                                                {d.toLocaleDateString('vi-VN', { weekday: 'short' })}
                                             </span>
                                             <span className="text-[9px] font-bold text-slate-400 uppercase">
-                                                {d.toLocaleDateString('en-US', { day: '2-digit', month: '2-digit' })}
+                                                {d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' })}
                                             </span>
                                         </div>
                                     </TableHead>
@@ -395,24 +518,7 @@ export default function StaffSchedulePage() {
                 </div>
             </div>
 
-            <div className="fixed bottom-6 left-4 right-4 bg-white/80 dark:bg-neutral-950/80 backdrop-blur-xl border border-slate-200/60 dark:border-neutral-800/60 p-5 rounded-2xl shadow-2xl flex items-center justify-between z-50">
-                <div>
-                    <p className="text-[10px] text-slate-400 uppercase font-black tracking-[0.2em] mb-0.5">Focus_Date</p>
-                    <p className="text-slate-900 dark:text-white font-black tracking-tight leading-none text-lg uppercase">{formatDate(date)}</p>
-                </div>
-                <div className="flex gap-2">
-                    <Button variant="ghost" size="sm" className="h-10 px-4 rounded-lg bg-slate-50 dark:bg-white/5 text-[10px] font-black uppercase tracking-widest hover:bg-slate-100 dark:hover:bg-neutral-800 transition-all active:scale-95" onClick={() => {
-                        const d = new Date(date)
-                        d.setDate(d.getDate() - 1)
-                        setDate(d.toISOString().slice(0, 10))
-                    }}>Prev</Button>
-                    <Button variant="ghost" size="sm" className="h-10 px-4 rounded-lg bg-slate-50 dark:bg-white/5 text-[10px] font-black uppercase tracking-widest hover:bg-slate-100 dark:hover:bg-neutral-800 transition-all active:scale-95" onClick={() => {
-                        const d = new Date(date)
-                        d.setDate(d.getDate() + 1)
-                        setDate(d.toISOString().slice(0, 10))
-                    }}>Next</Button>
-                </div>
-            </div>
+            {/* Bottom floating nav removed in favor of top unified nav */}
         </div>
     )
 }

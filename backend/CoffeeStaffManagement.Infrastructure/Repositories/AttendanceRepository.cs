@@ -48,6 +48,9 @@ public class AttendanceRepository : IAttendanceRepository
     DateOnly toDate)
     {
         return await _context.Attendances
+            .Include(a => a.Employee)
+            .Include(a => a.Schedule)
+                .ThenInclude(s => s!.Employee)
             .Include(a => a.Schedule)
                 .ThenInclude(s => s!.Shift)
                     .ThenInclude(sh => sh!.Position)
@@ -65,7 +68,12 @@ public class AttendanceRepository : IAttendanceRepository
     public async Task<List<Attendance>> GetByDateRangeAsync(DateOnly fromDate, DateOnly toDate)
     {
         return await _context.Attendances
+            .Include(a => a.Employee)
             .Include(a => a.Schedule)
+                .ThenInclude(s => s!.Employee)
+            .Include(a => a.Schedule)
+                .ThenInclude(s => s!.Shift)
+                    .ThenInclude(sh => sh!.Position)
             .Where(a =>
                 a.Schedule != null &&
                 a.Schedule.WorkDate >= fromDate &&
@@ -82,11 +90,22 @@ public class AttendanceRepository : IAttendanceRepository
         await _context.SaveChangesAsync(ct);
     }
 
+    public async Task<Attendance?> GetByIdAsync(int id)
+    {
+        return await _context.Attendances.FindAsync(id);
+    }
+
     public async Task UpdateAsync(
         Attendance attendance,
         CancellationToken ct)
     {
         _context.Attendances.Update(attendance);
+        await _context.SaveChangesAsync(ct);
+    }
+
+    public async Task DeleteAsync(Attendance attendance, CancellationToken ct)
+    {
+        _context.Attendances.Remove(attendance);
         await _context.SaveChangesAsync(ct);
     }
 }

@@ -149,18 +149,18 @@ export function WeeklyScheduleTable({ date, shifts, onCellClick, filterPosition 
                             <TableRow className="bg-slate-50/50 dark:bg-white/5 border-b border-slate-200 dark:border-neutral-800">
                                 <TableHead className="w-[180px] border-r border-slate-200 dark:border-neutral-800 py-6 px-4">
                                     <div className="flex flex-col gap-1">
-                                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Shift_Info</span>
-                                        <span className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tight">Timeline</span>
+                                        <span className="text-[11px] font-bold tracking-wide text-slate-400">Shift Info</span>
+                                        <span className="text-sm font-bold text-slate-900 dark:text-white tracking-tight">Timeline</span>
                                     </div>
                                 </TableHead>
                                 {weekDates.map((d) => (
                                     <TableHead key={d.toISOString()} className="text-center min-w-[140px] border-r border-slate-200 dark:border-neutral-800 last:border-r-0 p-3">
                                         <div className="flex flex-col items-center gap-1">
-                                            <span className="font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider text-[11px]">
-                                                {d.toLocaleDateString('en-US', { weekday: 'short' })}
+                                            <span className="font-bold text-slate-700 dark:text-slate-300 capitalize tracking-wide text-sm">
+                                                {d.toLocaleDateString('vi-VN', { weekday: 'short' })}
                                             </span>
                                             <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400">
-                                                {d.toLocaleDateString('en-US', { day: '2-digit', month: '2-digit' })}
+                                                {d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' })}
                                             </span>
                                         </div>
                                     </TableHead>
@@ -184,16 +184,21 @@ export function WeeklyScheduleTable({ date, shifts, onCellClick, filterPosition 
                                         const groupedByPosition: Record<string, any[]> = {}
                                         daySchedules.forEach(s => {
                                             const pos = s.positionName || 'Unknown'
+                                            if (filterPosition && filterPosition !== 'all' && pos !== filterPosition) {
+                                                return; // Skip if it doesn't match the current filter
+                                            }
                                             if (!groupedByPosition[pos]) groupedByPosition[pos] = []
                                             groupedByPosition[pos].push(s)
                                         })
 
                                         const sortedPositions = Object.keys(groupedByPosition).sort(sortPositions)
 
+                                        const totalSchedulesInCell = Object.values(groupedByPosition).flat().length;
+
                                         return (
                                             <TableCell key={dateStr} className="p-2 align-top h-32 border-r border-slate-200 dark:border-neutral-800 last:border-r-0 relative">
                                                 <div className="flex flex-col gap-2 h-full">
-                                                    {daySchedules.length === 0 ? (
+                                                    {totalSchedulesInCell === 0 ? (
                                                         <div
                                                             className="flex-1 flex items-center justify-center opacity-40 hover:opacity-100 transition-opacity cursor-pointer group/add"
                                                             onClick={(e) => {
@@ -221,6 +226,14 @@ export function WeeklyScheduleTable({ date, shifts, onCellClick, filterPosition 
                                                                                 >
                                                                                     <div className="flex flex-col overflow-hidden">
                                                                                         <span className="text-[11px] font-bold leading-tight line-clamp-1">{schedule.employeeName}</span>
+                                                                                        <span className="text-[9px] font-mono font-semibold bg-white/40 dark:bg-black/20 px-1 py-0.5 rounded w-max mt-1 text-slate-600 dark:text-slate-300">
+                                                                                            {schedule.shiftStartTime?.slice(0, 5) || '--:--'} - {schedule.shiftEndTime?.slice(0, 5) || '--:--'}
+                                                                                        </span>
+                                                                                        {(schedule.checkIn || schedule.checkOut) && (
+                                                                                            <span className="text-[9px] font-mono font-bold text-green-700 dark:text-green-400 bg-green-500/20 px-1 py-0.5 rounded w-max mt-1">
+                                                                                                Thực tế: {schedule.checkIn ? new Date(schedule.checkIn).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) : '--:--'} - {schedule.checkOut ? new Date(schedule.checkOut).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) : '--:--'}
+                                                                                            </span>
+                                                                                        )}
                                                                                         {schedule.note && (
                                                                                             <span className="text-[9px] italic opacity-70 line-clamp-2 mt-0.5" title={schedule.note}>
                                                                                                 "{schedule.note}"

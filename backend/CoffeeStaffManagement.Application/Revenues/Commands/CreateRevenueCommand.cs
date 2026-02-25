@@ -37,8 +37,11 @@ public class CreateRevenueCommandHandler : IRequestHandler<CreateRevenueCommand,
         // 1. Calculate Total Revenue = Cash + Bank
         var totalRevenue = request.Request.Cash + request.Request.Bank;
 
-        // 2. Deviation = Total (Expected is no longer tracked per revenue record in DB)
-        var deviation = totalRevenue;
+        // 2. Net Income/Loss = Total + Income - Expenses
+        var net = totalRevenue + request.Request.Income - request.Request.Expenses;
+
+        // 3. Deviation = difference from expected. Let's just track Net as Deviation placeholder for now.
+        var deviation = net;
 
         // For now, let's create the Revenue record first.
         var revenue = new Revenue
@@ -48,8 +51,10 @@ public class CreateRevenueCommandHandler : IRequestHandler<CreateRevenueCommand,
             OpeningBalance = request.Request.OpeningBalance,
             Cash = request.Request.Cash,
             Bank = request.Request.Bank,
+            Income = request.Request.Income,
+            Expenses = request.Request.Expenses,
             TotalRevenue = totalRevenue,
-            Net = totalRevenue, // Will be updated if expenses are added
+            Net = net,
             Deviation = deviation,
             Note = request.Request.Note,
             CreatedAt = DateTime.UtcNow
@@ -66,6 +71,8 @@ public class CreateRevenueCommandHandler : IRequestHandler<CreateRevenueCommand,
             OpeningBalance = revenue.OpeningBalance,
             Cash = revenue.Cash,
             Bank = revenue.Bank,
+            Income = revenue.Income,
+            Expenses = revenue.Expenses,
             TotalRevenue = revenue.TotalRevenue,
             Net = revenue.Net,
             Deviation = revenue.Deviation,

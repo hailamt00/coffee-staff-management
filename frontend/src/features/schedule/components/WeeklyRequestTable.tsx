@@ -122,8 +122,8 @@ export function WeeklyRequestTable({ date, shifts, filterPosition }: WeeklyReque
                             <TableHead className="w-[180px] border-r border-slate-200 dark:border-neutral-800 py-6 px-4">
                                 <div className="flex flex-col gap-2">
                                     <div className="flex flex-col gap-1">
-                                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Request_Grp</span>
-                                        <span className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tight">Timeline</span>
+                                        <span className="text-[11px] font-bold tracking-wide text-slate-400">Request Group</span>
+                                        <span className="text-sm font-bold text-slate-900 dark:text-white tracking-tight">Timeline</span>
                                     </div>
                                     <div className="flex items-center gap-2 mt-1">
                                         <input
@@ -133,7 +133,7 @@ export function WeeklyRequestTable({ date, shifts, filterPosition }: WeeklyReque
                                             onChange={(e) => setShowHandled(e.target.checked)}
                                             className="h-3 w-3 rounded border-slate-300"
                                         />
-                                        <label htmlFor="showHandled" className="text-[9px] font-bold text-slate-500 uppercase tracking-tighter cursor-pointer whitespace-nowrap">
+                                        <label htmlFor="showHandled" className="text-[11px] font-bold text-slate-500 tracking-wide cursor-pointer whitespace-nowrap">
                                             Show Handled
                                         </label>
                                     </div>
@@ -142,11 +142,11 @@ export function WeeklyRequestTable({ date, shifts, filterPosition }: WeeklyReque
                             {weekDates.map((d) => (
                                 <TableHead key={d.toISOString()} className="text-center min-w-[140px] border-r border-slate-200 dark:border-neutral-800 last:border-r-0 p-3">
                                     <div className="flex flex-col items-center gap-1">
-                                        <span className="font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider text-[11px]">
-                                            {d.toLocaleDateString('en-US', { weekday: 'short' })}
+                                        <span className="font-bold text-slate-700 dark:text-slate-300 capitalize tracking-wide text-sm">
+                                            {d.toLocaleDateString('vi-VN', { weekday: 'short' })}
                                         </span>
                                         <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400">
-                                            {d.toLocaleDateString('en-US', { day: '2-digit', month: '2-digit' })}
+                                            {d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' })}
                                         </span>
                                     </div>
                                 </TableHead>
@@ -240,7 +240,7 @@ export function WeeklyRequestTable({ date, shifts, filterPosition }: WeeklyReque
                                                                                         </Button>
                                                                                     </div>
                                                                                 ) : (
-                                                                                    <div className={`mt-1 text-[8px] font-black uppercase tracking-tighter text-center py-0.5 rounded ${req.status === 'approved' ? 'bg-emerald-200/50 text-emerald-800' : 'bg-red-200/50 text-red-800'}`}>
+                                                                                    <div className={`mt-1 text-[10px] font-bold capitalize tracking-wide text-center py-0.5 rounded ${req.status === 'approved' ? 'bg-emerald-200/50 text-emerald-800' : 'bg-red-200/50 text-red-800'}`}>
                                                                                         {req.status}
                                                                                     </div>
                                                                                 )}

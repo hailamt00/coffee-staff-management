@@ -1,0 +1,64 @@
+[
+  {
+    "id": 19,
+    "name": "Pha chế",
+    "status": true,
+    "shifts": [
+      {
+        "id": 62,
+        "name": "Ca Sáng",
+        "startTime": "06:00",
+        "endTime": "12:00",
+        "status": true,
+        "isEnabled": true
+      },
+      {
+        "id": 63,
+        "name": "Ca Chiều",
+        "startTime": "12:00",
+        "endTime": "18:00",
+        "status": true,
+        "isEnabled": true
+      },
+      {
+        "id": 64,
+        "name": "Ca Tối",
+        "startTime": "18:00",
+        "endTime": "23:00",
+        "status": true,
+        "isEnabled": true
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "name": "Phục vụ",
+    "status": true,
+    "shifts": [
+      {
+        "id": 59,
+        "name": "Ca Sáng",
+        "startTime": "06:00",
+        "endTime": "12:00",
+        "status": true,
+        "isEnabled": true
+      },
+      {
+        "id": 60,
+        "name": "Ca Chiều",
+        "startTime": "12:00",
+        "endTime": "18:00",
+        "status": true,
+        "isEnabled": true
+      },
+      {
+        "id": 61,
+        "name": "Ca Tối",
+        "startTime": "18:00",
+        "endTime": "23:00",
+        "status": true,
+        "isEnabled": true
+      }
+    ]
+  }
+]

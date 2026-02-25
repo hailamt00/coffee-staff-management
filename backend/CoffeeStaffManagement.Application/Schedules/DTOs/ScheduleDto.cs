@@ -22,5 +22,7 @@ public record ScheduleDto(
     string ShiftStartTime,
     string ShiftEndTime,
     DateOnly WorkDate,
-    string? Note
+    string? Note,
+    DateTime? CheckIn,
+    DateTime? CheckOut
 );

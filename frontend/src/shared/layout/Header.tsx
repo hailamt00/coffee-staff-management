@@ -70,11 +70,11 @@ export default function Header({ onToggleSidebar }: Props) {
 
           {/* App title */}
           <div className="flex flex-col leading-tight border-r border-slate-200 dark:border-neutral-800 pr-4 mr-1">
-            <span className="text-sm font-black tracking-tighter uppercase">
-              CSM_Elite
+            <span className="text-sm font-black tracking-tight">
+              CSM Elite
             </span>
-            <span className="text-[10px] font-bold text-slate-400 hidden sm:block uppercase tracking-widest">
-              V.2.0 PRO
+            <span className="text-[11px] font-bold text-slate-500 hidden sm:block tracking-wide">
+              V.2.0 Pro
             </span>
           </div>
         </div>

@@ -10,6 +10,7 @@ public interface IAttendanceRepository
         int shiftId,
         DateOnly workDate);
 
+    Task<AttendanceEntity?> GetByIdAsync(int id);
     Task<List<AttendanceEntity>> GetByDateAsync(DateOnly workDate);
     Task<List<AttendanceEntity>> GetByDateRangeAsync(
     int employeeId,
@@ -18,4 +19,5 @@ public interface IAttendanceRepository
     Task<List<AttendanceEntity>> GetByDateRangeAsync(DateOnly fromDate, DateOnly toDate);
     Task AddAsync(AttendanceEntity attendance, CancellationToken cancellationToken);
     Task UpdateAsync(AttendanceEntity attendance, CancellationToken cancellationToken);
+    Task DeleteAsync(AttendanceEntity attendance, CancellationToken cancellationToken);
 }

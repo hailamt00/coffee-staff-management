@@ -78,10 +78,10 @@ export default function StaffLoginPage() {
                                 <Coffee className="w-8 h-8 text-white dark:text-black" />
                             </motion.div>
 
-                            <h1 className="text-3xl font-black tracking-tighter text-slate-900 dark:text-white uppercase">
+                            <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">
                                 Staff Portal
                             </h1>
-                            <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1">
+                            <p className="text-[11px] font-bold text-slate-500 tracking-wide mt-1">
                                 Employee Access
                             </p>
                         </div>
@@ -99,7 +99,7 @@ export default function StaffLoginPage() {
 
                                 {/* Phone field */}
                                 <div className="space-y-2">
-                                    <label htmlFor="phone" className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                                    <label htmlFor="phone" className="text-[11px] font-bold text-slate-700 dark:text-slate-300 tracking-wide">
                                         Phone Number
                                     </label>
                                     <div className="relative group">
@@ -133,7 +133,7 @@ export default function StaffLoginPage() {
                                 {/* Submit button */}
                                 <Button
                                     type="submit"
-                                    className="w-full h-12 rounded-xl bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-black dark:hover:bg-slate-200 font-bold uppercase tracking-wider shadow-lg hover:shadow-xl transition-all duration-300 group"
+                                    className="w-full h-12 rounded-xl bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-black dark:hover:bg-slate-200 font-bold text-sm tracking-wide shadow-lg hover:shadow-xl transition-all duration-300 group"
                                     disabled={loading || !phone}
                                 >
                                     {loading ? (
@@ -179,7 +179,7 @@ export default function StaffLoginPage() {
                     transition={{ delay: 0.8 }}
                     className="mt-4 text-center"
                 >
-                    <p className="text-xs font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest">
+                    <p className="text-[11px] font-bold text-slate-500 tracking-wide">
                         Coffee Staff Management v2.0 Pro
                     </p>
                 </motion.div>

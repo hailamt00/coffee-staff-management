@@ -6,14 +6,18 @@ public class AttendanceDto
 
     public int EmployeeId { get; set; }
     public string EmployeeName { get; set; } = null!;
+    public string EmployeePhone { get; set; } = null!;
 
     public int ShiftId { get; set; }
     public string ShiftName { get; set; } = null!;
+    public string PositionName { get; set; } = null!;
 
     public DateOnly WorkDate { get; set; }
 
     public DateTime? CheckIn { get; set; }
     public DateTime? CheckOut { get; set; }
+    public double? TotalHours { get; set; }
+    public string? Note { get; set; }
 
     public string Status { get; set; } = null!;
 }

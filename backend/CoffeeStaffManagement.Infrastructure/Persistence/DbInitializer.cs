@@ -62,5 +62,28 @@ public static class DbInitializer
             context.SaveChanges();
         }
         // ------------------------------------------------
+
+        // --- MIGRATION: Fix Shift Times to User Custom Specs ---
+        var shifts = context.Shifts.Include(s => s.Position).ToList();
+        foreach (var s in shifts)
+        {
+            if (s.Name == null) continue;
+
+            if (s.Position?.Name == "Phục vụ")
+            {
+                if (s.Name.Contains("Sáng")) { s.StartTime = new TimeSpan(6, 30, 0); s.EndTime = new TimeSpan(11, 0, 0); }
+                if (s.Name.Contains("Chiều")) { s.StartTime = new TimeSpan(14, 0, 0); s.EndTime = new TimeSpan(18, 0, 0); }
+                if (s.Name.Contains("Tối")) { s.StartTime = new TimeSpan(18, 0, 0); s.EndTime = new TimeSpan(22, 30, 0); }
+            }
+            else if (s.Position?.Name == "Pha chế")
+            {
+                if (s.Name.Contains("Sáng")) { s.StartTime = new TimeSpan(6, 0, 0); s.EndTime = new TimeSpan(13, 0, 0); }
+                if (s.Name.Contains("Chiều")) { s.StartTime = new TimeSpan(13, 0, 0); s.EndTime = new TimeSpan(18, 0, 0); }
+                if (s.Name.Contains("Tối")) { s.StartTime = new TimeSpan(18, 0, 0); s.EndTime = new TimeSpan(22, 30, 0); }
+            }
+        }
+        context.SaveChanges();
+        // ------------------------------------------------
+
     }
 }

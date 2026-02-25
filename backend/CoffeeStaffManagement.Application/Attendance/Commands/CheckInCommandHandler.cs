@@ -9,13 +9,16 @@ public class CheckInCommandHandler
 {
     private readonly IAttendanceRepository _attendanceRepo;
     private readonly IScheduleRepository _scheduleRepo;
+    private readonly IShiftRepository _shiftRepo;
 
     public CheckInCommandHandler(
         IAttendanceRepository attendanceRepo,
-        IScheduleRepository scheduleRepo)
+        IScheduleRepository scheduleRepo,
+        IShiftRepository shiftRepo)
     {
         _attendanceRepo = attendanceRepo;
         _scheduleRepo = scheduleRepo;
+        _shiftRepo = shiftRepo;
     }
 
     public async Task Handle(
@@ -29,7 +32,18 @@ public class CheckInCommandHandler
             request.Request.WorkDate);
 
         if (schedule == null)
-            throw new KeyNotFoundException("No schedule found for this shift/date");
+        {
+            // Auto-create Substitute Schedule
+            schedule = new Domain.Entities.Schedule
+            {
+                EmployeeId = request.Request.EmployeeId,
+                ShiftId = request.Request.ShiftId,
+                WorkDate = request.Request.WorkDate,
+                ApprovedAt = DateTime.Now,
+                Note = "System Auto-Created: Substitute Check-In"
+            };
+            await _scheduleRepo.AddAsync(schedule);
+        }
 
         // 2. Check if already checked in
         var existing = await _attendanceRepo.GetAsync(
@@ -43,7 +57,8 @@ public class CheckInCommandHandler
         // 3. Create Attendance
         var now = DateTime.Now;
         var checkInTime = now.TimeOfDay;
-        var shiftStartTime = schedule.Shift?.StartTime;
+        var shift = schedule.Shift ?? await _shiftRepo.GetByIdAsync(schedule.ShiftId);
+        var shiftStartTime = shift?.StartTime;
 
         string? note = null;
         if (shiftStartTime.HasValue && checkInTime > shiftStartTime.Value.Add(TimeSpan.FromMinutes(15))) // 15 mins grace period

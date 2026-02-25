@@ -81,6 +81,7 @@ public class ScheduleRepository : IScheduleRepository
             .Include(x => x.Employee)
             .Include(x => x.Shift)
                 .ThenInclude(sh => sh!.Position)
+            .Include(x => x.Attendance)
             .Where(x => x.WorkDate >= fromDate && x.WorkDate <= toDate)
             .OrderBy(x => x.WorkDate)
             .ToListAsync();

@@ -38,6 +38,8 @@ interface DataTableProps<TData, TValue> {
     data: TData[]
     searchKey?: string
     loading?: boolean
+    defaultPageSize?: number
+    searchPosition?: 'top' | 'bottom'
     renderSubComponent?: (props: { row: any }) => React.ReactNode
     getRowCanExpand?: (row: any) => boolean
 }
@@ -47,6 +49,8 @@ export const DataTable = <TData, TValue>({
     data,
     searchKey,
     loading = false,
+    defaultPageSize = 10,
+    searchPosition = 'top',
     renderSubComponent,
     getRowCanExpand,
 }: DataTableProps<TData, TValue>) => {
@@ -55,9 +59,10 @@ export const DataTable = <TData, TValue>({
     const [expanded, setExpanded] = useState<ExpandedState>({})
     const [pagination, setPagination] = useState({
         pageIndex: 0,
-        pageSize: 10,
+        pageSize: defaultPageSize,
     })
 
+    // eslint-disable-next-line react-hooks/incompatible-library
     const table = useReactTable({
         data,
         columns,
@@ -105,7 +110,7 @@ export const DataTable = <TData, TValue>({
                                 <SelectValue placeholder={table.getState().pagination.pageSize} />
                             </SelectTrigger>
                             <SelectContent side="top">
-                                {[5, 10, 20, 50].map((pageSize) => (
+                                {[5, 10, 20, 50, 100].map((pageSize) => (
                                     <SelectItem key={pageSize} value={`${pageSize}`} className="text-xs">
                                         {pageSize}
                                     </SelectItem>
@@ -115,11 +120,11 @@ export const DataTable = <TData, TValue>({
                     </div>
                 </div>
 
-                {searchKey && (
+                {searchKey && searchPosition === 'top' && (
                     <div className="relative group flex-1 max-w-sm">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-black dark:group-focus-within:text-white transition-colors" />
                         <Input
-                            id="globalSearch"
+                            id="globalSearchTop"
                             aria-label="Search data"
                             placeholder="Type to filter data..."
                             value={globalFilter ?? ''}
@@ -201,18 +206,34 @@ export const DataTable = <TData, TValue>({
             </div>
 
             {/* PAGINATION */}
-            <div className="flex items-center justify-between px-2 pt-4 border-t border-slate-100 dark:border-neutral-800">
-                <div className="text-[11px] font-black uppercase tracking-widest text-slate-400">
-                    {totalRows > 0 ? (
-                        <>Record {startRow} - {endRow} / TR {totalRows}</>
-                    ) : 'No entries'}
-                </div>
+            <div className="flex flex-col gap-4 pt-4 border-t border-slate-100 dark:border-neutral-800">
+                {searchKey && searchPosition === 'bottom' && (
+                    <div className="relative group w-full sm:max-w-sm">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-black dark:group-focus-within:text-white transition-colors" />
+                        <Input
+                            id="globalSearchBottom"
+                            aria-label="Search data"
+                            placeholder="Type to filter data..."
+                            value={globalFilter ?? ''}
+                            onChange={(event) => setGlobalFilter(event.target.value)}
+                            className="h-11 w-full border border-slate-200 dark:border-neutral-800 bg-white dark:bg-black rounded-xl pl-11 pr-5 text-[13px] font-semibold focus:ring-1 focus:ring-black dark:focus:ring-white shadow-sm transition-all"
+                        />
+                    </div>
+                )}
 
-                <Pagination
-                    page={table.getState().pagination.pageIndex + 1}
-                    totalPages={table.getPageCount() || 1}
-                    onPageChange={(p) => table.setPageIndex(p - 1)}
-                />
+                <div className="flex items-center justify-between px-2">
+                    <div className="text-[11px] font-black uppercase tracking-widest text-slate-400">
+                        {totalRows > 0 ? (
+                            <>Record {startRow} - {endRow} / TR {totalRows}</>
+                        ) : 'No entries'}
+                    </div>
+
+                    <Pagination
+                        page={table.getState().pagination.pageIndex + 1}
+                        totalPages={table.getPageCount() || 1}
+                        onPageChange={(p) => table.setPageIndex(p - 1)}
+                    />
+                </div>
             </div>
         </div>
     )

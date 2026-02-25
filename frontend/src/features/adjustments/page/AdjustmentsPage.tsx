@@ -16,6 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
+import ViolationForm from '../components/ViolationForm'
 
 export default function AdjustmentsPage() {
   const [month, setMonth] = useState('02') // Default Feb
@@ -52,10 +54,10 @@ export default function AdjustmentsPage() {
       <div className="flex flex-wrap items-end justify-between gap-4 px-2">
         <div>
           <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
-            Adjustments
+            Ghi Nhận Vi Phạm
           </h1>
           <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-            Bonuses & Penalties
+            Employee Violations
           </p>
         </div>
 
@@ -91,40 +93,53 @@ export default function AdjustmentsPage() {
         </div>
       </div>
 
-      {/* KPI */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <SummaryCard
-          title="Total Adjustments"
-          value={stats.totalCount}
-          description="This month"
-          icon={ClipboardList}
-          color="cyan"
-        />
-        <SummaryCard
-          title="Bonuses"
-          value={stats.bonusCount}
-          description="Approved"
-          icon={TrendingUp}
-          color="green"
-        />
-        <SummaryCard
-          title="Penalties"
-          value={stats.penaltyCount}
-          description="Applied"
-          icon={TrendingDown}
-          color="red"
-        />
-        <SummaryCard
-          title="Net Amount"
-          value={formatMoney(stats.totalAmount)}
-          description="VND"
-          icon={DollarSign}
-          color="cyan"
-        />
-      </div>
+      {/* Tabs Layout */}
+      <Tabs defaultValue="form" className="w-full space-y-6">
+        <TabsList className="bg-slate-100 dark:bg-neutral-900 p-1">
+          <TabsTrigger value="form" className="px-6 font-semibold">Ghi Nhận Vi Phạm</TabsTrigger>
+          <TabsTrigger value="report" className="px-6 font-semibold">Báo Cáo Vi Phạm</TabsTrigger>
+        </TabsList>
 
-      {/* Table */}
-      <AdjustmentTable data={adjustments} loading={loading} />
+        <TabsContent value="form">
+          <ViolationForm />
+        </TabsContent>
+
+        <TabsContent value="report" className="space-y-6">
+          {/* KPI */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <SummaryCard
+              title="Tổng số lỗi"
+              value={stats.totalCount}
+              description="Tháng này"
+              icon={ClipboardList}
+              color="cyan"
+            />
+            <SummaryCard
+              title="Khen thưởng"
+              value={stats.bonusCount}
+              description="Số lượt"
+              icon={TrendingUp}
+              color="green"
+            />
+            <SummaryCard
+              title="Vi phạm"
+              value={stats.penaltyCount}
+              description="Đã phạt"
+              icon={TrendingDown}
+              color="red"
+            />
+            <SummaryCard
+              title="Tổng tiền phạt"
+              value={formatMoney(Math.abs(stats.totalAmount))}
+              description="VND"
+              icon={DollarSign}
+              color="cyan"
+            />
+          </div>
+
+          <AdjustmentTable data={adjustments} loading={loading} />
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }

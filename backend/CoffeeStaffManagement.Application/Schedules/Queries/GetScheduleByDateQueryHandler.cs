@@ -31,7 +31,9 @@ public class GetScheduleByDateQueryHandler
             x.Shift?.StartTime.ToString() ?? "",
             x.Shift?.EndTime.ToString() ?? "",
             x.WorkDate,
-            x.Note
+            x.Note,
+            x.Attendance?.CheckIn,
+            x.Attendance?.CheckOut
         )).ToList();
     }
 }

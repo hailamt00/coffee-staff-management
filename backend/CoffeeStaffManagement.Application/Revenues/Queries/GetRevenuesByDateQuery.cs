@@ -31,6 +31,8 @@ public class GetRevenuesByDateQueryHandler : IRequestHandler<GetRevenuesByDateQu
             OpeningBalance = r.OpeningBalance,
             Cash = r.Cash,
             Bank = r.Bank,
+            Income = r.Income,
+            Expenses = r.Expenses,
             TotalRevenue = r.TotalRevenue,
             Net = r.Net,
             Deviation = r.Deviation,

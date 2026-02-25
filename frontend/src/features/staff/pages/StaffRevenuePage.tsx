@@ -13,7 +13,7 @@ import {
 } from '@/shared/components/ui/select'
 import { useRevenue } from '@/features/revenue/hooks/useRevenue'
 import { useSchedule } from '@/features/schedule/hooks/useSchedule'
-import { DollarSign, Loader2, CheckCircle2 } from 'lucide-react'
+import { Loader2, CheckCircle2 } from 'lucide-react'
 
 export default function StaffRevenuePage() {
     const navigate = useNavigate()
@@ -38,6 +38,8 @@ export default function StaffRevenuePage() {
     const [revOpening, setRevOpening] = useState('0')
     const [revCash, setRevCash] = useState('0')
     const [revBank, setRevBank] = useState('0')
+    const [revIncome, setRevIncome] = useState('0')
+    const [revExpenses, setRevExpenses] = useState('0')
     const [revNote, setRevNote] = useState('')
     const [submitted, setSubmitted] = useState(false)
 
@@ -51,6 +53,8 @@ export default function StaffRevenuePage() {
                 openingBalance: Number(revOpening),
                 cash: Number(revCash),
                 bank: Number(revBank),
+                income: Number(revIncome),
+                expenses: Number(revExpenses),
                 note: revNote,
             })
             setSubmitted(true)
@@ -81,98 +85,145 @@ export default function StaffRevenuePage() {
     return (
         <div className="space-y-6">
             <div className="flex items-center gap-2 px-2">
-                <Button variant="ghost" size="sm" onClick={() => navigate('/staff/menu')} className="hover:bg-slate-100 dark:hover:bg-neutral-800 rounded-lg h-10 px-4 font-bold uppercase tracking-widest text-[10px]">
+                <Button variant="ghost" size="sm" onClick={() => navigate('/staff/menu')} className="hover:bg-slate-100 dark:hover:bg-neutral-800 rounded-lg h-10 px-4 font-bold text-[11px] tracking-wide">
                     &larr; Back
                 </Button>
             </div>
 
             <div className="px-2">
-                <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none uppercase">
-                    Shift_Report
+                <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-none">
+                    Shift Report
                 </h1>
-                <p className="mt-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    Revenue_Submission
+                <p className="mt-1 text-[11px] font-bold text-slate-500 tracking-wide">
+                    Revenue Submission
                 </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 <Card className="border border-slate-200/60 dark:border-neutral-800/60 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-sm rounded-2xl overflow-hidden">
-                    <CardContent className="p-6 space-y-6">
-                        <div className="space-y-2">
-                            <Label htmlFor="staffShift" className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Select Shift</Label>
-                            <Select value={revScheduleId} onValueChange={setRevScheduleId}>
-                                <SelectTrigger id="staffShift" className="h-12 rounded-xl border-slate-200/60 dark:border-neutral-800/60 bg-white/50 dark:bg-neutral-900/50">
-                                    <SelectValue placeholder="Select your current shift" />
-                                </SelectTrigger>
-                                <SelectContent className="rounded-xl border-slate-200 dark:border-neutral-800">
-                                    {mySchedules.map((s: any) => (
-                                        <SelectItem key={s.id} value={String(s.id)}>
-                                            {s.shift?.name} ({s.shift?.startTime?.slice(0, 5)} - {s.shift?.endTime?.slice(0, 5)})
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                    <CardContent className="p-0">
+                        {/* Selected Shift */}
+                        <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-neutral-800">
+                            <Label htmlFor="staffShift" className="text-xs font-bold text-slate-500 uppercase tracking-widest w-1/3">Select Shift</Label>
+                            <div className="w-2/3">
+                                <Select value={revScheduleId} onValueChange={setRevScheduleId}>
+                                    <SelectTrigger id="staffShift" className="h-10 border-0 bg-transparent text-right font-black shadow-none focus:ring-0 text-slate-900 dark:text-white justify-end p-0">
+                                        <SelectValue placeholder="Select current shift" />
+                                    </SelectTrigger>
+                                    <SelectContent align="end" className="rounded-xl border-slate-200 dark:border-neutral-800 shadow-xl">
+                                        {mySchedules.map((s: any) => (
+                                            <SelectItem key={s.id} value={String(s.id)} className="font-medium text-right">
+                                                {s.shift?.name} ({s.shift?.startTime?.slice(0, 5)} - {s.shift?.endTime?.slice(0, 5)})
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="staffOpening" className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Opening Balance</Label>
-                            <div className="relative">
-                                <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                        {/* Opening Balance */}
+                        <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-neutral-800">
+                            <Label htmlFor="staffOpening" className="text-xs font-bold text-slate-500 uppercase tracking-widest w-1/3">Đầu kỳ / Opening</Label>
+                            <div className="w-2/3 relative flex items-center justify-end">
                                 <Input
                                     id="staffOpening"
                                     type="number"
                                     value={revOpening}
                                     onChange={e => setRevOpening(e.target.value)}
-                                    className="pl-12 h-12 rounded-xl border-slate-200/60 dark:border-neutral-800/60 bg-white/50 dark:bg-neutral-900/50 font-bold"
+                                    className="h-10 border-0 bg-transparent text-right font-black text-slate-900 dark:text-white shadow-none focus-visible:ring-0 pr-0 text-base"
                                 />
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="staffCash" className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Cash Collected</Label>
+                        {/* Cash */}
+                        <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-neutral-800 bg-slate-50/50 dark:bg-neutral-900/50">
+                            <Label htmlFor="staffCash" className="text-xs font-bold text-slate-500 uppercase tracking-widest w-1/3">Tiền mặt / Cash</Label>
+                            <div className="w-2/3">
                                 <Input
                                     id="staffCash"
                                     type="number"
                                     value={revCash}
                                     onChange={e => setRevCash(e.target.value)}
-                                    className="h-12 rounded-xl border-slate-200/60 dark:border-neutral-800/60 bg-white/50 dark:bg-neutral-900/50 font-black text-slate-900 dark:text-white"
+                                    className="h-10 border-0 bg-transparent text-right font-black text-teal-600 dark:text-teal-400 shadow-none focus-visible:ring-0 pr-0 text-base"
                                 />
                             </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="staffBank" className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Bank/Transfer</Label>
+                        </div>
+
+                        {/* Bank/App Transfers */}
+                        <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-neutral-800">
+                            <Label htmlFor="staffBank" className="text-xs font-bold text-slate-500 uppercase tracking-widest w-1/3">MOMO / VCB (Bank)</Label>
+                            <div className="w-2/3">
                                 <Input
                                     id="staffBank"
                                     type="number"
                                     value={revBank}
                                     onChange={e => setRevBank(e.target.value)}
-                                    className="h-12 rounded-xl border-slate-200/60 dark:border-neutral-800/60 bg-white/50 dark:bg-neutral-900/50 font-black text-slate-900 dark:text-white"
+                                    className="h-10 border-0 bg-transparent text-right font-black text-blue-600 dark:text-blue-400 shadow-none focus-visible:ring-0 pr-0 text-base"
                                 />
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="staffNote" className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Note (Optional)</Label>
-                            <Input
-                                id="staffNote"
-                                value={revNote}
-                                onChange={e => setRevNote(e.target.value)}
-                                placeholder="Any discrepancies or observations..."
-                                className="h-12 rounded-xl border-slate-200/60 dark:border-neutral-800/60 bg-white/50 dark:bg-neutral-900/50 text-xs"
-                            />
+                        {/* Income */}
+                        <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-neutral-800 bg-slate-50/50 dark:bg-neutral-900/50">
+                            <Label htmlFor="staffIncome" className="text-xs font-bold text-slate-500 uppercase tracking-widest w-1/3">Thu khác / Income</Label>
+                            <div className="w-2/3">
+                                <Input
+                                    id="staffIncome"
+                                    type="number"
+                                    value={revIncome}
+                                    onChange={e => setRevIncome(e.target.value)}
+                                    className="h-10 border-0 bg-transparent text-right font-black text-green-600 dark:text-green-400 shadow-none focus-visible:ring-0 pr-0 text-base"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Expenses */}
+                        <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-neutral-800">
+                            <Label htmlFor="staffExpenses" className="text-xs font-bold text-slate-500 uppercase tracking-widest w-1/3">Chi khác / Expenses</Label>
+                            <div className="w-2/3">
+                                <Input
+                                    id="staffExpenses"
+                                    type="number"
+                                    value={revExpenses}
+                                    onChange={e => setRevExpenses(e.target.value)}
+                                    className="h-10 border-0 bg-transparent text-right font-black text-rose-600 dark:text-rose-400 shadow-none focus-visible:ring-0 pr-0 text-base"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Calculated Net Revenue (Read-only for visual feedback as in legacy app) */}
+                        <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-900/80">
+                            <Label className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest w-1/2">Doanh thu NET</Label>
+                            <div className="w-1/2 text-right font-black text-slate-900 dark:text-white text-base">
+                                {(Number(revCash) + Number(revBank) + Number(revIncome) - Number(revExpenses)).toLocaleString()}
+                            </div>
+                        </div>
+
+                        {/* Note */}
+                        <div className="flex items-center justify-between p-4">
+                            <Label htmlFor="staffNote" className="text-xs font-bold text-slate-500 uppercase tracking-widest w-1/3">Ghi chú / Note</Label>
+                            <div className="w-2/3">
+                                <Input
+                                    id="staffNote"
+                                    value={revNote}
+                                    onChange={e => setRevNote(e.target.value)}
+                                    placeholder="Optional notes..."
+                                    className="h-10 border-0 bg-transparent text-right font-medium text-slate-700 dark:text-slate-300 shadow-none focus-visible:ring-0 pr-0 text-sm"
+                                />
+                            </div>
                         </div>
                     </CardContent>
                 </Card>
 
                 <Button
                     type="submit"
-                    className="w-full bg-black hover:bg-slate-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200 h-14 text-sm font-black uppercase tracking-[0.2em] shadow-lg rounded-2xl transition-all active:scale-[0.98]"
+                    className="w-full bg-black hover:bg-slate-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200 h-14 text-sm font-bold tracking-wide shadow-lg rounded-2xl transition-all active:scale-[0.98]"
                     disabled={isLoading || !revScheduleId}
                 >
                     {isLoading ? (
                         <Loader2 className="h-5 w-5 animate-spin" />
                     ) : (
-                        'Submit_Revenue_Report'
+                        'Submit Revenue Report'
                     )}
                 </Button>
             </form>

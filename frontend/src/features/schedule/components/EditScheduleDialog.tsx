@@ -19,8 +19,10 @@ import {
 } from '@/shared/components/ui/select'
 import { Loader2, Trash2 } from 'lucide-react'
 import { format } from 'date-fns'
+import { vi } from 'date-fns/locale'
 import type { Schedule, UpdateScheduleRequest } from '@/shared/types/api'
 import { usePosition } from '../../positions/hooks/usePosition'
+import { DeleteConfirmDialog } from '@/shared/components/ui/delete-confirm-dialog'
 
 interface EditScheduleDialogProps {
     schedule: Schedule | null
@@ -44,6 +46,7 @@ export function EditScheduleDialog({
     const [note, setNote] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [isDeleting, setIsDeleting] = useState(false)
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
     // Determine available shifts based on selected position
     const availableShifts = useMemo(() => {
@@ -81,6 +84,7 @@ export function EditScheduleDialog({
             await onSave({
                 id: schedule.id,
                 data: {
+                    id: schedule.id,
                     shiftId: parseInt(shiftId),
                     workDate: schedule.workDate,
                     note: note
@@ -96,9 +100,9 @@ export function EditScheduleDialog({
 
     const handleDelete = async () => {
         if (!schedule) return
-        if (!confirm('Are you sure you want to delete this schedule?')) return
 
         setIsDeleting(true)
+        setShowDeleteConfirm(false)
         try {
             await onDelete(schedule.id)
             onClose()
@@ -131,7 +135,7 @@ export function EditScheduleDialog({
                     <div className="grid grid-cols-4 items-center gap-4">
                         <Label className="text-right font-bold text-slate-500">Date</Label>
                         <div className="col-span-3">
-                            {format(new Date(schedule.workDate), 'EEEE, dd/MM/yyyy')}
+                            {format(new Date(schedule.workDate), 'EEEE, dd/MM/yyyy', { locale: vi })}
                         </div>
                     </div>
 
@@ -187,7 +191,7 @@ export function EditScheduleDialog({
                     <Button
                         variant="destructive"
                         size="icon"
-                        onClick={handleDelete}
+                        onClick={() => setShowDeleteConfirm(true)}
                         disabled={isDeleting || isLoading}
                         type="button"
                     >
@@ -204,6 +208,14 @@ export function EditScheduleDialog({
                     </div>
                 </DialogFooter>
             </DialogContent>
+
+            <DeleteConfirmDialog
+                open={showDeleteConfirm}
+                onOpenChange={setShowDeleteConfirm}
+                title="Xác nhận xóa xếp ca"
+                description="Bạn có chắc chắn muốn xóa ca làm việc này không? Hành động này không thể hoàn tác."
+                onConfirm={handleDelete}
+            />
         </Dialog>
     )
 }

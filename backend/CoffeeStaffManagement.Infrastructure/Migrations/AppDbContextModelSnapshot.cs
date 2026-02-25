@@ -164,7 +164,6 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                         .HasColumnName("dob");
 
                     b.Property<string>("Gender")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("gender");
 
@@ -336,6 +335,12 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("employee_id");
 
+                    b.Property<decimal>("Expenses")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("Income")
+                        .HasColumnType("numeric");
+
                     b.Property<decimal>("Net")
                         .HasPrecision(12, 2)
                         .HasColumnType("numeric(12,2)")
@@ -383,7 +388,7 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                         .HasColumnType("numeric(12,2)")
                         .HasColumnName("amount");
 
-                    b.Property<int>("AttendanceId")
+                    b.Property<int?>("AttendanceId")
                         .HasColumnType("integer")
                         .HasColumnName("attendance_id");
 
@@ -454,6 +459,10 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                     b.Property<int>("EmployeeId")
                         .HasColumnType("integer")
                         .HasColumnName("employee_id");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("text")
+                        .HasColumnName("note");
 
                     b.Property<int>("ShiftId")
                         .HasColumnType("integer")
@@ -532,6 +541,10 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                         .HasColumnType("interval")
                         .HasColumnName("end_time");
 
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_enabled");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -578,9 +591,9 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                         .HasColumnName("created_at")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<string>("Reason")
+                    b.Property<string>("Description")
                         .HasColumnType("text")
-                        .HasColumnName("reason");
+                        .HasColumnName("description");
 
                     b.Property<int>("RevenueId")
                         .HasColumnType("integer")
@@ -588,8 +601,8 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("character varying(15)")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("type");
 
                     b.HasKey("Id");
@@ -597,11 +610,6 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                     b.HasIndex("RevenueId");
 
                     b.ToTable("transactions", (string)null);
-                });
-
-            modelBuilder.Entity("CoffeeStaffManagement.Domain.Entities.ActivityLog", b =>
-                {
-
                 });
 
             modelBuilder.Entity("CoffeeStaffManagement.Domain.Entities.Attendance", b =>

@@ -24,6 +24,7 @@ public class GetShiftRequestsByDateRangeQueryHandler
             x.Id,
             x.Employee?.Code ?? "",
             x.Employee?.Name ?? "",
+            x.Employee?.Phone ?? "",
             x.Shift?.Name ?? "",
             x.Shift?.Position?.Name ?? "",
             x.WorkDate,

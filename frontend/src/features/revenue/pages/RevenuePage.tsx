@@ -50,6 +50,8 @@ export default function RevenuePage() {
             openingBalance: Number(revOpening),
             cash: Number(revCash),
             bank: Number(revBank),
+            income: 0,
+            expenses: 0,
             note: revNote,
         })
         setOpenRevenue(false)
@@ -77,52 +79,58 @@ export default function RevenuePage() {
 
     const columns = useMemo<ColumnDef<any>[]>(() => [
         {
-            accessorKey: "id",
-            header: "ID",
-            cell: ({ row }) => <span className="text-xs font-mono">#{row.getValue("id")}</span>
-        },
-        {
-            accessorKey: "scheduleId",
-            header: "Shift",
-            cell: ({ row }) => <span className="text-sm">Shift #{row.getValue("scheduleId")}</span>
-        },
-
-        {
-            accessorKey: "totalRevenue",
-            header: () => <div className="text-right">Actual Sum</div>,
-            cell: ({ row }) => <div className="text-right font-bold text-slate-900 dark:text-slate-100">{formatMoney(row.getValue("totalRevenue"))}</div>
-        },
-        {
-            accessorKey: "net",
-            header: () => <div className="text-right">Net Profit</div>,
+            accessorKey: "createdAt",
+            header: "Ngày",
             cell: ({ row }) => {
-                const deviation = row.original.deviation;
-                const isPositive = deviation >= 0;
+                const dateVal = row.getValue("createdAt") as string;
+                return <span className="text-xs font-medium">{dateVal ? new Date(dateVal).toLocaleDateString('vi-VN') : '—'}</span>;
+            }
+        },
+        {
+            accessorKey: "employee",
+            header: "Nhân viên",
+            cell: ({ row }) => {
+                const s = row.original.schedule;
+                const e = s?.employee || row.original.employee;
+                const shiftName = s?.shift?.name;
                 return (
-                    <div className="text-right">
-                        <span className="font-semibold text-black dark:text-white">{formatMoney(row.getValue("net"))}</span>
-                        <p className={`text-[10px] font-medium uppercase ${isPositive ? 'text-black dark:text-white font-bold' : 'text-rose-500'}`}>
-                            {isPositive ? '+' : ''}{formatMoney(deviation)}
-                        </p>
+                    <div>
+                        <p className="font-semibold text-slate-900 dark:text-slate-100">{e?.name || `NV #${row.original.employeeId}`}</p>
+                        <p className="text-[10px] text-muted-foreground uppercase">{shiftName || `Ca #${row.original.scheduleId}`}</p>
                     </div>
                 )
             }
         },
         {
-            id: "actions",
-            header: "Transactions",
+            accessorKey: "totalRevenue",
+            header: () => <div className="text-right">Doanh thu trên phần mềm</div>,
+            cell: ({ row }) => <div className="text-right font-bold text-slate-900 dark:text-slate-100">{formatMoney(row.getValue("totalRevenue"))}</div>
+        },
+        {
+            id: "expenses",
+            header: () => <div className="text-right">Chi phí</div>,
             cell: ({ row }) => {
-                const trans = row.original.transactions || []
-                return (
-                    <div className="flex flex-wrap gap-1">
-                        {trans.slice(0, 2).map((t: any) => (
-                            <span key={t.id} className="text-[10px] bg-slate-100 dark:bg-slate-800 px-1 rounded truncate max-w-[80px]">
-                                {t.type === 'Expense' ? '-' : '+'}{formatMoney(t.amount)}
-                            </span>
-                        ))}
-                        {trans.length > 2 && <span className="text-[10px] text-muted-foreground">+{trans.length - 2} more</span>}
-                    </div>
-                )
+                const trans = row.original.transactions || [];
+                const expenses = trans.filter((t: any) => t.type === 'Expense').reduce((sum: number, t: any) => sum + t.amount, 0);
+                return <div className="text-right text-rose-500 font-medium">{expenses > 0 ? formatMoney(expenses) : '—'}</div>
+            }
+        },
+        {
+            accessorKey: "bank",
+            header: () => <div className="text-right">Két (Bank)</div>,
+            cell: ({ row }) => <div className="text-right text-slate-600 dark:text-slate-300">{formatMoney(row.getValue("bank"))}</div>
+        },
+        {
+            accessorKey: "cash",
+            header: () => <div className="text-right">Tiền mặt</div>,
+            cell: ({ row }) => <div className="text-right text-slate-600 dark:text-slate-300">{formatMoney(row.getValue("cash"))}</div>
+        },
+        {
+            accessorKey: "note",
+            header: "Ghi chú",
+            cell: ({ row }) => {
+                const note = row.getValue("note") as string;
+                return <span className="text-xs text-muted-foreground truncate max-w-[150px] inline-block" title={note}>{note || "—"}</span>;
             }
         }
     ], [])
@@ -137,10 +145,10 @@ export default function RevenuePage() {
             <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">
-                        Revenue
+                        Báo cáo kết sổ
                     </h1>
                     <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                        Financial Tracking
+                        Revenue Report
                     </p>
                 </div>
 
@@ -158,9 +166,9 @@ export default function RevenuePage() {
 
             {/* STATS */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <SummaryCard title="Total Revenue" value={formatMoney(totalRevenue)} icon={DollarSign} color="cyan" />
-                <SummaryCard title="Net Profit" value={formatMoney(totalNet)} icon={TrendingUp} color="green" />
-                <SummaryCard title="Reports" value={String(revenues.length)} icon={ClipboardList} color="blue" />
+                <SummaryCard title="Doanh thu" value={formatMoney(totalRevenue)} icon={DollarSign} color="cyan" />
+                <SummaryCard title="Lợi nhuận ròng" value={formatMoney(totalNet)} icon={TrendingUp} color="green" />
+                <SummaryCard title="Số báo cáo" value={String(revenues.length)} icon={ClipboardList} color="blue" />
             </div>
 
             {/* ACTIONS & LIST */}
