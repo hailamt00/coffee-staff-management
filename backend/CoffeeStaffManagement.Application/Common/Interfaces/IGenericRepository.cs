@@ -1,5 +1,3 @@
-using CoffeeStaffManagement.Application.Common.Interfaces;
-
 namespace CoffeeStaffManagement.Application.Common.Interfaces;
 
 public interface IGenericRepository<T> where T : class

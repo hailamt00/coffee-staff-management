@@ -4,16 +4,13 @@ using CoffeeStaffManagement.Infrastructure.Persistence;
 
 namespace CoffeeStaffManagement.Infrastructure.Repositories;
 
-public class ActivityLogRepository : IActivityLogRepository
+public class ActivityLogRepository : GenericRepository<ActivityLog>, IActivityLogRepository
 {
-    private readonly AppDbContext _context;
-
-    public ActivityLogRepository(AppDbContext context)
+    public ActivityLogRepository(AppDbContext context) : base(context)
     {
-        _context = context;
     }
 
-    public async Task AddAsync(
+    public new async Task AddAsync(
         ActivityLog log,
         CancellationToken ct)
     {

@@ -6,6 +6,9 @@ public class RevenueDto
     public int ScheduleId { get; set; }
     public int EmployeeId { get; set; }
     public string EmployeeName { get; set; } = null!;
+    public string ShiftName { get; set; } = "";
+    public string PositionName { get; set; } = "";
+    public string WorkDate { get; set; } = "";
     public decimal OpeningBalance { get; set; }
     public decimal Cash { get; set; }
     public decimal Bank { get; set; }

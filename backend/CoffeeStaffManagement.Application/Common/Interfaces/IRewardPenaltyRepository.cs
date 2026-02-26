@@ -2,7 +2,7 @@ using CoffeeStaffManagement.Domain.Entities;
 
 namespace CoffeeStaffManagement.Application.Common.Interfaces;
 
-public interface IRewardPenaltyRepository
+public interface IRewardPenaltyRepository : IGenericRepository<RewardPenalty>
 {
     // RewardPenaltyType
     Task<List<RewardPenaltyType>> GetTypesAsync();
@@ -14,6 +14,5 @@ public interface IRewardPenaltyRepository
     // RewardPenalty
     Task<List<RewardPenalty>> GetByEmployeeIdAsync(int employeeId, int month, int year);
     Task<List<RewardPenalty>> GetAllAsync(int month, int year);
-    Task AddAsync(RewardPenalty rewardPenalty);
     Task DeleteAsync(RewardPenalty rewardPenalty);
 }

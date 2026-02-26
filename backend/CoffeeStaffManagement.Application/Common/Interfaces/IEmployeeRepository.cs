@@ -4,7 +4,7 @@ using CoffeeStaffManagement.Domain.Entities;
 
 namespace CoffeeStaffManagement.Application.Common.Interfaces;
 
-public interface IEmployeeRepository
+public interface IEmployeeRepository : IGenericRepository<Employee>
 {
     Task<List<Employee>> GetAllAsync(string? search);
     Task<Employee?> GetByIdAsync(int id);

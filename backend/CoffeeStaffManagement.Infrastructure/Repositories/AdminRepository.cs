@@ -5,18 +5,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeStaffManagement.Infrastructure.Repositories;
 
-public class AdminRepository : IAdminRepository
+public class AdminRepository : GenericRepository<Admin>, IAdminRepository
 {
-    private readonly AppDbContext _db;
-
-    public AdminRepository(AppDbContext db)
+    public AdminRepository(AppDbContext db) : base(db)
     {
-        _db = db;
     }
 
     public async Task<Admin?> GetByUsernameAsync(string username)
     {
-        return await _db.Admins
+        return await _context.Admins
             .AsNoTracking()
             .FirstOrDefaultAsync(a => a.Username == username);
     }

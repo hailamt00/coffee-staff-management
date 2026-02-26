@@ -22,6 +22,11 @@ export const revenueApi = {
         return data
     },
 
+    getByMonth: async (month: number, year: number): Promise<Revenue[]> => {
+        const { data } = await axios.get(`/revenues?month=${month}&year=${year}`)
+        return data
+    },
+
     createTransaction: async (
         payload: CreateTransactionRequest
     ): Promise<Transaction> => {

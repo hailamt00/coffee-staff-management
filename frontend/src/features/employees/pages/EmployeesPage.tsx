@@ -63,24 +63,27 @@ export default function EmployeesPage() {
     {
       accessorKey: "code",
       header: "Code",
-      cell: ({ row }) => <div className="font-medium">{row.getValue("code")}</div>
+      cell: ({ row }) => <div className="font-medium">{row.getValue("code") || '—'}</div>
     },
     {
       accessorKey: "name",
       header: "Name",
-      cell: ({ row }) => <div className="font-semibold text-slate-900 dark:text-slate-100">{row.getValue("name")}</div>
+      cell: ({ row }) => <div className="font-semibold text-slate-900 dark:text-slate-100">{row.getValue("name") || '—'}</div>
     },
     {
       accessorKey: "phone",
       header: "Phone",
+      cell: ({ row }) => <div>{row.getValue("phone") || '—'}</div>
     },
     {
       accessorKey: "cid",
       header: "CID",
+      cell: ({ row }) => <div>{row.getValue("cid") || '—'}</div>
     },
     {
       accessorKey: "gender",
       header: "Gender",
+      cell: ({ row }) => <div>{row.getValue("gender") || '—'}</div>
     },
     {
       accessorKey: "serviceSalary",

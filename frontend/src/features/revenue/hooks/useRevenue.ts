@@ -19,6 +19,12 @@ export function useRevenue() {
         enabled: !!date,
     })
 
+    const useRevenuesByMonthQuery = (month: number, year: number) => useQuery({
+        queryKey: ['revenues', 'month', month, year],
+        queryFn: () => revenueApi.getByMonth(month, year),
+        enabled: month > 0 && year > 0,
+    })
+
     /* ================= COMMANDS ================= */
 
     const createRevenueMutation = useMutation({
@@ -76,6 +82,7 @@ export function useRevenue() {
 
         // Hooks
         useRevenues: (date: string) => useRevenuesQuery(date),
+        useRevenuesByMonth: (month: number, year: number) => useRevenuesByMonthQuery(month, year),
 
         // Commands
         createRevenue: createRevenueMutation.mutateAsync,

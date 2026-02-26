@@ -97,9 +97,9 @@ export default function SchedulePage() {
 
                     {/* Filter UI */}
                     <div className="flex items-center gap-3">
-                        <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Filter_By:</Label>
+                        <Label htmlFor="positionFilter" className="text-[10px] font-black uppercase tracking-widest text-slate-400">Filter_By:</Label>
                         <Select value={filterPosition} onValueChange={setFilterPosition}>
-                            <SelectTrigger className="w-[180px] h-9 bg-slate-50 border-slate-200 dark:bg-neutral-800 dark:border-neutral-700 text-xs font-bold">
+                            <SelectTrigger id="positionFilter" className="w-[160px] h-9 bg-slate-50/50 border-slate-200 dark:bg-neutral-900/50 dark:border-neutral-800 text-xs font-bold">
                                 <SelectValue placeholder="All Positions" />
                             </SelectTrigger>
                             <SelectContent>
@@ -218,7 +218,7 @@ export default function SchedulePage() {
 
                             {availableShifts.length > 0 && (
                                 <div className="space-y-2">
-                                    <Label>Shifts</Label>
+                                    <div className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Shifts</div>
                                     <div className="grid grid-cols-1 gap-2 border rounded-lg p-3">
                                         {availableShifts.map(s => (
                                             <div key={s.id} className="flex items-center gap-2">
@@ -259,8 +259,8 @@ export default function SchedulePage() {
                             </Button>
                         </div>
                     </DialogContent>
-                </Dialog>
-            </div>
+                </Dialog >
+            </div >
 
 
             <Tabs value={activeTab} className="w-full">
@@ -283,6 +283,6 @@ export default function SchedulePage() {
                     />
                 </TabsContent>
             </Tabs>
-        </div>
+        </div >
     )
 }

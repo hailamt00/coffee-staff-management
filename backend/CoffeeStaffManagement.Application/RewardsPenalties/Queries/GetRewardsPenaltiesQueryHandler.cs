@@ -24,7 +24,9 @@ public class GetRewardsPenaltiesQueryHandler : IRequestHandler<GetRewardsPenalti
             EmployeeName = r.Employee?.Name ?? "Unknown",
             TypeId = r.TypeId,
             TypeName = r.Type?.Name ?? "Unknown",
+            Kind = r.Type?.Type ?? CoffeeStaffManagement.Domain.Enums.RewardPenaltyKind.Penalty,
             Amount = r.Amount,
+            Reason = r.Reason,
             CreatedAt = r.CreatedAt
         }).ToList();
     }

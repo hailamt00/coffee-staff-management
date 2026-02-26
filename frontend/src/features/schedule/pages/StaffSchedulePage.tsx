@@ -223,9 +223,9 @@ export default function StaffSchedulePage() {
 
                     {/* Filter UI */}
                     <div className="flex items-center gap-3">
-                        <Label className="text-[11px] font-bold tracking-wide text-slate-400">Filter By:</Label>
+                        <Label htmlFor="positionFilter" className="text-[11px] font-bold tracking-wide text-slate-400">Filter By:</Label>
                         <Select value={filterPosition} onValueChange={setFilterPosition}>
-                            <SelectTrigger className="w-[180px] h-9 bg-slate-50 border-slate-200 dark:bg-neutral-800 dark:border-neutral-700 text-xs font-bold">
+                            <SelectTrigger id="positionFilter" className="w-[180px] h-9 bg-slate-50 border-slate-200 dark:bg-neutral-800 dark:border-neutral-700 text-xs font-bold">
                                 <SelectValue placeholder="All Positions" />
                             </SelectTrigger>
                             <SelectContent>
@@ -308,7 +308,7 @@ export default function StaffSchedulePage() {
                             </div>
 
                             <div className="space-y-2 pt-2">
-                                <Label className="text-[11px] font-bold text-slate-500 tracking-wide">Select Shifts {editMode && '(Edit limits to single selection)'}</Label>
+                                <div className="text-[11px] font-bold text-slate-500 tracking-wide">Select Shifts {editMode && '(Edit limits to single selection)'}</div>
                                 {reqPositionId ? (
                                     <div className="border border-slate-200 dark:border-neutral-800 rounded-xl overflow-hidden overflow-x-auto shadow-sm">
                                         <Table>

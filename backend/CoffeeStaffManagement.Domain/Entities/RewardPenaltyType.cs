@@ -7,5 +7,6 @@ public class RewardPenaltyType : BaseEntity
 {
     public string Name { get; set; } = null!;
     public RewardPenaltyKind Type { get; set; }
+    public decimal Amount { get; set; }
     public ICollection<RewardPenalty> RewardsPenalties { get; set; } = new List<RewardPenalty>();
 }

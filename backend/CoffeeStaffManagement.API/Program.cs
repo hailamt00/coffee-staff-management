@@ -42,6 +42,7 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<AppDbContext>();
+        context.Database.Migrate(); // Auto-apply migrations
 
         var hasher = services.GetRequiredService<IPasswordHasher>();
 

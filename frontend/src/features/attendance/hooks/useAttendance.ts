@@ -17,12 +17,16 @@ export function useAttendance() {
         queryKey: ['attendance', date],
         queryFn: () => attendanceApi.getByDate(date),
         enabled: !!date,
+        staleTime: 5 * 60 * 1000,
+        refetchOnWindowFocus: false,
     })
 
     const useAttendanceRangeQuery = (startDate: string, endDate: string) => useQuery({
         queryKey: ['attendance-range', startDate, endDate],
         queryFn: () => attendanceApi.getByDateRange(startDate, endDate),
         enabled: !!startDate && !!endDate,
+        staleTime: 5 * 60 * 1000,
+        refetchOnWindowFocus: false,
     })
 
     /* ================= COMMANDS ================= */

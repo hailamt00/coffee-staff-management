@@ -6,13 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeStaffManagement.Infrastructure.Repositories;
 
-public class RewardPenaltyRepository : IRewardPenaltyRepository
+public class RewardPenaltyRepository : GenericRepository<RewardPenalty>, IRewardPenaltyRepository
 {
-    private readonly AppDbContext _context;
-
-    public RewardPenaltyRepository(AppDbContext context)
+    public RewardPenaltyRepository(AppDbContext context) : base(context)
     {
-        _context = context;
     }
 
     public async Task<List<RewardPenaltyType>> GetTypesAsync()
@@ -62,12 +59,6 @@ public class RewardPenaltyRepository : IRewardPenaltyRepository
                         r.CreatedAt.Year == year)
             .OrderByDescending(r => r.CreatedAt)
             .ToListAsync();
-    }
-
-    public async Task AddAsync(RewardPenalty rewardPenalty)
-    {
-        _context.RewardPenalties.Add(rewardPenalty);
-        await _context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(RewardPenalty rewardPenalty)

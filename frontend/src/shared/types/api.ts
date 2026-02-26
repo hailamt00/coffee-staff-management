@@ -189,10 +189,34 @@ export interface Payroll {
   id: number
   employeeId: number
   employeeName?: string
+  employeePhone?: string
+  positionName?: string
   month: number
   year: number
+
+  totalHours: number
+  baseSalary: number
+  totalRewards: number
+  totalPenalties: number
+  totalLateMinutes: number
+
   totalSalary: number
   createdAt: string
+
+  details?: PayrollDetail[]
+}
+
+export interface PayrollDetail {
+  id: number
+  workDate: string
+  shiftName: string
+  positionName: string
+  checkIn?: string
+  checkOut?: string
+  status: string
+  hours: number
+  amount: number
+  note?: string
 }
 
 export interface PayrollAdjustment {
@@ -202,6 +226,37 @@ export interface PayrollAdjustment {
   reason?: string
   createdAt: string
 }
+
+/* ======================================================
+   REWARD & PENALTY (ADJUSTMENTS)
+====================================================== */
+
+export interface RewardPenaltyType {
+  id: number
+  name: string
+  type: 'Reward' | 'Penalty'
+  amount: number
+}
+
+export interface RewardPenalty {
+  id: number
+  employeeId: number
+  employeeName: string
+  typeId: number
+  typeName: string
+  kind: 'Reward' | 'Penalty'
+  amount: number
+  reason?: string
+  createdAt: string
+}
+
+export interface ApplyRewardPenaltyRequest {
+  employeeId: number
+  typeId: number
+  amount: number
+  reason?: string
+}
+
 
 /* ======================================================
    ACTIVITY LOG
@@ -301,6 +356,10 @@ export interface Revenue {
   id: number
   scheduleId: number
   employeeId: number
+  employeeName?: string
+  shiftName?: string
+  positionName?: string
+  workDate?: string
   openingBalance: number
   cash: number
   bank: number

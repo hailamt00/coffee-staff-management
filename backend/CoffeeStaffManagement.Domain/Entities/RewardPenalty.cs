@@ -9,6 +9,7 @@ public class RewardPenalty : AuditableEntity
     public int TypeId { get; set; }
 
     public decimal Amount { get; set; }
+    public string? Reason { get; set; }
 
     public Employee? Employee { get; set; }
     public Attendance? Attendance { get; set; }

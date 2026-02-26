@@ -2,7 +2,7 @@ using ActivityLogEntity = CoffeeStaffManagement.Domain.Entities.ActivityLog;
 
 namespace CoffeeStaffManagement.Application.Common.Interfaces;
 
-public interface IActivityLogRepository
+public interface IActivityLogRepository : IGenericRepository<ActivityLogEntity>
 {
-    Task AddAsync(ActivityLogEntity log, CancellationToken ct);
+    new Task AddAsync(ActivityLogEntity log, CancellationToken ct);
 }

@@ -5,20 +5,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeStaffManagement.Infrastructure.Repositories;
 
-public class ShiftRepository : IShiftRepository
+public class ShiftRepository : GenericRepository<Shift>, IShiftRepository
 {
-    private readonly AppDbContext _context;
-
-    public ShiftRepository(AppDbContext context)
+    public ShiftRepository(AppDbContext context) : base(context)
     {
-        _context = context;
     }
 
-    public async Task<Shift?> GetByIdAsync(int id)
+    public new async Task<Shift?> GetByIdAsync(int id, CancellationToken ct = default)
     {
         return await _context.Shifts
             .Include(s => s.Position)
-            .FirstOrDefaultAsync(s => s.Id == id);
+            .FirstOrDefaultAsync(s => s.Id == id, ct);
     }
 
     public async Task<List<Shift>> GetAllAsync()

@@ -6,13 +6,10 @@ using Microsoft.EntityFrameworkCore;
 namespace CoffeeStaffManagement.Infrastructure.Repositories;
 
 public class ScheduleRequestRepository
-    : IScheduleRequestRepository
+    : GenericRepository<ScheduleRequest>, IScheduleRequestRepository
 {
-    private readonly AppDbContext _context;
-
-    public ScheduleRequestRepository(AppDbContext context)
+    public ScheduleRequestRepository(AppDbContext context) : base(context)
     {
-        _context = context;
     }
 
     public async Task<List<ScheduleRequest>> GetByEmployeeAsync(long employeeId)

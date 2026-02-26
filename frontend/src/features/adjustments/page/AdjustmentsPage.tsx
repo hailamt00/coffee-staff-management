@@ -29,22 +29,19 @@ export default function AdjustmentsPage() {
   const loading = mutationLoading || queryLoading
 
   const stats = useMemo(() => {
-    const totalCount = adjustments.length
-    const bonuses = adjustments.filter(a => a.amount > 0 || a.typeName.toLowerCase().includes('thưởng') || a.typeName.toLowerCase().includes('bonus'))
-    const penalties = adjustments.filter(a => a.amount < 0 || a.typeName.toLowerCase().includes('phạt') || a.typeName.toLowerCase().includes('penalty'))
+    const bonuses = adjustments.filter(a => a.kind === 'Reward')
+    const penalties = adjustments.filter(a => a.kind === 'Penalty')
 
-    // Amount is positive in DB?
-    // RewardPenaltyDto: Amount.
-    // Usually Amount is always positive and Type determines sign?
-    // Let's assume Amount is absolute value, relying on Type.
     const bonusAmount = bonuses.reduce((sum, a) => sum + a.amount, 0)
     const penaltyAmount = penalties.reduce((sum, a) => sum + a.amount, 0)
 
     return {
-      totalCount,
+      totalCount: adjustments.length,
       bonusCount: bonuses.length,
       penaltyCount: penalties.length,
-      totalAmount: bonusAmount - penaltyAmount // Net
+      bonusAmount,
+      penaltyAmount,
+      netAmount: bonusAmount - penaltyAmount
     }
   }, [adjustments])
 
@@ -54,10 +51,10 @@ export default function AdjustmentsPage() {
       <div className="flex flex-wrap items-end justify-between gap-4 px-2">
         <div>
           <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
-            Ghi Nhận Vi Phạm
+            Khen Thưởng & Vi Phạm
           </h1>
           <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-            Employee Violations
+            Employee Adjustments
           </p>
         </div>
 
@@ -96,8 +93,8 @@ export default function AdjustmentsPage() {
       {/* Tabs Layout */}
       <Tabs defaultValue="form" className="w-full space-y-6">
         <TabsList className="bg-slate-100 dark:bg-neutral-900 p-1">
-          <TabsTrigger value="form" className="px-6 font-semibold">Ghi Nhận Vi Phạm</TabsTrigger>
-          <TabsTrigger value="report" className="px-6 font-semibold">Báo Cáo Vi Phạm</TabsTrigger>
+          <TabsTrigger value="form" className="px-6 font-semibold">Ghi Nhận Thưởng/Phạt</TabsTrigger>
+          <TabsTrigger value="report" className="px-6 font-semibold">Báo Cáo Tổng Hợp</TabsTrigger>
         </TabsList>
 
         <TabsContent value="form">
@@ -108,30 +105,30 @@ export default function AdjustmentsPage() {
           {/* KPI */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <SummaryCard
-              title="Tổng số lỗi"
+              title="Tổng lượt"
               value={stats.totalCount}
-              description="Tháng này"
+              description="Xử lý trong tháng"
               icon={ClipboardList}
               color="cyan"
             />
             <SummaryCard
               title="Khen thưởng"
               value={stats.bonusCount}
-              description="Số lượt"
+              description={`${formatMoney(stats.bonusAmount)} VND`}
               icon={TrendingUp}
               color="green"
             />
             <SummaryCard
               title="Vi phạm"
               value={stats.penaltyCount}
-              description="Đã phạt"
+              description={`${formatMoney(stats.penaltyAmount)} VND`}
               icon={TrendingDown}
               color="red"
             />
             <SummaryCard
-              title="Tổng tiền phạt"
-              value={formatMoney(Math.abs(stats.totalAmount))}
-              description="VND"
+              title="Thực nhận"
+              value={formatMoney(stats.netAmount)}
+              description="VND (Sau bù trừ)"
               icon={DollarSign}
               color="cyan"
             />

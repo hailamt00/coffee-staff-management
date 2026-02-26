@@ -8,7 +8,7 @@ public class AttendanceDto
     public string EmployeeName { get; set; } = null!;
     public string EmployeePhone { get; set; } = null!;
 
-    public int ShiftId { get; set; }
+    public int? ShiftId { get; set; }
     public string ShiftName { get; set; } = null!;
     public string PositionName { get; set; } = null!;
 

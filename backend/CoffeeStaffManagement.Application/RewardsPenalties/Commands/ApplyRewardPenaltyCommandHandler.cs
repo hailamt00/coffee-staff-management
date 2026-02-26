@@ -39,10 +39,12 @@ public class ApplyRewardPenaltyCommandHandler : IRequestHandler<ApplyRewardPenal
         {
             EmployeeId = request.Request.EmployeeId,
             TypeId = request.Request.TypeId,
-            Amount = request.Request.Amount
+            Amount = request.Request.Amount,
+            Reason = request.Request.Reason
         };
 
         await _rewardPenaltyRepo.AddAsync(rewardPenalty);
+        await _rewardPenaltyRepo.SaveChangesAsync(ct);
 
         await _logger.LogAsync(
             $"Apply RewardPenalty: {rpType.Name} for {employee.Name}: {rewardPenalty.Amount:N0} VND - user: {_currentUserService.UserId}",

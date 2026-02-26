@@ -24,6 +24,13 @@ public class RevenuesController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet]
+    public async Task<ActionResult<List<RevenueDto>>> GetByMonth([FromQuery] int month, [FromQuery] int year)
+    {
+        var result = await _mediator.Send(new GetRevenuesByMonthQuery(month, year));
+        return Ok(result);
+    }
+
     [HttpGet("schedule/{scheduleId}")]
     public async Task<ActionResult<RevenueDto>> GetBySchedule(int scheduleId)
     {

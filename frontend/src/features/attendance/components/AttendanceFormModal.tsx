@@ -118,9 +118,9 @@ export function AttendanceFormModal({
                 <div className="grid gap-4 py-4">
 
                     <div className="space-y-2">
-                        <Label>Nhân viên</Label>
+                        <Label htmlFor="employeeForm">Nhân viên</Label>
                         <Select value={employeeId} onValueChange={setEmployeeId} disabled={isEditMode}>
-                            <SelectTrigger>
+                            <SelectTrigger id="employeeForm">
                                 <SelectValue placeholder="Chọn nhân viên" />
                             </SelectTrigger>
                             <SelectContent>
@@ -132,7 +132,7 @@ export function AttendanceFormModal({
                     </div>
 
                     <div className="space-y-2">
-                        <Label>Chức vụ (Vị trí)</Label>
+                        <Label htmlFor="positionForm">Chức vụ (Vị trí)</Label>
                         <Select
                             value={positionId}
                             onValueChange={(val) => {
@@ -141,7 +141,7 @@ export function AttendanceFormModal({
                             }}
                             disabled={isEditMode}
                         >
-                            <SelectTrigger>
+                            <SelectTrigger id="positionForm">
                                 <SelectValue placeholder="Chọn chức vụ" />
                             </SelectTrigger>
                             <SelectContent>
@@ -153,9 +153,9 @@ export function AttendanceFormModal({
                     </div>
 
                     <div className="space-y-2">
-                        <Label>Ca làm việc (Mặc định)</Label>
+                        <Label htmlFor="shiftForm">Ca làm việc (Mặc định)</Label>
                         <Select value={shiftId} onValueChange={setShiftId} disabled={isEditMode || !positionId}>
-                            <SelectTrigger>
+                            <SelectTrigger id="shiftForm">
                                 <SelectValue placeholder="Chọn ca làm" />
                             </SelectTrigger>
                             <SelectContent>
@@ -172,8 +172,9 @@ export function AttendanceFormModal({
                     </div>
 
                     <div className="space-y-2">
-                        <Label>Ngày làm việc</Label>
+                        <Label htmlFor="dateForm">Ngày làm việc</Label>
                         <Input
+                            id="dateForm"
                             type="date"
                             value={workDate}
                             onChange={e => setWorkDate(e.target.value)}
@@ -183,18 +184,19 @@ export function AttendanceFormModal({
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label>Giờ Bắt đầu (Check-in)</Label>
-                            <Input type="time" value={checkIn} onChange={e => setCheckIn(e.target.value)} />
+                            <Label htmlFor="checkInForm">Giờ Bắt đầu (Check-in)</Label>
+                            <Input id="checkInForm" type="time" value={checkIn} onChange={e => setCheckIn(e.target.value)} />
                         </div>
                         <div className="space-y-2">
-                            <Label>Giờ Kết thúc (Check-out)</Label>
-                            <Input type="time" value={checkOut} onChange={e => setCheckOut(e.target.value)} />
+                            <Label htmlFor="checkOutForm">Giờ Kết thúc (Check-out)</Label>
+                            <Input id="checkOutForm" type="time" value={checkOut} onChange={e => setCheckOut(e.target.value)} />
                         </div>
                     </div>
 
                     <div className="space-y-2">
-                        <Label>Ghi chú</Label>
+                        <Label htmlFor="noteForm">Ghi chú</Label>
                         <Input
+                            id="noteForm"
                             placeholder="Nhập ghi chú..."
                             value={note}
                             onChange={e => setNote(e.target.value)}

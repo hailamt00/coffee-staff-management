@@ -31,33 +31,28 @@ public class GetAttendanceByDateRangeQueryHandler
         foreach (var att in attendances)
         {
             var schedule = att.Schedule;
-            if (schedule == null) continue; // Should not happen based on Repo Include, but safe fallback
-
             var status = "present";
 
-            if (att.CheckIn.HasValue)
+            if (att.CheckIn.HasValue && schedule?.Shift?.StartTime != null)
             {
-                var shiftStartTime = schedule.Shift?.StartTime;
-                if (shiftStartTime.HasValue)
+                var shiftStartTime = schedule.Shift.StartTime.Value;
+                var checkInTime = att.CheckIn.Value.TimeOfDay;
+                if (checkInTime > shiftStartTime.Add(TimeSpan.FromMinutes(15))) // 15 mins grace period
                 {
-                    var checkInTime = att.CheckIn.Value.TimeOfDay;
-                    if (checkInTime > shiftStartTime.Value.Add(TimeSpan.FromMinutes(15))) // 15 mins grace period
-                    {
-                        status = "late";
-                    }
+                    status = "late";
                 }
             }
 
             result.Add(new AttendanceDto
             {
                 Id = att.Id,
-                EmployeeId = schedule.EmployeeId,
-                EmployeeName = schedule.Employee?.Name ?? att.Employee?.Name ?? "Unknown",
-                EmployeePhone = schedule.Employee?.Phone ?? att.Employee?.Phone ?? "Unknown",
-                ShiftId = schedule.ShiftId,
-                ShiftName = schedule.Shift?.Name ?? "Unknown",
-                PositionName = schedule.Shift?.Position?.Name ?? "Unknown",
-                WorkDate = schedule.WorkDate,
+                EmployeeId = att.EmployeeId,
+                EmployeeName = att.Employee?.Name ?? schedule?.Employee?.Name ?? "Unknown",
+                EmployeePhone = att.Employee?.Phone ?? schedule?.Employee?.Phone ?? "—",
+                ShiftId = schedule?.ShiftId,
+                ShiftName = schedule?.Shift?.Name ?? "—",
+                PositionName = schedule?.Shift?.Position?.Name ?? "—",
+                WorkDate = schedule?.WorkDate ?? (att.CheckIn.HasValue ? DateOnly.FromDateTime(att.CheckIn.Value) : DateOnly.MinValue),
                 CheckIn = att.CheckIn,
                 CheckOut = att.CheckOut,
                 TotalHours = (double?)att.TotalHours,

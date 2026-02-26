@@ -203,12 +203,12 @@ export default function StaffAttendancePage() {
 
                     <div className="p-6 space-y-5">
                         <div className="space-y-2.5">
-                            <Label className="text-[11px] font-bold text-slate-500 tracking-wide uppercase">Position</Label>
+                            <Label htmlFor="substituePosition" className="text-[11px] font-bold text-slate-500 tracking-wide uppercase">Position</Label>
                             <Select value={subPositionId} onValueChange={(val) => {
                                 setSubPositionId(val)
                                 setSubShiftId('')
                             }}>
-                                <SelectTrigger className="h-12 rounded-xl border-slate-200/60 dark:border-neutral-800/60 bg-white/50 dark:bg-neutral-900/50 transition-colors hover:bg-white dark:hover:bg-neutral-900 focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-0">
+                                <SelectTrigger id="substituePosition" className="h-12 rounded-xl border-slate-200/60 dark:border-neutral-800/60 bg-white/50 dark:bg-neutral-900/50 transition-colors hover:bg-white dark:hover:bg-neutral-900 focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-0">
                                     <SelectValue placeholder="Select position" />
                                 </SelectTrigger>
                                 <SelectContent className="rounded-xl border-slate-200/60 dark:border-neutral-800/60 shadow-xl">
@@ -222,9 +222,9 @@ export default function StaffAttendancePage() {
                         </div>
 
                         <div className="space-y-2.5">
-                            <Label className="text-[11px] font-bold text-slate-500 tracking-wide uppercase">Shift</Label>
+                            <Label htmlFor="substituteShift" className="text-[11px] font-bold text-slate-500 tracking-wide uppercase">Shift</Label>
                             <Select value={subShiftId} onValueChange={setSubShiftId} disabled={!subPositionId}>
-                                <SelectTrigger className="h-12 rounded-xl border-slate-200/60 dark:border-neutral-800/60 bg-white/50 dark:bg-neutral-900/50 transition-colors hover:bg-white dark:hover:bg-neutral-900 focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-0 disabled:opacity-50">
+                                <SelectTrigger id="substituteShift" className="h-12 rounded-xl border-slate-200/60 dark:border-neutral-800/60 bg-white/50 dark:bg-neutral-900/50 transition-colors hover:bg-white dark:hover:bg-neutral-900 focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-0 disabled:opacity-50">
                                     <SelectValue placeholder={subPositionId ? "Select shift" : "Select position first"} />
                                 </SelectTrigger>
                                 <SelectContent className="rounded-xl border-slate-200/60 dark:border-neutral-800/60 shadow-xl">

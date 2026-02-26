@@ -10,14 +10,12 @@ using NpgsqlTypes;
 
 namespace CoffeeStaffManagement.Infrastructure.Repositories
 {
-    public class EmployeeRepository : IEmployeeRepository
+    public class EmployeeRepository : GenericRepository<Employee>, IEmployeeRepository
     {
-        private readonly AppDbContext _context;
         private readonly NpgsqlDataSource _dataSource;
 
-        public EmployeeRepository(AppDbContext context, NpgsqlDataSource dataSource)
+        public EmployeeRepository(AppDbContext context, NpgsqlDataSource dataSource) : base(context)
         {
-            _context = context;
             _dataSource = dataSource;
         }
 

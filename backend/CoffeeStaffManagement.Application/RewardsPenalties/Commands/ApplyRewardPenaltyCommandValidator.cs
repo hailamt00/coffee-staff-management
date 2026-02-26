@@ -14,7 +14,7 @@ public class ApplyRewardPenaltyCommandValidator : AbstractValidator<ApplyRewardP
             .GreaterThan(0).WithMessage("Invalid reward/penalty type ID");
 
         RuleFor(v => v.Request.Amount)
-            .GreaterThan(0).WithMessage("Amount must be greater than zero");
+            .GreaterThanOrEqualTo(0).WithMessage("Amount must be greater than or equal to zero");
 
     }
 }

@@ -19,6 +19,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
+    TableFooter,
 } from '@/shared/components/ui/table'
 import { Pagination } from '@/shared/components/ui/pagination'
 import { Input } from '@/shared/components/ui/input'
@@ -42,6 +43,8 @@ interface DataTableProps<TData, TValue> {
     searchPosition?: 'top' | 'bottom'
     renderSubComponent?: (props: { row: any }) => React.ReactNode
     getRowCanExpand?: (row: any) => boolean
+    showFooter?: boolean
+    hideToolbar?: boolean
 }
 
 export const DataTable = <TData, TValue>({
@@ -53,6 +56,8 @@ export const DataTable = <TData, TValue>({
     searchPosition = 'top',
     renderSubComponent,
     getRowCanExpand,
+    showFooter = false,
+    hideToolbar = false,
 }: DataTableProps<TData, TValue>) => {
     const [sorting, setSorting] = useState<SortingState>([])
     const [globalFilter, setGlobalFilter] = useState('')
@@ -93,47 +98,49 @@ export const DataTable = <TData, TValue>({
     return (
         <div className="space-y-4">
             {/* TOOLBAR */}
-            <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between bg-slate-50/50 dark:bg-neutral-900/30 p-3 rounded-2xl border border-slate-200 dark:border-neutral-800 backdrop-blur-sm shadow-sm transition-all focus-within:shadow-md">
-                <div className="flex items-center gap-4 pl-2">
-                    <div className="h-9 w-9 rounded-full bg-black dark:bg-white flex items-center justify-center text-white dark:text-black shadow-lg">
-                        <SlidersHorizontal size={14} />
+            {!hideToolbar && (
+                <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between bg-slate-50/50 dark:bg-neutral-900/30 p-3 rounded-2xl border border-slate-200 dark:border-neutral-800 backdrop-blur-sm shadow-sm transition-all focus-within:shadow-md">
+                    <div className="flex items-center gap-4 pl-2">
+                        <div className="h-9 w-9 rounded-full bg-black dark:bg-white flex items-center justify-center text-white dark:text-black shadow-lg">
+                            <SlidersHorizontal size={14} />
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <Label htmlFor="pageSize" className="text-[11px] font-bold uppercase text-slate-500 tracking-widest cursor-pointer">Entry /</Label>
+                            <Select
+                                value={`${table.getState().pagination.pageSize}`}
+                                onValueChange={(value) => {
+                                    table.setPageSize(Number(value))
+                                }}
+                            >
+                                <SelectTrigger id="pageSize" className="h-8 w-[65px] text-xs font-black border-none bg-transparent hover:bg-slate-200/50 dark:hover:bg-white/5 rounded-lg transition-colors">
+                                    <SelectValue placeholder={table.getState().pagination.pageSize} />
+                                </SelectTrigger>
+                                <SelectContent side="top">
+                                    {[5, 10, 20, 50, 100].map((pageSize) => (
+                                        <SelectItem key={pageSize} value={`${pageSize}`} className="text-xs">
+                                            {pageSize}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                        <Label htmlFor="pageSize" className="text-[11px] font-bold uppercase text-slate-500 tracking-widest cursor-pointer">Entry /</Label>
-                        <Select
-                            value={`${table.getState().pagination.pageSize}`}
-                            onValueChange={(value) => {
-                                table.setPageSize(Number(value))
-                            }}
-                        >
-                            <SelectTrigger id="pageSize" className="h-8 w-[65px] text-xs font-black border-none bg-transparent hover:bg-slate-200/50 dark:hover:bg-white/5 rounded-lg transition-colors">
-                                <SelectValue placeholder={table.getState().pagination.pageSize} />
-                            </SelectTrigger>
-                            <SelectContent side="top">
-                                {[5, 10, 20, 50, 100].map((pageSize) => (
-                                    <SelectItem key={pageSize} value={`${pageSize}`} className="text-xs">
-                                        {pageSize}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
-                </div>
 
-                {searchKey && searchPosition === 'top' && (
-                    <div className="relative group flex-1 max-w-sm">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-black dark:group-focus-within:text-white transition-colors" />
-                        <Input
-                            id="globalSearchTop"
-                            aria-label="Search data"
-                            placeholder="Type to filter data..."
-                            value={globalFilter ?? ''}
-                            onChange={(event) => setGlobalFilter(event.target.value)}
-                            className="h-11 w-full border-none bg-white dark:bg-black rounded-xl pl-11 pr-5 text-[13px] font-semibold focus:ring-1 focus:ring-black dark:focus:ring-white shadow-inner transition-all"
-                        />
-                    </div>
-                )}
-            </div>
+                    {searchKey && searchPosition === 'top' && (
+                        <div className="relative group flex-1 max-w-sm">
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-black dark:group-focus-within:text-white transition-colors" />
+                            <Input
+                                id="globalSearchTop"
+                                aria-label="Search data"
+                                placeholder="Type to filter data..."
+                                value={globalFilter ?? ''}
+                                onChange={(event) => setGlobalFilter(event.target.value)}
+                                className="h-11 w-full border-none bg-white dark:bg-black rounded-xl pl-11 pr-5 text-[13px] font-semibold focus:ring-1 focus:ring-black dark:focus:ring-white shadow-inner transition-all"
+                            />
+                        </div>
+                    )}
+                </div>
+            )}
 
             {/* TABLE */}
             <div className="rounded-md border bg-white dark:bg-black overflow-hidden">
@@ -202,6 +209,24 @@ export const DataTable = <TData, TValue>({
                             )}
                         </AnimatePresence>
                     </TableBody>
+                    {showFooter && (
+                        <TableFooter className="bg-slate-50 dark:bg-neutral-900/50">
+                            {table.getFooterGroups().map((footerGroup) => (
+                                <TableRow key={footerGroup.id}>
+                                    {footerGroup.headers.map((header) => (
+                                        <TableCell key={header.id} className="py-3 px-4 text-xs font-black border-t">
+                                            {header.isPlaceholder
+                                                ? null
+                                                : flexRender(
+                                                    header.column.columnDef.footer,
+                                                    header.getContext()
+                                                )}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))}
+                        </TableFooter>
+                    )}
                 </Table>
             </div>
 

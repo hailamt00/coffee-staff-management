@@ -5,13 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeStaffManagement.Infrastructure.Repositories;
 
-public class PositionRepository : IPositionRepository
+public class PositionRepository : GenericRepository<Position>, IPositionRepository
 {
-    private readonly AppDbContext _context;
-
-    public PositionRepository(AppDbContext context)
+    public PositionRepository(AppDbContext context) : base(context)
     {
-        _context = context;
     }
 
     public async Task<List<Position>> GetAllAsync()
@@ -20,25 +17,8 @@ public class PositionRepository : IPositionRepository
             .OrderBy(p => p.Name)
             .ToListAsync();
 
-    public async Task<Position?> GetByIdAsync(int id)
+    public new async Task<Position?> GetByIdAsync(int id, CancellationToken ct = default)
         => await _context.Positions
             .Include(p => p.Shifts)
-            .FirstOrDefaultAsync(p => p.Id == id);
-
-    public async Task AddAsync(Position position)
-    {
-        _context.Positions.Add(position);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task UpdateAsync(Position position)
-    {
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task DeleteAsync(Position position)
-    {
-        _context.Positions.Remove(position);
-        await _context.SaveChangesAsync();
-    }
+            .FirstOrDefaultAsync(p => p.Id == id, ct);
 }

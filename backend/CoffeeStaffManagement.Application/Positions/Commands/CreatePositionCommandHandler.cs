@@ -39,7 +39,8 @@ public class CreatePositionCommandHandler
             });
         }
 
-        await _repo.AddAsync(position);
+        await _repo.AddAsync(position, ct);
+        await _repo.SaveChangesAsync(ct);
 
         return MapToDto(position);
     }

@@ -4,7 +4,7 @@ namespace CoffeeStaffManagement.Domain.Entities;
 
 public class Attendance : BaseEntity
 {
-    public int ScheduleId { get; set; }
+    public int? ScheduleId { get; set; }
     public int EmployeeId { get; set; }
 
     public DateTime? CheckIn { get; set; }

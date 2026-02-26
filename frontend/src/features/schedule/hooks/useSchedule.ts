@@ -17,30 +17,40 @@ export function useSchedule() {
         queryKey: ['schedules', date],
         queryFn: () => scheduleApi.getSchedule(date),
         enabled: !!date,
+        staleTime: 5 * 60 * 1000,
+        refetchOnWindowFocus: false,
     })
 
     const useRequestsQuery = (date: string) => useQuery({
         queryKey: ['schedule-requests', date],
         queryFn: () => scheduleApi.getRequests(date),
         enabled: !!date,
+        staleTime: 5 * 60 * 1000,
+        refetchOnWindowFocus: false,
     })
 
     const useWeeklySchedulesQuery = (fromDate: string, toDate: string) => useQuery({
         queryKey: ['schedules-weekly', fromDate, toDate],
         queryFn: () => scheduleApi.getWeeklySchedule(fromDate, toDate),
         enabled: !!fromDate && !!toDate,
+        staleTime: 5 * 60 * 1000,
+        refetchOnWindowFocus: false,
     })
 
     const useMyRequestsQuery = (employeeId: number) => useQuery({
         queryKey: ['schedule-requests', 'my', employeeId],
         queryFn: () => scheduleApi.getMyRequests(employeeId),
         enabled: !!employeeId,
+        staleTime: 5 * 60 * 1000,
+        refetchOnWindowFocus: false,
     })
 
     const useWeeklyRequestsQuery = (fromDate: string, toDate: string) => useQuery({
         queryKey: ['schedule-requests', 'weekly', fromDate, toDate],
         queryFn: () => scheduleApi.getWeeklyRequests(fromDate, toDate),
         enabled: !!fromDate && !!toDate,
+        staleTime: 5 * 60 * 1000,
+        refetchOnWindowFocus: false,
     })
 
     /* ================= COMMANDS ================= */

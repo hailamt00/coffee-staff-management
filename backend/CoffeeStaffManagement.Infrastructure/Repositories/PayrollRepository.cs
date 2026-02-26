@@ -5,13 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeStaffManagement.Infrastructure.Repositories;
 
-public class PayrollRepository : IPayrollRepository
+public class PayrollRepository : GenericRepository<Payroll>, IPayrollRepository
 {
-    private readonly AppDbContext _context;
-
-    public PayrollRepository(AppDbContext context)
+    public PayrollRepository(AppDbContext context) : base(context)
     {
-        _context = context;
     }
 
     public async Task<Payroll?> GetAsync(
@@ -28,20 +25,12 @@ public class PayrollRepository : IPayrollRepository
                 ct);
     }
 
-    public async Task<Payroll?> GetByIdAsync(
+    public new async Task<Payroll?> GetByIdAsync(
         int payrollId,
         CancellationToken ct)
     {
         return await _context.Payrolls
             .FirstOrDefaultAsync(p => p.Id == payrollId, ct);
-    }
-
-    public async Task AddAsync(
-        Payroll payroll,
-        CancellationToken ct)
-    {
-        await _context.Payrolls.AddAsync(payroll, ct);
-        await _context.SaveChangesAsync(ct);
     }
 
     public async Task UpdateAsync(
@@ -58,6 +47,15 @@ public class PayrollRepository : IPayrollRepository
     {
         return await _context.Payrolls
             .Include(p => p.Employee) // Include Employee for name
+            .Include(p => p.Details)
+                .ThenInclude(d => d.Attendance)
+                    .ThenInclude(a => a!.Schedule)
+                        .ThenInclude(s => s!.Shift)
+                            .ThenInclude(sh => sh!.Position)
+            .Include(p => p.Details)
+                .ThenInclude(d => d.Attendance)
+                    .ThenInclude(a => a!.RewardsPenalties)
+                        .ThenInclude(r => r.Type)
             .Where(p =>
                 p.Month == month &&
                 p.Year == year)

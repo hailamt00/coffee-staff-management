@@ -20,6 +20,7 @@ public class DeletePositionCommandHandler
         var position = await _repo.GetByIdAsync(request.Id)
             ?? throw new KeyNotFoundException("Position not found");
 
-        await _repo.DeleteAsync(position);
+        _repo.Delete(position);
+        await _repo.SaveChangesAsync(cancellationToken);
     }
 }

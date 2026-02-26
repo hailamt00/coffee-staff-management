@@ -17,6 +17,8 @@ export function useEmployee() {
   const employeesQuery = useQuery({
     queryKey: ['employees'],
     queryFn: () => employeeApi.getAll(),
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
   })
 
   /* ================= COMMANDS ================= */

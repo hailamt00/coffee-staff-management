@@ -22,7 +22,8 @@ public class GetRewardPenaltyTypesQueryHandler : IRequestHandler<GetRewardPenalt
         {
             Id = t.Id,
             Name = t.Name,
-            Type = t.Type.ToString()
+            Type = t.Type.ToString(),
+            Amount = t.Amount
         }).ToList();
     }
 }

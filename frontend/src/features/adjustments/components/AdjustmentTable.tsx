@@ -3,16 +3,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui
 import { Badge } from '@/shared/components/ui/badge'
 import { DataTable } from '@/shared/components/ui/data-table'
 import { ColumnDef } from '@tanstack/react-table'
-import type { Adjustment } from '../types'
+import type { RewardPenalty } from '@/shared/types/api'
 import { formatMoney, formatDate } from '@/shared/utils/format'
 
 interface Props {
-  data: Adjustment[]
+  data: RewardPenalty[]
   loading?: boolean
 }
 
 export default function AdjustmentTable({ data, loading }: Props) {
-  const columns = useMemo<ColumnDef<any>[]>(() => [
+  const columns = useMemo<ColumnDef<RewardPenalty>[]>(() => [
     {
       accessorKey: "createdAt",
       header: "Ngày",
@@ -25,38 +25,39 @@ export default function AdjustmentTable({ data, loading }: Props) {
     },
     {
       accessorKey: "typeName",
-      header: "Lỗi vi phạm",
+      header: "Nội dung",
       cell: ({ row }) => {
-        const type = row.getValue("typeName") as string
-        const isBonus = type.toLowerCase().includes('thưởng') || type.toLowerCase().includes('bonus')
+        const typeOrig = row.original.typeName
+        const isBonus = row.original.kind === 'Reward'
         return (
           <Badge
             variant={isBonus ? 'default' : 'destructive'}
             className={isBonus ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-red-500 hover:bg-red-600'}
           >
-            {type}
+            {typeOrig}
           </Badge>
         )
       }
     },
     {
       accessorKey: "amount",
-      header: () => <div className="text-right">Số điểm (Tiền)</div>,
+      header: () => <div className="text-right">Số tiền (VNĐ)</div>,
       cell: ({ row }) => {
         const amount = row.getValue("amount") as number
-        const type = row.original.typeName
-        const isBonus = type.toLowerCase().includes('thưởng') || type.toLowerCase().includes('bonus')
+        const isBonus = row.original.kind === 'Reward'
+        const isWarning = amount === 0
+
         return (
-          <div className={`text-right font-mono font-bold ${isBonus ? 'text-emerald-600' : 'text-red-600'}`}>
-            {isBonus ? '+' : '-'}{formatMoney(Math.abs(amount))}
+          <div className={`text-right font-mono font-bold ${isWarning ? 'text-slate-400' : isBonus ? 'text-emerald-600' : 'text-red-600'}`}>
+            {isWarning ? 'Nhắc nhở' : `${isBonus ? '+' : '-'}${formatMoney(Math.abs(amount))}`}
           </div>
         )
       }
     },
     {
-      id: "note",
-      header: "Ghi Chú",
-      cell: ({ row }) => <div className="text-xs text-muted-foreground">{row.original.note || "—"}</div>
+      accessorKey: "reason",
+      header: "Lý do / Ghi chú",
+      cell: ({ row }) => <div className="text-xs text-muted-foreground whitespace-normal min-w-[150px]">{row.original.reason || "—"}</div>
     }
   ], [])
 

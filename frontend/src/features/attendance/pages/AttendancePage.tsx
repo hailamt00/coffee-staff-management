@@ -243,8 +243,9 @@ export default function AttendancePage() {
         <div className="flex flex-col md:flex-row gap-4 items-end justify-between">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4 flex-1">
             <div className="space-y-1.5">
-              <Label className="text-xs font-semibold text-slate-600">Từ ngày</Label>
+              <Label htmlFor="startDateFilter" className="text-xs font-semibold text-slate-600">Từ ngày</Label>
               <Input
+                id="startDateFilter"
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
@@ -252,8 +253,9 @@ export default function AttendancePage() {
               />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-semibold text-slate-600">Đến ngày</Label>
+              <Label htmlFor="endDateFilter" className="text-xs font-semibold text-slate-600">Đến ngày</Label>
               <Input
+                id="endDateFilter"
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
@@ -261,9 +263,9 @@ export default function AttendancePage() {
               />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-semibold text-slate-600">Chức vụ</Label>
+              <Label htmlFor="positionFilter" className="text-xs font-semibold text-slate-600">Chức vụ</Label>
               <Select value={positionFilter} onValueChange={setPositionFilter}>
-                <SelectTrigger className="h-9">
+                <SelectTrigger id="positionFilter" className="h-9">
                   <SelectValue placeholder="Tất cả" />
                 </SelectTrigger>
                 <SelectContent>
@@ -274,13 +276,15 @@ export default function AttendancePage() {
               </Select>
             </div>
             <div className="space-y-1.5 min-w-[200px]">
-              <Label className="text-xs font-semibold text-slate-600">Nhân viên</Label>
-              <MultiSelect
-                options={employees.map(emp => ({ label: emp.name, value: String(emp.id) }))}
-                selectedValues={selectedEmployeeIds}
-                onChange={setSelectedEmployeeIds}
-                placeholder="Chọn nhân viên..."
-              />
+              <div className="text-xs font-semibold text-slate-600 mb-1.5">Nhân viên</div>
+              <div>
+                <MultiSelect
+                  options={employees.map(emp => ({ label: emp.name, value: String(emp.id) }))}
+                  selectedValues={selectedEmployeeIds}
+                  onChange={setSelectedEmployeeIds}
+                  placeholder="Chọn nhân viên..."
+                />
+              </div>
             </div>
             <div className="flex items-center gap-2 h-9 mt-auto">
               <input

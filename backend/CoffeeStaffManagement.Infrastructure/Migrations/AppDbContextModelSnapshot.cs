@@ -335,12 +335,6 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("employee_id");
 
-                    b.Property<decimal>("Expenses")
-                        .HasColumnType("numeric");
-
-                    b.Property<decimal>("Income")
-                        .HasColumnType("numeric");
-
                     b.Property<decimal>("Net")
                         .HasPrecision(12, 2)
                         .HasColumnType("numeric(12,2)")
@@ -401,6 +395,10 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                     b.Property<int>("EmployeeId")
                         .HasColumnType("integer")
                         .HasColumnName("employee_id");
+
+                    b.Property<string>("Reason")
+                        .HasColumnType("text")
+                        .HasColumnName("reason");
 
                     b.Property<int>("TypeId")
                         .HasColumnType("integer")

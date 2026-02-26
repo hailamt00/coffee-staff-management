@@ -2,7 +2,7 @@ using CoffeeStaffManagement.Domain.Entities;
 
 namespace CoffeeStaffManagement.Application.Common.Interfaces;
 
-public interface IScheduleRepository
+public interface IScheduleRepository : IGenericRepository<Schedule>
 {
     Task<Schedule?> GetByIdAsync(int id);
     Task<List<Schedule>> GetByDateAsync(DateOnly date);

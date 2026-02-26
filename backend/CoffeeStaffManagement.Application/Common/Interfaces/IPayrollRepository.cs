@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CoffeeStaffManagement.Application.Common.Interfaces;
 
-public interface IPayrollRepository
+public interface IPayrollRepository : IGenericRepository<PayrollEntity>
 {
     Task<PayrollEntity?> GetAsync(
         int employeeId,
@@ -18,12 +18,8 @@ public interface IPayrollRepository
         int year,
         CancellationToken ct);
 
-    Task<PayrollEntity?> GetByIdAsync(
+    new Task<PayrollEntity?> GetByIdAsync(
         int payrollId,
-        CancellationToken ct);
-
-    Task AddAsync(
-        PayrollEntity payroll,
         CancellationToken ct);
 
     Task UpdateAsync(

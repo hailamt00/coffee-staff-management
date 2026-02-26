@@ -1,5 +1,6 @@
 using CoffeeStaffManagement.Application.Common.Interfaces;
 using CoffeeStaffManagement.Domain.Entities;
+using CoffeeStaffManagement.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeStaffManagement.Infrastructure.Persistence;
@@ -83,7 +84,19 @@ public static class DbInitializer
             }
         }
         context.SaveChanges();
-        // ------------------------------------------------
 
+        if (!context.RewardPenaltyTypes.Any())
+        {
+            context.RewardPenaltyTypes.AddRange(
+                new RewardPenaltyType { Name = "Đi làm muộn", Type = RewardPenaltyKind.Penalty, Amount = 20000 },
+                new RewardPenaltyType { Name = "Làm hỏng đồ", Type = RewardPenaltyKind.Penalty, Amount = 50000 },
+                new RewardPenaltyType { Name = "Không chấp hành đồng phục", Type = RewardPenaltyKind.Penalty, Amount = 10000 },
+                new RewardPenaltyType { Name = "Thái độ chưa tốt", Type = RewardPenaltyKind.Penalty, Amount = 0 },
+                new RewardPenaltyType { Name = "Chuyên cần", Type = RewardPenaltyKind.Reward, Amount = 100000 },
+                new RewardPenaltyType { Name = "Phục vụ tốt", Type = RewardPenaltyKind.Reward, Amount = 50000 },
+                new RewardPenaltyType { Name = "Nhân viên xuất sắc", Type = RewardPenaltyKind.Reward, Amount = 200000 }
+            );
+            context.SaveChanges();
+        }
     }
 }

@@ -19,5 +19,9 @@ public class RewardPenaltyTypeConfiguration : IEntityTypeConfiguration<RewardPen
             .HasColumnName("type")
             .HasConversion<string>()
             .HasMaxLength(15);
+
+        builder.Property(x => x.Amount)
+            .HasColumnName("amount")
+            .HasPrecision(12, 2);
     }
 }

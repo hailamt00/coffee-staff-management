@@ -5,16 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeStaffManagement.Infrastructure.Repositories;
 
-public class RevenueRepository : IRevenueRepository
+public class RevenueRepository : GenericRepository<Revenue>, IRevenueRepository
 {
-    private readonly AppDbContext _context;
-
-    public RevenueRepository(AppDbContext context)
+    public RevenueRepository(AppDbContext context) : base(context)
     {
-        _context = context;
     }
 
-    public async Task<Revenue?> GetByIdAsync(int id, CancellationToken ct)
+    public new async Task<Revenue?> GetByIdAsync(int id, CancellationToken ct)
     {
         return await _context.Revenues
             .Include(r => r.Transactions)
@@ -41,10 +38,17 @@ public class RevenueRepository : IRevenueRepository
             .ToListAsync(ct);
     }
 
-    public async Task AddAsync(Revenue revenue, CancellationToken ct)
+    public async Task<List<Revenue>> GetByMonthAsync(int month, int year, CancellationToken ct)
     {
-        await _context.Revenues.AddAsync(revenue, ct);
-        await _context.SaveChangesAsync(ct);
+        return await _context.Revenues
+            .Include(r => r.Transactions)
+            .Include(r => r.Employee)
+            .Include(r => r.Schedule)
+                .ThenInclude(s => s!.Shift)
+                    .ThenInclude(sh => sh!.Position)
+            .Where(r => r.CreatedAt.Month == month && r.CreatedAt.Year == year)
+            .OrderByDescending(r => r.CreatedAt)
+            .ToListAsync(ct);
     }
 
     public async Task UpdateAsync(Revenue revenue, CancellationToken ct)

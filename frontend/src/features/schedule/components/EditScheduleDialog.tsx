@@ -126,14 +126,14 @@ export function EditScheduleDialog({
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label className="text-right font-bold text-slate-500">Employee</Label>
+                        <span className="text-sm text-right font-bold text-slate-500">Employee</span>
                         <div className="col-span-3 font-semibold text-lg">
                             {schedule.employeeName}
                         </div>
                     </div>
 
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label className="text-right font-bold text-slate-500">Date</Label>
+                        <span className="text-sm text-right font-bold text-slate-500">Date</span>
                         <div className="col-span-3">
                             {format(new Date(schedule.workDate), 'EEEE, dd/MM/yyyy', { locale: vi })}
                         </div>
@@ -141,12 +141,12 @@ export function EditScheduleDialog({
 
                     {/* Position Selection */}
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label className="text-right font-bold text-slate-500">Position</Label>
+                        <Label htmlFor="editPosition" className="text-right font-bold text-slate-500">Position</Label>
                         <Select value={selectedPositionId} onValueChange={(val) => {
                             setSelectedPositionId(val)
                             setShiftId('') // Reset shift when position changes
                         }}>
-                            <SelectTrigger className="col-span-3">
+                            <SelectTrigger id="editPosition" className="col-span-3">
                                 <SelectValue placeholder="Select position" />
                             </SelectTrigger>
                             <SelectContent>
@@ -161,9 +161,9 @@ export function EditScheduleDialog({
 
                     {/* Shift Selection */}
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="shift" className="text-right font-bold text-slate-500">Shift</Label>
+                        <Label htmlFor="editShift" className="text-right font-bold text-slate-500">Shift</Label>
                         <Select value={shiftId} onValueChange={setShiftId} disabled={!selectedPositionId}>
-                            <SelectTrigger className="col-span-3">
+                            <SelectTrigger id="editShift" className="col-span-3">
                                 <SelectValue placeholder={selectedPositionId ? "Select shift" : "Select position first"} />
                             </SelectTrigger>
                             <SelectContent>

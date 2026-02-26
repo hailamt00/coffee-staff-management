@@ -1,5 +1,0 @@
-{
-  "StatusCode": 500,
-  "Message": "Internal Server Error from the custom middleware.",
-  "Detailed": "42703: column t.reason does not exist\r\n\r\nPOSITION: 168"
-}

@@ -39,7 +39,8 @@ public class UpdatePositionCommandHandler
             });
         }
 
-        await _repo.UpdateAsync(position);
+        _repo.Update(position);
+        await _repo.SaveChangesAsync(ct);
 
         return new PositionDto
         {

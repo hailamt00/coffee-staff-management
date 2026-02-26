@@ -3,7 +3,7 @@ using CoffeeStaffManagement.Domain.Entities;
 
 namespace CoffeeStaffManagement.Application.Common.Interfaces;
 
-public interface IAttendanceRepository
+public interface IAttendanceRepository : IGenericRepository<AttendanceEntity>
 {
     Task<AttendanceEntity?> GetAsync(
         int employeeId,
@@ -17,7 +17,7 @@ public interface IAttendanceRepository
     DateOnly fromDate,
     DateOnly toDate);
     Task<List<AttendanceEntity>> GetByDateRangeAsync(DateOnly fromDate, DateOnly toDate);
-    Task AddAsync(AttendanceEntity attendance, CancellationToken cancellationToken);
+    new Task AddAsync(AttendanceEntity attendance, CancellationToken cancellationToken);
     Task UpdateAsync(AttendanceEntity attendance, CancellationToken cancellationToken);
     Task DeleteAsync(AttendanceEntity attendance, CancellationToken cancellationToken);
 }

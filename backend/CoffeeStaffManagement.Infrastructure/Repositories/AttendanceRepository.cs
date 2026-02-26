@@ -5,13 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeStaffManagement.Infrastructure.Repositories;
 
-public class AttendanceRepository : IAttendanceRepository
+public class AttendanceRepository : GenericRepository<Attendance>, IAttendanceRepository
 {
-    private readonly AppDbContext _context;
-
-    public AttendanceRepository(AppDbContext context)
+    public AttendanceRepository(AppDbContext context) : base(context)
     {
-        _context = context;
     }
 
     public async Task<Attendance?> GetAsync(
@@ -82,7 +79,7 @@ public class AttendanceRepository : IAttendanceRepository
     }
 
 
-    public async Task AddAsync(
+    public new async Task AddAsync(
         Attendance attendance,
         CancellationToken ct)
     {

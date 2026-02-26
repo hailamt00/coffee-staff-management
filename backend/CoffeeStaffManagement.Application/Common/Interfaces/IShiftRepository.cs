@@ -2,8 +2,8 @@ using CoffeeStaffManagement.Domain.Entities;
 
 namespace CoffeeStaffManagement.Application.Common.Interfaces;
 
-public interface IShiftRepository
+public interface IShiftRepository : IGenericRepository<Shift>
 {
-    Task<Shift?> GetByIdAsync(int id);
+    new Task<Shift?> GetByIdAsync(int id, CancellationToken ct = default);
     Task<List<Shift>> GetAllAsync();
 }
