@@ -11,5 +11,6 @@ public class Transaction : AuditableEntity
     public decimal Amount { get; set; }
     public string? Description { get; set; }
 
+
     public Revenue? Revenue { get; set; }
 }

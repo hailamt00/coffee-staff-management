@@ -10,8 +10,7 @@ public class Revenue : AuditableEntity
     public decimal OpeningBalance { get; set; }
     public decimal Cash { get; set; }
     public decimal Bank { get; set; }
-    public decimal Income { get; set; }
-    public decimal Expenses { get; set; }
+
     public decimal Net { get; set; }
 
     public decimal TotalRevenue { get; set; } // Rename 'Revenue' to 'TotalRevenue' in C# to avoid collision with class name

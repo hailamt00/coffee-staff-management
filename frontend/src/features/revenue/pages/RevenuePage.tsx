@@ -34,7 +34,6 @@ export default function RevenuePage() {
     const { data: revenues = [], isLoading } = useRevenuesByMonth(month, year)
     const loading = mutationLoading || isLoading
 
-    // For the "create" dialog, we still need today's schedules
     const todayDate = now.toISOString().slice(0, 10)
     const { useSchedules } = useSchedule()
     const { data: schedules = [] } = useSchedules(todayDate)
@@ -53,8 +52,6 @@ export default function RevenuePage() {
             openingBalance: Number(revOpening),
             cash: Number(revCash),
             bank: Number(revBank),
-            income: 0,
-            expenses: 0,
             note: revNote,
         })
         setOpenCreate(false)
@@ -67,16 +64,47 @@ export default function RevenuePage() {
 
     // === COMPUTED TOTALS ===
     const totals = useMemo(() => {
-        const t = { cash: 0, bank: 0, income: 0, expenses: 0, revenue: 0, deviation: 0 }
+        let tongDoanhThu = 0    // Sum of TotalRevenue (cash + bank)
+        let tongChiTuKet = 0   // Sum of all Expense transactions
+        let tongNet = 0         // Sum of Net (after Thu/Chi adjustments)
+        let tongDoanhThuThuChi = 0 // TotalRevenue - Expenses + Income
+        let tongSaiLech = 0    // Deviation
+        let tongTM = 0
+        let tongCK = 0
+        let tongIncome = 0
+        let tongExpenses = 0
+
         revenues.forEach((r: Revenue) => {
-            t.cash += r.cash
-            t.bank += r.bank
-            t.income += r.income
-            t.expenses += r.expenses
-            t.revenue += r.totalRevenue
-            t.deviation += r.deviation
+            tongDoanhThu += r.totalRevenue
+            tongNet += r.net
+            tongSaiLech += r.deviation
+            tongTM += r.cash
+            tongCK += r.bank
+            tongIncome += r.income
+            tongExpenses += r.expenses
+            tongChiTuKet += r.expenses
         })
-        return t
+
+        tongDoanhThuThuChi = tongDoanhThu - tongChiTuKet + tongIncome
+
+        return { tongDoanhThu, tongChiTuKet, tongNet, tongDoanhThuThuChi, tongSaiLech, tongTM, tongCK, tongIncome, tongExpenses }
+    }, [revenues])
+
+    // === EXPENSE BREAKDOWN (all transactions across all revenues) ===
+    const allExpenses = useMemo(() => {
+        const items: { date: string; reason: string; amount: number }[] = []
+        revenues.forEach((r: Revenue) => {
+            r.transactions?.forEach((t: any) => {
+                if (t.type === 'Expense') {
+                    items.push({
+                        date: r.workDate || r.createdAt,
+                        reason: t.reason || '—',
+                        amount: t.amount,
+                    })
+                }
+            })
+        })
+        return items.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     }, [revenues])
 
     // === DETAIL COLUMNS ===
@@ -85,82 +113,123 @@ export default function RevenuePage() {
             accessorKey: "workDate",
             header: "Ngày",
             cell: ({ row }) => (
-                <span className="font-medium text-slate-700 dark:text-slate-300 whitespace-nowrap">
-                    {row.original.workDate ? formatDate(row.original.workDate) : formatDate(row.original.createdAt)}
-                </span>
-            )
-        },
-        {
-            accessorKey: "shiftName",
-            header: "Ca",
-            cell: ({ row }) => (
-                <div>
-                    <p className="font-semibold text-slate-900 dark:text-slate-100 text-xs">
-                        {row.original.employeeName || `NV #${row.original.employeeId}`}
-                    </p>
-                    <p className="text-[10px] text-muted-foreground uppercase">
-                        {row.original.shiftName || '—'} · {row.original.positionName || ''}
-                    </p>
+                <div className="flex flex-col gap-0.5">
+                    <span className="font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap">
+                        {row.original.workDate ? formatDate(row.original.workDate) : formatDate(row.original.createdAt)}
+                    </span>
+                    <span className="text-[10px] text-slate-400 tabular-nums">
+                        {new Date(row.original.createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                    </span>
                 </div>
             )
         },
         {
-            accessorKey: "cash",
-            header: () => <div className="text-right">TM doanh thu</div>,
-            cell: ({ row }) => <div className="text-right font-medium tabular-nums">{formatMoney(row.original.cash)}</div>,
-            footer: () => <div className="text-right font-black tabular-nums">{formatMoney(totals.cash)}</div>
+            accessorKey: "openingBalance",
+            header: () => <div className="text-right">Đầu kỳ</div>,
+            cell: ({ row }) => <div className="text-right font-medium tabular-nums text-slate-600">{formatMoney(row.original.openingBalance)}</div>,
         },
         {
-            accessorKey: "bank",
-            header: () => <div className="text-right">CK</div>,
-            cell: ({ row }) => <div className="text-right font-medium tabular-nums">{formatMoney(row.original.bank)}</div>,
-            footer: () => <div className="text-right font-black tabular-nums">{formatMoney(totals.bank)}</div>
-        },
-        {
-            accessorKey: "income",
-            header: () => <div className="text-right">Thu</div>,
-            cell: ({ row }) => <div className="text-right font-medium tabular-nums text-emerald-600">{formatMoney(row.original.income)}</div>,
-            footer: () => <div className="text-right font-black tabular-nums text-emerald-600">{formatMoney(totals.income)}</div>
-        },
-        {
-            accessorKey: "expenses",
-            header: () => <div className="text-right">Chi</div>,
+            id: "paymentMethods",
+            header: "TM/CK",
             cell: ({ row }) => (
-                <div className="text-right font-medium tabular-nums text-rose-600">
-                    {row.original.expenses > 0 ? formatMoney(row.original.expenses) : '0'}
+                <div className="flex flex-col gap-0.5 text-[11px] font-medium leading-tight">
+                    <div className="flex justify-between gap-4">
+                        <span className="text-slate-500 uppercase">TM:</span>
+                        <span className="tabular-nums text-slate-900">{formatMoney(row.original.cash)}</span>
+                    </div>
+                    {row.original.bank > 0 && (
+                        <div className="flex justify-between gap-4">
+                            <span className="text-blue-600 uppercase font-bold">CK:</span>
+                            <span className="tabular-nums text-blue-700">{formatMoney(row.original.bank)}</span>
+                        </div>
+                    )}
                 </div>
-            ),
-            footer: () => <div className="text-right font-black tabular-nums text-rose-600">{formatMoney(totals.expenses)}</div>
+            )
+        },
+        {
+            id: "transactions",
+            header: "Chi/Thu",
+            cell: ({ row }) => (
+                <div className="flex flex-col gap-1 max-w-[280px]">
+                    {row.original.transactions?.map((t: any, i: number) => (
+                        <div key={i} className="flex flex-col border-b border-slate-50 last:border-0 pb-1 last:pb-0">
+                            <div className="flex justify-between items-start gap-2">
+                                <span className={`text-[10px] font-bold uppercase ${t.type === 'Income' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                                    {t.type === 'Income' ? 'THU' : 'CHI'}:
+                                </span>
+                                <span className={`text-[11px] font-bold tabular-nums ${t.type === 'Income' ? 'text-emerald-700' : 'text-rose-700'}`}>
+                                    {formatMoney(t.amount)}
+                                </span>
+                            </div>
+                            <span className="text-[10px] text-slate-500 italic line-clamp-2 leading-none">{t.reason || '—'}</span>
+                        </div>
+                    ))}
+                    {!row.original.transactions?.length && <span className="text-[10px] text-slate-400">Không có phát sinh</span>}
+                </div>
+            )
         },
         {
             accessorKey: "totalRevenue",
             header: () => <div className="text-right">Doanh thu</div>,
-            cell: ({ row }) => <div className="text-right font-bold tabular-nums">{formatMoney(row.original.totalRevenue)}</div>,
-            footer: () => <div className="text-right font-black tabular-nums">{formatMoney(totals.revenue)}</div>
+            cell: ({ row }) => <div className="text-right font-black tabular-nums text-slate-900">{formatMoney(row.original.totalRevenue)}</div>,
+        },
+        {
+            accessorKey: "net",
+            header: () => <div className="text-right">NET</div>,
+            cell: ({ row }) => <div className="text-right font-black tabular-nums text-blue-600">{formatMoney(row.original.net)}</div>,
         },
         {
             accessorKey: "deviation",
-            header: () => <div className="text-right">Chênh lệch</div>,
+            header: () => <div className="text-right">Sai lệch</div>,
             cell: ({ row }) => {
                 const d = row.original.deviation
-                const color = d > 0 ? 'text-emerald-600' : d < 0 ? 'text-rose-600' : ''
+                const color = d > 0 ? 'text-emerald-600' : d < 0 ? 'text-rose-600' : 'text-slate-400'
                 return <div className={`text-right font-bold tabular-nums ${color}`}>{formatMoney(d)}</div>
-            },
-            footer: () => {
-                const color = totals.deviation > 0 ? 'text-emerald-600' : totals.deviation < 0 ? 'text-rose-600' : ''
-                return <div className={`text-right font-black tabular-nums ${color}`}>{formatMoney(totals.deviation)}</div>
             }
         },
         {
-            accessorKey: "note",
+            id: "info",
             header: "Ghi chú",
             cell: ({ row }) => (
-                <span className="text-xs text-muted-foreground truncate max-w-[150px] inline-block" title={row.original.note || ''}>
-                    {row.original.note || '—'}
-                </span>
+                <div className="flex flex-col gap-0.5">
+                    <span className="text-[10px] text-slate-500 italic leading-tight">{row.original.note || '—'}</span>
+                    <span className="text-[11px] font-bold text-slate-900 uppercase tracking-tighter">
+                        {row.original.employeeName || '—'}
+                    </span>
+                </div>
             )
         }
-    ], [totals])
+    ], [])
+
+    const expenseColumns = useMemo<ColumnDef<{ date: string; reason: string; amount: number }>[]>(() => [
+        {
+            accessorKey: 'date',
+            header: 'Ngày',
+            cell: ({ row }) => (
+                <span className="text-xs font-bold text-slate-700 whitespace-nowrap">
+                    {formatDate(row.original.date)}
+                </span>
+            )
+        },
+        {
+            accessorKey: 'reason',
+            header: 'Nội dung chi',
+            cell: ({ row }) => (
+                <span className="text-xs text-slate-600">{row.original.reason}</span>
+            )
+        },
+        {
+            accessorKey: 'amount',
+            header: () => <div className="text-right">Amount</div>,
+            cell: ({ row }) => (
+                <div className="text-right font-bold tabular-nums text-rose-600">
+                    {formatMoney(row.original.amount)}
+                </div>
+            )
+        }
+    ], [])
+
+    const saiLechColor = totals.tongSaiLech > 0 ? 'text-emerald-600' : totals.tongSaiLech < 0 ? 'text-rose-600' : 'text-slate-400'
 
     return (
         <motion.div
@@ -180,7 +249,6 @@ export default function RevenuePage() {
                 </div>
 
                 <div className="flex items-center gap-3">
-                    {/* Month Filter */}
                     <div className="flex items-center gap-2">
                         <Label htmlFor="revMonth" className="text-xs font-bold text-slate-500 uppercase">Tháng</Label>
                         <Input
@@ -206,7 +274,6 @@ export default function RevenuePage() {
                         />
                     </div>
 
-                    {/* Create Revenue */}
                     <Dialog open={openCreate} onOpenChange={setOpenCreate}>
                         <DialogTrigger asChild>
                             <Button className="bg-emerald-500 hover:bg-emerald-600 text-white border-none h-9">
@@ -244,15 +311,13 @@ export default function RevenuePage() {
                                         <Input id="revCash" type="number" value={revCash} onChange={e => setRevCash(e.target.value)} />
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="revBank">Chuyển khoản (CK)</Label>
-                                        <Input id="revBank" type="number" value={revBank} onChange={e => setRevBank(e.target.value)} />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="revNote2">Ghi chú</Label>
-                                        <Input id="revNote2" value={revNote} onChange={e => setRevNote(e.target.value)} placeholder="Tùy chọn..." />
-                                    </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="revBank">Chuyển khoản (CK/MM/VCB)</Label>
+                                    <Input id="revBank" type="number" value={revBank} onChange={e => setRevBank(e.target.value)} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="revNote2">Ghi chú</Label>
+                                    <Input id="revNote2" value={revNote} onChange={e => setRevNote(e.target.value)} placeholder="Tùy chọn..." />
                                 </div>
                                 <Button onClick={handleCreate} className="w-full bg-emerald-500 hover:bg-emerald-600 text-white">
                                     Lưu kết sổ
@@ -267,27 +332,37 @@ export default function RevenuePage() {
             <div className="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 shadow-sm rounded-2xl overflow-hidden">
                 <div className="p-4 lg:p-5 border-b border-slate-100 dark:border-neutral-800 bg-slate-50/50 dark:bg-white/5">
                     <h2 className="text-sm font-black text-slate-800 dark:text-slate-200 uppercase tracking-widest">
-                        Summary
+                        Tổng hợp tháng {month}/{year}
                     </h2>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                         <thead>
                             <tr className="bg-[#5ac1c9] text-white">
-                                <th className="text-right px-4 py-3 font-bold">Tổng TM</th>
-                                <th className="text-right px-4 py-3 font-bold">Tổng CK</th>
-                                <th className="text-right px-4 py-3 font-bold">Tổng Thu</th>
-                                <th className="text-right px-4 py-3 font-bold">Tổng Chi</th>
-                                <th className="text-right px-4 py-3 font-bold">Tổng Doanh thu</th>
+                                <th className="text-right px-4 py-3 font-bold whitespace-nowrap">Tổng Doanh thu</th>
+                                <th className="text-right px-4 py-3 font-bold whitespace-nowrap">Tổng Chi từ két</th>
+                                <th className="text-right px-4 py-3 font-bold whitespace-nowrap">Tổng NET</th>
+                                <th className="text-right px-4 py-3 font-bold whitespace-nowrap">Doanh thu sau thu/chi</th>
+                                <th className="text-right px-4 py-3 font-bold whitespace-nowrap">#</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr className="border-b border-slate-100 dark:border-neutral-800">
-                                <td className="px-4 py-3 text-right font-bold tabular-nums">{formatMoney(totals.cash)}</td>
-                                <td className="px-4 py-3 text-right font-bold tabular-nums">{formatMoney(totals.bank)}</td>
-                                <td className="px-4 py-3 text-right font-bold tabular-nums text-emerald-600">{formatMoney(totals.income)}</td>
-                                <td className="px-4 py-3 text-right font-bold tabular-nums text-rose-600">{formatMoney(totals.expenses)}</td>
-                                <td className="px-4 py-3 text-right font-black tabular-nums text-blue-600">{formatMoney(totals.revenue)}</td>
+                            <tr className="border-b border-slate-100 dark:border-neutral-800 hover:bg-slate-50/50">
+                                <td className="px-4 py-3 text-right font-black tabular-nums text-slate-900">
+                                    {formatMoney(totals.tongDoanhThu)}
+                                </td>
+                                <td className="px-4 py-3 text-right font-bold tabular-nums text-rose-600">
+                                    {formatMoney(totals.tongChiTuKet)}
+                                </td>
+                                <td className="px-4 py-3 text-right font-bold tabular-nums text-blue-600">
+                                    {formatMoney(totals.tongNet)}
+                                </td>
+                                <td className="px-4 py-3 text-right font-black tabular-nums text-emerald-600">
+                                    {formatMoney(totals.tongDoanhThuThuChi)}
+                                </td>
+                                <td className={`px-4 py-3 text-right font-bold tabular-nums ${saiLechColor}`}>
+                                    {formatMoney(totals.tongSaiLech)}
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -298,13 +373,15 @@ export default function RevenuePage() {
             <div className="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 shadow-sm rounded-2xl overflow-hidden">
                 <div className="p-4 lg:p-5 border-b border-slate-100 dark:border-neutral-800 bg-slate-50/50 dark:bg-white/5">
                     <h2 className="text-sm font-black text-slate-800 dark:text-slate-200 uppercase tracking-widest">
-                        Danh sách chi tiết
+                        Doanh thu từng ngày
                     </h2>
                 </div>
                 <div className="p-0">
                     <DataTable
                         columns={detailColumns}
-                        data={revenues}
+                        data={[...revenues].sort((a: Revenue, b: Revenue) =>
+                            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+                        )}
                         loading={loading}
                         showFooter={true}
                         defaultPageSize={50}
@@ -312,6 +389,30 @@ export default function RevenuePage() {
                     />
                 </div>
             </div>
+
+            {/* ===== EXPENSE BREAKDOWN TABLE ===== */}
+            {allExpenses.length > 0 && (
+                <div className="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 shadow-sm rounded-2xl overflow-hidden">
+                    <div className="p-4 lg:p-5 border-b border-slate-100 dark:border-neutral-800 bg-slate-50/50 dark:bg-white/5 flex items-center justify-between">
+                        <h2 className="text-sm font-black text-slate-800 dark:text-slate-200 uppercase tracking-widest">
+                            Bảng chi chi tiết
+                        </h2>
+                        <span className="text-xs font-bold text-rose-600 tabular-nums">
+                            Tổng: {formatMoney(allExpenses.reduce((s, e) => s + e.amount, 0))}
+                        </span>
+                    </div>
+                    <div className="p-0">
+                        <DataTable
+                            columns={expenseColumns}
+                            data={allExpenses}
+                            loading={loading}
+                            showFooter={false}
+                            defaultPageSize={30}
+                            hideToolbar={true}
+                        />
+                    </div>
+                </div>
+            )}
         </motion.div>
     )
 }

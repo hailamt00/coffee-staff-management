@@ -215,7 +215,9 @@ export interface PayrollDetail {
   checkOut?: string
   status: string
   hours: number
+  rate: number
   amount: number
+
   note?: string
 }
 
@@ -373,6 +375,8 @@ export interface Revenue {
   transactions?: Transaction[]
 }
 
+
+
 export interface CreateTransactionRequest {
   revenueId: number
   type: 'Income' | 'Expense'
@@ -385,10 +389,10 @@ export interface CreateRevenueRequest {
   openingBalance: number
   cash: number
   bank: number
-  income: number
-  expenses: number
   note?: string
 }
+
+
 /* ======================================================
    DASHBOARD
 ====================================================== */

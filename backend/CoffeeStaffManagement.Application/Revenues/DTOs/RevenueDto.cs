@@ -19,4 +19,5 @@ public class RevenueDto
     public decimal Deviation { get; set; }
     public string? Note { get; set; }
     public DateTime CreatedAt { get; set; }
+    public List<CoffeeStaffManagement.Application.Transactions.DTOs.TransactionDto> Transactions { get; set; } = new();
 }

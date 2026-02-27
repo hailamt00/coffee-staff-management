@@ -33,6 +33,8 @@ public class PayrollDetailDto
     public string? CheckOut { get; set; }
     public string Status { get; set; } = string.Empty;
     public decimal Hours { get; set; }
+    public decimal Rate { get; set; }
     public decimal Amount { get; set; }
+
     public string? Note { get; set; }
 }

@@ -5,7 +5,5 @@ public record CreateRevenueRequest(
     decimal OpeningBalance,
     decimal Cash,
     decimal Bank,
-    decimal Income,
-    decimal Expenses,
     string? Note
 );

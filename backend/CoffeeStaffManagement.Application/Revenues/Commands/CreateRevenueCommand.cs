@@ -34,16 +34,10 @@ public class CreateRevenueCommandHandler : IRequestHandler<CreateRevenueCommand,
             throw new ArgumentException("Revenue report already exists for this schedule");
         }
 
-        // 1. Calculate Total Revenue = Cash + Bank
         var totalRevenue = request.Request.Cash + request.Request.Bank;
+        var net = totalRevenue;
+        var deviation = 0m;
 
-        // 2. Net Income/Loss = Total + Income - Expenses
-        var net = totalRevenue + request.Request.Income - request.Request.Expenses;
-
-        // 3. Deviation = difference from expected. Let's just track Net as Deviation placeholder for now.
-        var deviation = net;
-
-        // For now, let's create the Revenue record first.
         var revenue = new Revenue
         {
             ScheduleId = request.Request.ScheduleId,
@@ -51,8 +45,6 @@ public class CreateRevenueCommandHandler : IRequestHandler<CreateRevenueCommand,
             OpeningBalance = request.Request.OpeningBalance,
             Cash = request.Request.Cash,
             Bank = request.Request.Bank,
-            Income = request.Request.Income,
-            Expenses = request.Request.Expenses,
             TotalRevenue = totalRevenue,
             Net = net,
             Deviation = deviation,
@@ -71,8 +63,8 @@ public class CreateRevenueCommandHandler : IRequestHandler<CreateRevenueCommand,
             OpeningBalance = revenue.OpeningBalance,
             Cash = revenue.Cash,
             Bank = revenue.Bank,
-            Income = revenue.Income,
-            Expenses = revenue.Expenses,
+            Income = 0,
+            Expenses = 0,
             TotalRevenue = revenue.TotalRevenue,
             Net = revenue.Net,
             Deviation = revenue.Deviation,

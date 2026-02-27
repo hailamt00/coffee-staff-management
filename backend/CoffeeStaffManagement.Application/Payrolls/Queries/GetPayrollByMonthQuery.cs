@@ -85,7 +85,9 @@ public class GetPayrollByMonthQueryHandler : IRequestHandler<GetPayrollByMonthQu
                     CheckOut = d.Attendance?.CheckOut?.ToString("HH:mm"),
                     Status = d.Attendance?.CheckIn.HasValue == true ? (d.Attendance.CheckOut.HasValue ? "Hoàn thành" : "Thiếu Check-out") : "Vắng",
                     Hours = d.Hours,
+                    Rate = d.Rate,
                     Amount = d.Amount,
+
                     Note = d.Attendance?.Note
                 }).ToList()
             };

@@ -2,7 +2,9 @@ import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { usePayroll } from '../hooks/usePayroll'
 import { useEmployee } from '@/features/employees/hooks/useEmployee'
+import { useAdjustment } from '@/features/adjustments/hooks/useAdjustment'
 import { MultiSelect } from '@/shared/components/ui/multi-select'
+
 import { Button } from '@/shared/components/ui/button'
 import { Label } from '@/shared/components/ui/label'
 import { Input } from '@/shared/components/ui/input'
@@ -46,9 +48,12 @@ export default function PayrollPage() {
 
   const { usePayrolls, loading: mutationLoading, generatePayroll } = usePayroll()
   const { data: rawPayrolls = [], isLoading: queryLoading } = usePayrolls(queryMonthParam, queryYearParam)
+  const { useAdjustments } = useAdjustment()
+  const { data: rawAdjustments = [], isLoading: adjustmentsLoading } = useAdjustments(queryMonthParam, queryYearParam)
   const { employees } = useEmployee()
 
-  const loading = mutationLoading || queryLoading
+  const loading = mutationLoading || queryLoading || adjustmentsLoading
+
 
   const handleGenerate = async () => {
     const genMonth = new Date(startDate).getMonth() + 1
@@ -100,6 +105,80 @@ export default function PayrollPage() {
     })
   }, [payrolls, queryPositionFilter, queryMissingFilter, queryStartDate, queryEndDate])
 
+  // Filter adjustments by range
+  const filteredAdjustments = useMemo(() => {
+    return rawAdjustments.filter(adj => {
+      const adjDate = new Date(adj.createdAt)
+      const start = new Date(queryStartDate)
+      const end = new Date(queryEndDate)
+      end.setHours(23, 59, 59, 999)
+
+      const dateMatch = adjDate >= start && adjDate <= end
+      const employeeMatch = queryEmployeeIds.length === 0 || queryEmployeeIds.includes(String(adj.employeeId))
+
+      return dateMatch && employeeMatch
+    })
+  }, [rawAdjustments, queryStartDate, queryEndDate, queryEmployeeIds])
+
+  // Aggregated Summary Data for the Range
+  const summaryData = useMemo(() => {
+    const summaryMap = new Map<number, {
+      employeeId: number;
+      employeeName: string;
+      employeePhone: string;
+      baseSalary: number;
+      rewards: number;
+      penalties: number;
+      total: number;
+    }>()
+
+    // 1. Aggregate Base Salary from allDetails (which is already range-filtered)
+    allDetails.forEach(detail => {
+      const empId = detail.employeeId
+      if (!summaryMap.has(empId)) {
+        summaryMap.set(empId, {
+          employeeId: empId,
+          employeeName: detail.computedEmployeeName,
+          employeePhone: employees.find(e => e.id === empId)?.phone || '',
+          baseSalary: 0,
+          rewards: 0,
+          penalties: 0,
+          total: 0
+        })
+      }
+      summaryMap.get(empId)!.baseSalary += detail.amount
+    })
+
+    // 2. Aggregate Rewards and Penalties
+    filteredAdjustments.forEach(adj => {
+      const empId = adj.employeeId
+      if (!summaryMap.has(empId)) {
+        summaryMap.set(empId, {
+          employeeId: empId,
+          employeeName: adj.employeeName || `NV #${empId}`,
+          employeePhone: employees.find(e => e.id === empId)?.phone || '',
+          baseSalary: 0,
+          rewards: 0,
+          penalties: 0,
+          total: 0
+        })
+      }
+      const entry = summaryMap.get(empId)!
+      if (adj.kind === 'Reward') {
+        entry.rewards += adj.amount
+      } else {
+        entry.penalties += adj.amount
+      }
+    })
+
+    // 3. Compute Totals
+    return Array.from(summaryMap.values()).map(item => ({
+      ...item,
+      total: item.baseSalary + item.rewards - item.penalties
+    })).sort((a, b) => a.employeeName.localeCompare(b.employeeName))
+  }, [allDetails, filteredAdjustments, employees])
+
+
 
   // --- Detail Columns ---
   const detailColumns = useMemo<ColumnDef<PayrollDetail & { computedEmployeeName: string }>[]>(() => [
@@ -141,11 +220,17 @@ export default function PayrollPage() {
       cell: ({ row }) => <div className="text-center font-bold text-slate-700">{row.getValue("hours")}</div>
     },
     {
+      accessorKey: "rate",
+      header: () => <div className="text-right">Đơn giá</div>,
+      cell: ({ row }) => <div className="text-right font-medium text-slate-500 text-xs italic">{formatMoney(row.getValue("rate"))}/giờ</div>
+    },
+    {
       accessorKey: "amount",
       header: () => <div className="text-right">Lương</div>,
       cell: ({ row }) => <div className="text-right font-bold text-emerald-600">{formatMoney(row.getValue("amount"))}</div>
     }
   ], [])
+
 
   return (
     <motion.div
@@ -271,15 +356,15 @@ export default function PayrollPage() {
                     </div>
                   </td>
                 </tr>
-              ) : payrolls.length === 0 ? (
+              ) : summaryData.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="text-center py-10 text-slate-400 font-semibold">
                     Chưa có dữ liệu lương
                   </td>
                 </tr>
               ) : (
-                payrolls.map((p) => (
-                  <tr key={p.id} className="border-b border-slate-100 dark:border-neutral-800 hover:bg-slate-50/60 dark:hover:bg-neutral-800/30 transition-colors">
+                summaryData.map((p) => (
+                  <tr key={p.employeeId} className="border-b border-slate-100 dark:border-neutral-800 hover:bg-slate-50/60 dark:hover:bg-neutral-800/30 transition-colors">
                     <td className="px-4 py-3 font-medium text-slate-800 dark:text-slate-200">
                       {p.employeeName}{p.employeePhone ? `-${p.employeePhone}` : ''}
                     </td>
@@ -287,37 +372,37 @@ export default function PayrollPage() {
                       {formatMoney(p.baseSalary)}
                     </td>
                     <td className="px-4 py-3 text-right font-medium tabular-nums text-emerald-600">
-                      {p.totalRewards > 0 ? formatMoney(p.totalRewards) : <span className="text-emerald-500">0</span>}
+                      {p.rewards > 0 ? formatMoney(p.rewards) : <span className="text-emerald-500">0</span>}
                     </td>
                     <td className="px-4 py-3 text-right font-medium tabular-nums text-rose-600">
-                      {p.totalPenalties > 0 ? `-${formatMoney(p.totalPenalties)}` : <span className="text-rose-500">0</span>}
+                      {p.penalties > 0 ? `-${formatMoney(p.penalties)}` : <span className="text-rose-500">0</span>}
                     </td>
                     <td className="px-4 py-3 text-right font-bold tabular-nums">
-                      {formatMoney(p.totalSalary)}
+                      {formatMoney(p.total)}
                     </td>
                   </tr>
                 ))
               )}
+
             </tbody>
-            {payrolls.length > 0 && (
-              <tfoot>
-                <tr className="bg-slate-50 dark:bg-neutral-900/60 border-t-2 border-slate-200 dark:border-neutral-700">
-                  <td className="px-4 py-3 font-black text-slate-800 dark:text-white">Tổng lương</td>
-                  <td className="px-4 py-3 text-right font-black tabular-nums">
-                    {formatMoney(payrolls.reduce((s, p) => s + p.baseSalary, 0))}
-                  </td>
-                  <td className="px-4 py-3 text-right font-black tabular-nums text-emerald-600">
-                    {formatMoney(payrolls.reduce((s, p) => s + p.totalRewards, 0))}
-                  </td>
-                  <td className="px-4 py-3 text-right font-black tabular-nums text-rose-600">
-                    {(() => { const t = payrolls.reduce((s, p) => s + p.totalPenalties, 0); return t > 0 ? `-${formatMoney(t)}` : '0'; })()}
-                  </td>
-                  <td className="px-4 py-3 text-right font-black tabular-nums">
-                    {formatMoney(payrolls.reduce((s, p) => s + p.totalSalary, 0))}
-                  </td>
-                </tr>
-              </tfoot>
+            {summaryData.length > 0 && (
+              <tr className="bg-slate-50 dark:bg-neutral-900/60 border-t-2 border-slate-200 dark:border-neutral-700">
+                <td className="px-4 py-3 font-black text-slate-800 dark:text-white">Tổng lương</td>
+                <td className="px-4 py-3 text-right font-black tabular-nums">
+                  {formatMoney(summaryData.reduce((s, p) => s + p.baseSalary, 0))}
+                </td>
+                <td className="px-4 py-3 text-right font-black tabular-nums text-emerald-600">
+                  {formatMoney(summaryData.reduce((s, p) => s + p.rewards, 0))}
+                </td>
+                <td className="px-4 py-3 text-right font-black tabular-nums text-rose-600">
+                  {(() => { const t = summaryData.reduce((s, p) => s + p.penalties, 0); return t > 0 ? `-${formatMoney(t)}` : '0'; })()}
+                </td>
+                <td className="px-4 py-3 text-right font-black tabular-nums">
+                  {formatMoney(summaryData.reduce((s, p) => s + p.total, 0))}
+                </td>
+              </tr>
             )}
+
           </table>
         </div>
       </div>
