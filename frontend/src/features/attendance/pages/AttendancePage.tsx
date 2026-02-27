@@ -31,6 +31,7 @@ import { StatCard } from '@/shared/components/StatCard'
 import { DataTable } from '@/shared/components/ui/data-table'
 import type { ColumnDef } from '@tanstack/react-table'
 import { AttendanceFormModal } from '../components/AttendanceFormModal'
+import { formatDateInVietnam } from '@/shared/utils/datetime'
 // Removed unused Attendance import
 
 /* ================= HELPERS ================= */
@@ -125,14 +126,21 @@ export default function AttendancePage() {
     {
       id: "index",
       header: "#",
-      cell: ({ row }) => <span className="font-mono text-xs text-slate-500">{row.index + 1}</span>
+      cell: ({ row, table }) => {
+        const pageIndex = table.getState().pagination.pageIndex
+        const pageSize = table.getState().pagination.pageSize
+        const localIndex = table.getRowModel().rows.findIndex((r) => r.id === row.id)
+        const displayIndex = pageIndex * pageSize + (localIndex >= 0 ? localIndex : row.index) + 1
+
+        return <span className="font-mono text-xs text-slate-500">{displayIndex}</span>
+      }
     },
     {
       accessorKey: "workDate",
       header: "Ngày",
       cell: ({ row }) => {
-        const wDate = row.original.workDate;
-        return <span className="text-sm">{wDate ? new Date(wDate).toLocaleDateString('vi-VN') : '—'}</span>
+        const workDate = row.original.workDate
+        return <span className="text-sm">{workDate ? formatDateInVietnam(workDate) : '—'}</span>
       }
     },
     {
@@ -403,3 +411,5 @@ export default function AttendancePage() {
     </motion.div>
   )
 }
+
+

@@ -19,10 +19,16 @@ public class CreateRewardPenaltyTypeCommandHandler : IRequestHandler<CreateRewar
 
     public async Task<int> Handle(CreateRewardPenaltyTypeCommand request, CancellationToken ct)
     {
+        if (request.Request.Amount < 0)
+        {
+            throw new ArgumentException("Amount must be greater than or equal to 0");
+        }
+
         var type = new RewardPenaltyType
         {
             Name = request.Request.Name,
-            Type = request.Request.Type
+            Type = request.Request.Type,
+            Amount = request.Request.Amount
         };
 
         await _repo.AddTypeAsync(type);

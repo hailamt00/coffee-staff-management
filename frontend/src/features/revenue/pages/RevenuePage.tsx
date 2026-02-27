@@ -20,10 +20,11 @@ import {
     SelectValue,
 } from '@/shared/components/ui/select'
 import { Plus } from 'lucide-react'
-import { formatMoney, formatDate } from '@/shared/utils/format'
+import { formatMoney } from '@/shared/utils/format'
+import { formatDateInVietnam, formatTimeInVietnam } from '@/shared/utils/datetime'
 import { DataTable } from '@/shared/components/ui/data-table'
 import type { ColumnDef } from '@tanstack/react-table'
-import type { Revenue } from '@/shared/types/api'
+import type { Revenue, Schedule, Transaction } from '@/shared/types/api'
 
 export default function RevenuePage() {
     const now = new Date()
@@ -67,34 +68,25 @@ export default function RevenuePage() {
         let tongDoanhThu = 0    // Sum of TotalRevenue (cash + bank)
         let tongChiTuKet = 0   // Sum of all Expense transactions
         let tongNet = 0         // Sum of Net (after Thu/Chi adjustments)
-        let tongDoanhThuThuChi = 0 // TotalRevenue - Expenses + Income
+        let tongThucTe = 0      // cash + bank - opening + expenses - income
         let tongSaiLech = 0    // Deviation
-        let tongTM = 0
-        let tongCK = 0
-        let tongIncome = 0
-        let tongExpenses = 0
 
         revenues.forEach((r: Revenue) => {
             tongDoanhThu += r.totalRevenue
             tongNet += r.net
             tongSaiLech += r.deviation
-            tongTM += r.cash
-            tongCK += r.bank
-            tongIncome += r.income
-            tongExpenses += r.expenses
             tongChiTuKet += r.expenses
+            tongThucTe += r.cash + r.bank - r.openingBalance + r.expenses - r.income
         })
 
-        tongDoanhThuThuChi = tongDoanhThu - tongChiTuKet + tongIncome
-
-        return { tongDoanhThu, tongChiTuKet, tongNet, tongDoanhThuThuChi, tongSaiLech, tongTM, tongCK, tongIncome, tongExpenses }
+        return { tongDoanhThu, tongChiTuKet, tongNet, tongThucTe, tongSaiLech }
     }, [revenues])
 
     // === EXPENSE BREAKDOWN (all transactions across all revenues) ===
     const allExpenses = useMemo(() => {
         const items: { date: string; reason: string; amount: number }[] = []
         revenues.forEach((r: Revenue) => {
-            r.transactions?.forEach((t: any) => {
+            r.transactions?.forEach((t: Transaction) => {
                 if (t.type === 'Expense') {
                     items.push({
                         date: r.workDate || r.createdAt,
@@ -115,10 +107,10 @@ export default function RevenuePage() {
             cell: ({ row }) => (
                 <div className="flex flex-col gap-0.5">
                     <span className="font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap">
-                        {row.original.workDate ? formatDate(row.original.workDate) : formatDate(row.original.createdAt)}
+                        {formatDateInVietnam(row.original.workDate || row.original.createdAt)}
                     </span>
                     <span className="text-[10px] text-slate-400 tabular-nums">
-                        {new Date(row.original.createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                        {formatTimeInVietnam(row.original.createdAt)}
                     </span>
                 </div>
             )
@@ -151,7 +143,7 @@ export default function RevenuePage() {
             header: "Chi/Thu",
             cell: ({ row }) => (
                 <div className="flex flex-col gap-1 max-w-[280px]">
-                    {row.original.transactions?.map((t: any, i: number) => (
+                    {row.original.transactions?.map((t: Transaction, i: number) => (
                         <div key={i} className="flex flex-col border-b border-slate-50 last:border-0 pb-1 last:pb-0">
                             <div className="flex justify-between items-start gap-2">
                                 <span className={`text-[10px] font-bold uppercase ${t.type === 'Income' ? 'text-emerald-600' : 'text-rose-600'}`}>
@@ -177,6 +169,14 @@ export default function RevenuePage() {
             accessorKey: "net",
             header: () => <div className="text-right">NET</div>,
             cell: ({ row }) => <div className="text-right font-black tabular-nums text-blue-600">{formatMoney(row.original.net)}</div>,
+        },
+        {
+            id: "actualRevenue",
+            header: () => <div className="text-right">Thuc te</div>,
+            cell: ({ row }) => {
+                const actual = row.original.cash + row.original.bank - row.original.openingBalance + row.original.expenses - row.original.income
+                return <div className="text-right font-black tabular-nums text-emerald-600">{formatMoney(actual)}</div>
+            }
         },
         {
             accessorKey: "deviation",
@@ -207,7 +207,7 @@ export default function RevenuePage() {
             header: 'Ngày',
             cell: ({ row }) => (
                 <span className="text-xs font-bold text-slate-700 whitespace-nowrap">
-                    {formatDate(row.original.date)}
+                    {formatDateInVietnam(row.original.date)}
                 </span>
             )
         },
@@ -293,7 +293,7 @@ export default function RevenuePage() {
                                             <SelectValue placeholder="Chọn ca làm việc" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {schedules.map((s: any) => (
+                                            {schedules.map((s: Schedule) => (
                                                 <SelectItem key={s.id} value={String(s.id)}>
                                                     {s.employeeName || 'NV'} - {s.shiftName || `Ca #${s.shiftId}`}
                                                 </SelectItem>
@@ -342,7 +342,7 @@ export default function RevenuePage() {
                                 <th className="text-right px-4 py-3 font-bold whitespace-nowrap">Tổng Doanh thu</th>
                                 <th className="text-right px-4 py-3 font-bold whitespace-nowrap">Tổng Chi từ két</th>
                                 <th className="text-right px-4 py-3 font-bold whitespace-nowrap">Tổng NET</th>
-                                <th className="text-right px-4 py-3 font-bold whitespace-nowrap">Doanh thu sau thu/chi</th>
+                                <th className="text-right px-4 py-3 font-bold whitespace-nowrap">Tong thuc te</th>
                                 <th className="text-right px-4 py-3 font-bold whitespace-nowrap">#</th>
                             </tr>
                         </thead>
@@ -358,7 +358,7 @@ export default function RevenuePage() {
                                     {formatMoney(totals.tongNet)}
                                 </td>
                                 <td className="px-4 py-3 text-right font-black tabular-nums text-emerald-600">
-                                    {formatMoney(totals.tongDoanhThuThuChi)}
+                                    {formatMoney(totals.tongThucTe)}
                                 </td>
                                 <td className={`px-4 py-3 text-right font-bold tabular-nums ${saiLechColor}`}>
                                     {formatMoney(totals.tongSaiLech)}
@@ -416,3 +416,4 @@ export default function RevenuePage() {
         </motion.div>
     )
 }
+

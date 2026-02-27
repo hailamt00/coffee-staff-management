@@ -10,6 +10,7 @@ import {
 import { DataTable } from '@/shared/components/ui/data-table'
 import { ColumnDef } from '@tanstack/react-table'
 import type { ActivityLog } from '@/shared/types/api'
+import { formatDateInVietnam, formatTimeInVietnam } from '@/shared/utils/datetime'
 
 export default function ActivityLogPage() {
   const { useActivityLogs } = useActivityLog()
@@ -30,14 +31,13 @@ export default function ActivityLogPage() {
         accessorKey: 'createdAt',
         header: 'Time',
         cell: ({ row }) => {
-          const d = new Date(row.original.createdAt)
           return (
             <div className="flex flex-col gap-0.5">
               <span className="text-xs font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap tabular-nums">
-                {d.toLocaleDateString('vi-VN')}
+                {formatDateInVietnam(row.original.createdAt)}
               </span>
               <span className="text-[10px] text-slate-400 tabular-nums">
-                {d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                {formatTimeInVietnam(row.original.createdAt)}
               </span>
             </div>
           )

@@ -27,6 +27,7 @@ import StaffMenuPage from '@/features/staff/pages/StaffMenuPage'
 import StaffAttendancePage from '@/features/attendance/pages/StaffAttendancePage'
 import StaffSchedulePage from '@/features/schedule/pages/StaffSchedulePage'
 import StaffRevenuePage from '@/features/staff/pages/StaffRevenuePage'
+import StaffRevenueResultPage from '@/features/staff/pages/StaffRevenueResultPage'
 
 export const router = createBrowserRouter([
   {
@@ -66,6 +67,10 @@ export const router = createBrowserRouter([
           {
             path: 'revenue',
             element: <StaffRevenuePage />,
+          },
+          {
+            path: 'revenue/result',
+            element: <StaffRevenueResultPage />,
           },
           {
             index: true,

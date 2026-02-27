@@ -58,6 +58,20 @@ public class RewardsPenaltiesController : ControllerBase
         return Ok(await _mediator.Send(new ApplyRewardPenaltyCommand(request)));
     }
 
+    [HttpPut("{id}")]
+    public async Task<ActionResult> Update(int id, UpdateRewardPenaltyRequest request)
+    {
+        await _mediator.Send(new UpdateRewardPenaltyCommand(id, request));
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> Delete(int id)
+    {
+        await _mediator.Send(new DeleteRewardPenaltyCommand(id));
+        return NoContent();
+    }
+
     [HttpGet("employee/{employeeId}")]
     public async Task<ActionResult<List<RewardPenaltyDto>>> GetEmployeeRewardsPenalties(
         int employeeId,

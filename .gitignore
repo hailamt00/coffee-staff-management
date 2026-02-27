@@ -1,0 +1,59 @@
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.user
+*.swp
+*.tmp
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Frontend build/cache outputs
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/.vite/
+frontend/*.tsbuildinfo
+frontend/eslint.json
+frontend/lint.json
+frontend/lint2.json
+frontend/lint_output.txt
+frontend/tsc_errors.txt
+frontend/frontend_build_errors.txt
+frontend/vite.config.js
+frontend/vite.config.d.ts
+
+# .NET build outputs
+**/bin/
+**/obj/
+*.binlog
+
+# Local runtime/debug artifacts
+*.log
+api_build.txt
+build_output.txt
+infra_build.txt
+infra_build_2.txt
+ef_update_error.txt
+backend/build.log
+backend/build_*.txt
+backend/errors.txt
+backend/msbuild.log
+backend/CoffeeStaffManagement.API/backend-dev.log
+backend/CoffeeStaffManagement.API/restore_tmp.log
+backend/CoffeeStaffManagement.API/bin/Debug/net10.0/backend-runtime.log
+backend/CoffeeStaffManagement.Infrastructure/infra.binlog
+backend/CoffeeStaffManagement.Infrastructure/infra_build_diag.log
+backend/CoffeeStaffManagement.Infrastructure/infra_restore.log
+backend/CoffeeStaffManagement.Infrastructure/restore_stdout.txt
+backend/CoffeeStaffManagement.Infrastructure/restore_stderr.txt
+backend/CoffeeStaffManagement.Infrastructure/pp.xml
+backend/DbCheck/out.txt

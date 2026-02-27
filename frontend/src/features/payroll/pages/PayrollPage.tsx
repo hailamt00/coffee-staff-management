@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from '@/shared/components/ui/select'
 import { FileUp, Play } from 'lucide-react'
-import { formatMoney } from '@/shared/utils/format'
+import { formatDate, formatMoney } from '@/shared/utils/format'
 import { DataTable } from '@/shared/components/ui/data-table'
 import type { ColumnDef } from '@tanstack/react-table'
 import type { PayrollDetail } from '@/shared/types/api'
@@ -185,13 +185,20 @@ export default function PayrollPage() {
     {
       id: "index",
       header: "STT",
-      cell: ({ row }) => <div className="text-center font-bold text-slate-500">{row.index + 1}</div>,
+      cell: ({ row, table }) => {
+        const pageIndex = table.getState().pagination.pageIndex
+        const pageSize = table.getState().pagination.pageSize
+        const localIndex = table.getRowModel().rows.findIndex((r) => r.id === row.id)
+        const displayIndex = pageIndex * pageSize + (localIndex >= 0 ? localIndex : row.index) + 1
+
+        return <div className="text-center font-bold text-slate-500">{displayIndex}</div>
+      },
       size: 50
     },
     {
       accessorKey: "workDate",
       header: "Ngày",
-      cell: ({ row }) => <div className="font-semibold text-slate-700 dark:text-slate-300">{row.getValue("workDate")}</div>
+      cell: ({ row }) => <div className="font-semibold text-slate-700 dark:text-slate-300">{formatDate(String(row.getValue("workDate") ?? ""))}</div>
     },
     {
       accessorKey: "computedEmployeeName",
@@ -425,9 +432,11 @@ export default function PayrollPage() {
             columns={detailColumns}
             data={allDetails}
             loading={loading}
+            initialSorting={[{ id: 'workDate', desc: false }]}
           />
         </div>
       </div>
     </motion.div>
   )
 }
+

@@ -1,6 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { scheduleApi } from '../api/schedule.api'
 import type {
+    AddScheduleRequest,
+    UpdateScheduleRequest,
+    UpdateShiftRequestPayload,
     CreateShiftRequest,
     ApproveShiftRequest,
 } from '@/shared/types/api'
@@ -79,7 +82,7 @@ export function useSchedule() {
     })
 
     const updateRequestMutation = useMutation({
-        mutationFn: ({ id, data }: { id: number; data: any }) => scheduleApi.updateRequest(id, data),
+        mutationFn: ({ id, data }: { id: number; data: UpdateShiftRequestPayload }) => scheduleApi.updateRequest(id, data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['schedule-requests'] })
             dispatch(addNotification({ type: 'success', title: 'Success', message: 'Request updated' }))
@@ -126,7 +129,7 @@ export function useSchedule() {
     })
 
     const addScheduleMutation = useMutation({
-        mutationFn: (payload: any) => scheduleApi.addSchedule(payload),
+        mutationFn: (payload: AddScheduleRequest) => scheduleApi.addSchedule(payload),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['schedules'] })
             queryClient.invalidateQueries({ queryKey: ['schedules-weekly'] })
@@ -150,7 +153,7 @@ export function useSchedule() {
     })
 
     const updateMutation = useMutation({
-        mutationFn: ({ id, data }: { id: number; data: any }) => scheduleApi.updateSchedule(id, data),
+        mutationFn: ({ id, data }: { id: number; data: UpdateScheduleRequest }) => scheduleApi.updateSchedule(id, data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['schedules'] })
             queryClient.invalidateQueries({ queryKey: ['schedules-weekly'] })
@@ -205,6 +208,13 @@ export function useSchedule() {
         // Legacy compatibility properties (will be empty/false unless using the new useSchedules/useRequests inside component)
         schedules: [],
         requests: [],
-        loading: createMutation.isPending || updateRequestMutation.isPending || deleteRequestMutation.isPending || approveMutation.isPending || addScheduleMutation.isPending,
+        loading:
+            createMutation.isPending ||
+            updateRequestMutation.isPending ||
+            deleteRequestMutation.isPending ||
+            approveMutation.isPending ||
+            addScheduleMutation.isPending ||
+            updateMutation.isPending ||
+            deleteMutation.isPending,
     }
 }

@@ -5,5 +5,9 @@ public record CreateRevenueRequest(
     decimal OpeningBalance,
     decimal Cash,
     decimal Bank,
-    string? Note
+    string? Note,
+    int? EmployeeId = null,
+    DateTime? SubmittedAt = null,
+    decimal? Net = null,
+    decimal? Deviation = null
 );

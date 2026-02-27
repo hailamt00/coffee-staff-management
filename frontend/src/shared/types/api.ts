@@ -38,7 +38,6 @@ export type ApiErrorResponse = {
 }
 
 /* ======================================================
-/* ======================================================
    EMPLOYEE
 ====================================================== */
 
@@ -93,7 +92,8 @@ export interface UpdateEmployeeRequest {
 }
 
 /* ======================================================
-/* ========= SHIFT ========= */
+   SHIFT
+====================================================== */
 export interface Shift {
   id: number
   name: string
@@ -240,6 +240,18 @@ export interface RewardPenaltyType {
   amount: number
 }
 
+export interface CreateRewardPenaltyTypeRequest {
+  name: string
+  type: 'Reward' | 'Penalty'
+  amount: number
+}
+
+export interface UpdateRewardPenaltyTypeRequest {
+  name: string
+  type: 'Reward' | 'Penalty'
+  amount: number
+}
+
 export interface RewardPenalty {
   id: number
   employeeId: number
@@ -255,6 +267,11 @@ export interface RewardPenalty {
 export interface ApplyRewardPenaltyRequest {
   employeeId: number
   typeId: number
+  amount: number
+  reason?: string
+}
+
+export interface UpdateRewardPenaltyRequest {
   amount: number
   reason?: string
 }
@@ -314,6 +331,13 @@ export interface UpdateScheduleRequest {
   note?: string
 }
 
+export interface UpdateShiftRequestPayload {
+  id: number
+  shiftId: number
+  workDate: string
+  note?: string
+}
+
 export type ScheduleStatus = 'pending' | 'approved' | 'rejected'
 
 export interface ScheduleRequest {
@@ -340,6 +364,7 @@ export interface CreateShiftRequest {
 export interface ApproveShiftRequest {
   requestId: number
   isApproved: boolean
+  approvedBy?: number
 }
 /* ======================================================
    REVENUE & TRANSACTIONS
@@ -390,6 +415,10 @@ export interface CreateRevenueRequest {
   cash: number
   bank: number
   note?: string
+  employeeId?: number
+  submittedAt?: string
+  net?: number
+  deviation?: number
 }
 
 

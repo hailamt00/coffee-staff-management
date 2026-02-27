@@ -23,7 +23,7 @@ export default function AdjustmentsPage() {
   const [month, setMonth] = useState('02') // Default Feb
   const [year, setYear] = useState('2026')
 
-  const { useAdjustments, loading: mutationLoading } = useAdjustment()
+  const { useAdjustments, updateAdjustment, deleteAdjustment, loading: mutationLoading } = useAdjustment()
   const { data: adjustments = [], isLoading: queryLoading } = useAdjustments(Number(month), Number(year))
 
   const loading = mutationLoading || queryLoading
@@ -134,7 +134,12 @@ export default function AdjustmentsPage() {
             />
           </div>
 
-          <AdjustmentTable data={adjustments} loading={loading} />
+          <AdjustmentTable
+            data={adjustments}
+            loading={loading}
+            onEdit={(id, payload) => updateAdjustment({ id, payload })}
+            onDelete={deleteAdjustment}
+          />
         </TabsContent>
       </Tabs>
     </div>

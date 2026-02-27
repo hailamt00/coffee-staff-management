@@ -18,11 +18,10 @@ import {
     SelectValue,
 } from '@/shared/components/ui/select'
 import { Loader2, Trash2 } from 'lucide-react'
-import { format } from 'date-fns'
-import { vi } from 'date-fns/locale'
 import type { Schedule, UpdateScheduleRequest } from '@/shared/types/api'
 import { usePosition } from '../../positions/hooks/usePosition'
 import { DeleteConfirmDialog } from '@/shared/components/ui/delete-confirm-dialog'
+import { formatDateInVietnam } from '@/shared/utils/datetime'
 
 interface EditScheduleDialogProps {
     schedule: Schedule | null
@@ -135,7 +134,7 @@ export function EditScheduleDialog({
                     <div className="grid grid-cols-4 items-center gap-4">
                         <span className="text-sm text-right font-bold text-slate-500">Date</span>
                         <div className="col-span-3">
-                            {format(new Date(schedule.workDate), 'EEEE, dd/MM/yyyy', { locale: vi })}
+                            {formatDateInVietnam(schedule.workDate)}
                         </div>
                     </div>
 

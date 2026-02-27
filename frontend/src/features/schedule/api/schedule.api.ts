@@ -2,6 +2,9 @@ import axios from '@/shared/api/axios'
 import type {
     Schedule,
     ScheduleRequest,
+    AddScheduleRequest,
+    UpdateScheduleRequest,
+    UpdateShiftRequestPayload,
     CreateShiftRequest,
     ApproveShiftRequest,
 } from '@/shared/types/api'
@@ -38,7 +41,7 @@ export const scheduleApi = {
         await axios.post('/schedules/request', payload)
     },
 
-    updateRequest: async (id: number, payload: any) => {
+    updateRequest: async (id: number, payload: UpdateShiftRequestPayload) => {
         await axios.put(`/schedules/request/${id}`, payload)
     },
 
@@ -46,7 +49,7 @@ export const scheduleApi = {
         await axios.delete(`/schedules/request/${id}`)
     },
 
-    addSchedule: async (payload: any) => {
+    addSchedule: async (payload: AddScheduleRequest) => {
         await axios.post('/schedules/add', payload)
     },
 
@@ -54,7 +57,7 @@ export const scheduleApi = {
         await axios.post('/schedules/approve', payload)
     },
 
-    updateSchedule: async (id: number, payload: any) => {
+    updateSchedule: async (id: number, payload: UpdateScheduleRequest) => {
         await axios.put(`/schedules/${id}`, payload)
     },
 

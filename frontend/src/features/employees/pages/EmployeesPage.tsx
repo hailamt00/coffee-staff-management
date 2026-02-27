@@ -58,7 +58,14 @@ export default function EmployeesPage() {
     {
       id: "index",
       header: "#",
-      cell: ({ row }) => <div className="text-muted-foreground">{row.index + 1}</div>
+      cell: ({ row, table }) => {
+        const pageIndex = table.getState().pagination.pageIndex
+        const pageSize = table.getState().pagination.pageSize
+        const localIndex = table.getRowModel().rows.findIndex((r) => r.id === row.id)
+        const displayIndex = pageIndex * pageSize + (localIndex >= 0 ? localIndex : row.index) + 1
+
+        return <div className="text-muted-foreground">{displayIndex}</div>
+      }
     },
     {
       accessorKey: "code",

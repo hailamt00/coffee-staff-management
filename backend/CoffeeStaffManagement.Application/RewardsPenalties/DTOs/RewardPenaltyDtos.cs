@@ -12,7 +12,8 @@ public class RewardPenaltyTypeDto
 
 public record CreateRewardPenaltyTypeRequest(
     string Name,
-    RewardPenaltyKind Type
+    RewardPenaltyKind Type,
+    decimal Amount
 );
 
 public class RewardPenaltyDto
@@ -31,6 +32,11 @@ public class RewardPenaltyDto
 public record ApplyRewardPenaltyRequest(
     int EmployeeId,
     int TypeId,
+    decimal Amount,
+    string? Reason
+);
+
+public record UpdateRewardPenaltyRequest(
     decimal Amount,
     string? Reason
 );

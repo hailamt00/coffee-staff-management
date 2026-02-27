@@ -25,6 +25,7 @@ import { useEmployee } from '@/features/employees/hooks/useEmployee'
 import { usePosition } from '@/features/positions/hooks/usePosition'
 import { WeeklyScheduleTable } from '../components/WeeklyScheduleTable'
 import { WeeklyRequestTable } from '../components/WeeklyRequestTable'
+import type { Shift } from '@/shared/types/api'
 
 export default function SchedulePage() {
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10))
@@ -70,7 +71,7 @@ export default function SchedulePage() {
         return positions.flatMap(p => (p.shifts || []).map(s => ({ ...s, positionName: p.name })))
     }, [positions])
 
-    const handleQuickAdd = (clickedDate: string, shift: any) => {
+    const handleQuickAdd = (clickedDate: string, shift: Shift) => {
         setAddDate(clickedDate)
         // Find position ID for this shift
         const pos = positions.find(p => p.name === shift.positionName)

@@ -6,11 +6,31 @@ import { Input } from '@/shared/components/ui/input'
 import { Label } from '@/shared/components/ui/label'
 import { useRevenue } from '@/features/revenue/hooks/useRevenue'
 import { useSchedule } from '@/features/schedule/hooks/useSchedule'
-import { Loader2, CheckCircle2, Plus, Trash2, ChevronLeft } from 'lucide-react'
+import { Loader2, Plus, Trash2, ChevronLeft } from 'lucide-react'
+import type { Revenue, Schedule, Transaction } from '@/shared/types/api'
+import { STAFF_REVENUE_RESULT_KEY, type StaffRevenueResultData } from '@/features/staff/types/revenueResult'
 
 interface LineItem {
     amount: string
     reason: string
+}
+
+function normalizeReason(reason?: string) {
+    return (reason ?? '').trim()
+}
+
+function transactionExists(
+    transactions: Transaction[],
+    type: 'Income' | 'Expense',
+    amount: number,
+    reason?: string
+) {
+    const normalizedReason = normalizeReason(reason)
+    return transactions.some(t =>
+        t.type === type &&
+        Number(t.amount) === amount &&
+        normalizeReason(t.reason) === normalizedReason
+    )
 }
 
 export default function StaffRevenuePage() {
@@ -29,7 +49,7 @@ export default function StaffRevenuePage() {
     }, [staff, navigate])
 
     // Auto-find today's schedule for this staff member
-    const mySchedule = allSchedules.find((s: any) => s.employeeId === staff?.id)
+    const mySchedule = allSchedules.find((s: Schedule) => s.employeeId === staff?.id)
 
     // Form state
     const [openingBalance, setOpeningBalance] = useState('0')
@@ -42,7 +62,6 @@ export default function StaffRevenuePage() {
 
     const [netInput, setNetInput] = useState('0')
     const [showPreview, setShowPreview] = useState(false)
-    const [submitted, setSubmitted] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
 
     // Computed totals for line items
@@ -69,41 +88,101 @@ export default function StaffRevenuePage() {
         const scheduleId = mySchedule?.id ?? allSchedules[0]?.id
         if (!scheduleId) return
 
+        const validExpenses = expenses.filter(exp => Number(exp.amount) > 0)
+        const validIncomes = incomes.filter(inc => Number(inc.amount) > 0)
+        const netRevenue = Number(netInput) || 0
+        const deviation = doanhThuThucTe - netRevenue
+        const submitClickedAt = new Date().toISOString()
+        const submittedById = staff?.id ? Number(staff.id) : undefined
+        const submittedByName = staff?.name || '—'
+
         setIsSubmitting(true)
         try {
-            const revenue = await createRevenue({
+            const revenue: Revenue = await createRevenue({
                 scheduleId,
                 openingBalance: Number(openingBalance),
                 cash: Number(cash),
                 bank: Number(bank),
                 note,
+                employeeId: submittedById,
+                submittedAt: submitClickedAt,
+                net: netRevenue,
+                deviation,
             })
 
-            // Create expense transactions
-            for (const exp of expenses) {
-                if (exp.amount && Number(exp.amount) > 0) {
-                    await createTransaction({
+            const existingTransactions: Transaction[] = [...(revenue.transactions ?? [])]
+
+            for (const exp of validExpenses) {
+                const amount = Number(exp.amount)
+                const reason = exp.reason || undefined
+
+                if (!transactionExists(existingTransactions, 'Expense', amount, reason)) {
+                    const created = await createTransaction({
                         revenueId: revenue.id,
                         type: 'Expense',
-                        amount: Number(exp.amount),
-                        reason: exp.reason || undefined,
+                        amount,
+                        reason,
                     })
+                    existingTransactions.push(created)
                 }
             }
 
-            // Create income transactions
-            for (const inc of incomes) {
-                if (inc.amount && Number(inc.amount) > 0) {
-                    await createTransaction({
+            for (const inc of validIncomes) {
+                const amount = Number(inc.amount)
+                const reason = inc.reason || undefined
+
+                if (!transactionExists(existingTransactions, 'Income', amount, reason)) {
+                    const created = await createTransaction({
                         revenueId: revenue.id,
                         type: 'Income',
-                        amount: Number(inc.amount),
-                        reason: inc.reason || undefined,
+                        amount,
+                        reason,
                     })
+                    existingTransactions.push(created)
                 }
             }
 
-            setSubmitted(true)
+            const resolvedTransactions = existingTransactions
+            const resolvedExpenses = resolvedTransactions
+                .filter(t => t.type === 'Expense')
+                .reduce((sum, t) => sum + (Number(t.amount) || 0), 0)
+            const resolvedIncomes = resolvedTransactions
+                .filter(t => t.type === 'Income')
+                .reduce((sum, t) => sum + (Number(t.amount) || 0), 0)
+
+            const resolvedOpening = Number(revenue.openingBalance) || 0
+            const resolvedCash = Number(revenue.cash) || 0
+            const resolvedBank = Number(revenue.bank) || 0
+            const resolvedNet = Number(revenue.net) || 0
+            const resolvedActual = resolvedCash + resolvedBank - resolvedOpening + resolvedExpenses - resolvedIncomes
+            const resolvedDeviation = resolvedActual - resolvedNet
+
+            const resultData: StaffRevenueResultData = {
+                revenueId: revenue.id,
+                submittedAt: submitClickedAt,
+                employeeName: submittedByName,
+                openingBalance: resolvedOpening,
+                cash: resolvedCash,
+                bank: resolvedBank,
+                totalExpenses: resolvedExpenses,
+                totalIncomes: resolvedIncomes,
+                expenseReasons: resolvedTransactions
+                    .filter(t => t.type === 'Expense')
+                    .map(t => t.reason?.trim())
+                    .filter((r): r is string => !!r),
+                incomeReasons: resolvedTransactions
+                    .filter(t => t.type === 'Income')
+                    .map(t => t.reason?.trim())
+                    .filter((r): r is string => !!r),
+                actualRevenue: resolvedActual,
+                netRevenue: resolvedNet,
+                deviation: resolvedDeviation,
+                note: revenue.note || note || undefined,
+            }
+
+            localStorage.setItem(STAFF_REVENUE_RESULT_KEY, JSON.stringify(resultData))
+            navigate('/staff/revenue/result', { state: resultData })
+            setShowPreview(false)
         } catch (err) {
             // Handled by hook notifications
         } finally {
@@ -114,26 +193,6 @@ export default function StaffRevenuePage() {
     const handlePreview = (e: React.FormEvent) => {
         e.preventDefault()
         setShowPreview(true)
-    }
-
-    if (submitted) {
-        return (
-            <div className="pt-12 text-center space-y-6">
-                <div className="bg-slate-100 dark:bg-white/10 w-20 h-20 rounded-full flex items-center justify-center mx-auto">
-                    <CheckCircle2 className="h-10 w-10 text-slate-900 dark:text-white" />
-                </div>
-                <div className="space-y-2">
-                    <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Đã nộp báo cáo!</h2>
-                    <p className="text-slate-500 px-6">Báo cáo kết sổ ca đã được ghi lại thành công.</p>
-                </div>
-                <Button
-                    className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-slate-200 w-full max-w-[200px]"
-                    onClick={() => navigate('/staff/menu')}
-                >
-                    Về Menu
-                </Button>
-            </div>
-        )
     }
 
     const noSchedule = !mySchedule && allSchedules.length === 0
@@ -169,14 +228,11 @@ export default function StaffRevenuePage() {
                         <PreviewRow label="Ngân hàng (CK)" value={Number(bank).toLocaleString()} alt />
                         <PreviewRow label="Doanh thu NET" value={Number(netInput).toLocaleString()} bold />
                         <PreviewRow label="Thực tế" value={doanhThuThucTe.toLocaleString()} alt />
-
-                        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-50 dark:border-neutral-800">
-                            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Sai lệch</span>
-                            <span className={`text-sm tabular-nums font-black ${saiLech === 0 ? 'text-slate-500' : saiLech > 0 ? 'text-amber-600' : 'text-rose-600'}`}>
-                                {saiLech.toLocaleString()}
-                            </span>
-                        </div>
-
+                        <PreviewRow
+                            label="Sai lệch"
+                            value={saiLech.toLocaleString()}
+                            valueClassName={`text-sm tabular-nums font-black ${saiLech === 0 ? 'text-slate-500' : saiLech > 0 ? 'text-amber-600' : 'text-rose-600'}`}
+                        />
                         {note ? <PreviewRow label="Ghi chú" value={note} alt /> : null}
                     </CardContent>
                 </Card>
@@ -260,7 +316,7 @@ export default function StaffRevenuePage() {
 
             {noSchedule && (
                 <div className="mx-2 p-4 bg-amber-50 border border-amber-200 rounded-xl text-[12px] text-amber-800 font-medium">
-                    ⚠ Không tìm thấy lịch ca hôm nay. Báo cáo vẫn sẽ được lưu.
+                    ⚠ Không tìm thấy lịch ca hôm nay. Cần có lịch ca để gửi báo cáo doanh thu.
                 </div>
             )}
 
@@ -347,14 +403,6 @@ export default function StaffRevenuePage() {
                         {incomes.map((inc, idx) => (
                             <div key={idx} className="flex items-center gap-2 px-4 py-3 border-b border-slate-50 dark:border-neutral-800 last:border-0">
                                 <div className="flex flex-col gap-1.5 flex-1">
-                                    <Input
-                                        type="number"
-                                        placeholder="Số tiền"
-                                        value={inc.amount}
-                                        onChange={setIncomes.bind(null, (prev) => prev.map((item, i) => i === idx ? { ...item, amount: inc.amount } : item))} // wait, simplified this
-                                        className="h-9 border-slate-200 dark:border-neutral-700 font-bold text-emerald-600 text-sm"
-                                    />
-                                    {/* correction: using updateIncome helper */}
                                     <Input
                                         type="number"
                                         placeholder="Số tiền"
@@ -464,13 +512,17 @@ function MoneyInput({ id, value, onChange, color }: {
     )
 }
 
-function PreviewRow({ label, value, bold, alt }: {
-    label: string; value?: string | number; bold?: boolean; alt?: boolean
+function PreviewRow({ label, value, bold, alt, valueClassName }: {
+    label: string; value?: string | number; bold?: boolean; alt?: boolean; valueClassName?: string
 }) {
+    const textClassName = bold
+        ? 'font-black text-slate-900 dark:text-white'
+        : 'font-semibold text-slate-700 dark:text-slate-300'
+
     return (
         <div className={`flex items-center justify-between px-4 py-3 border-b border-slate-50 dark:border-neutral-800 last:border-0 ${alt ? 'bg-slate-50/50 dark:bg-white/5' : ''}`}>
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">{label}</span>
-            <span className={`text-sm tabular-nums ${bold ? 'font-black text-slate-900 dark:text-white' : 'font-semibold text-slate-700 dark:text-slate-300'}`}>{value ?? '—'}</span>
+            <span className={valueClassName ?? `text-sm tabular-nums ${textClassName}`}>{value ?? '—'}</span>
         </div>
     )
 }

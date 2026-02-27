@@ -10,7 +10,7 @@ import {
 import { useSchedule } from '../hooks/useSchedule'
 import { Loader2 } from 'lucide-react'
 import { EditScheduleDialog } from './EditScheduleDialog'
-import type { Schedule, Shift } from '@/shared/types/api'
+import type { Schedule, Shift, UpdateScheduleRequest } from '@/shared/types/api'
 
 interface WeeklyScheduleTableProps {
     date: string
@@ -52,7 +52,7 @@ export function WeeklyScheduleTable({ date, shifts, onCellClick, filterPosition 
     const { data: schedules = [], isLoading } = useWeeklySchedule(fromDate, toDate)
 
     const scheduleMap = useMemo(() => {
-        const map = new Map<string, any[]>()
+        const map = new Map<string, Schedule[]>()
         if (!schedules) return map
 
         schedules.forEach(s => {
@@ -122,7 +122,7 @@ export function WeeklyScheduleTable({ date, shifts, onCellClick, filterPosition 
         setIsEditDialogOpen(true)
     }
 
-    const handleUpdate = async (params: { id: number, data: any }) => {
+    const handleUpdate = async (params: { id: number, data: UpdateScheduleRequest }) => {
         await updateSchedule(params)
         setIsEditDialogOpen(false)
     }
@@ -181,7 +181,7 @@ export function WeeklyScheduleTable({ date, shifts, onCellClick, filterPosition 
                                         const key = `${shift.name}-${dateStr}`
                                         const daySchedules = scheduleMap.get(key) || []
 
-                                        const groupedByPosition: Record<string, any[]> = {}
+                                        const groupedByPosition: Record<string, Schedule[]> = {}
                                         daySchedules.forEach(s => {
                                             const pos = s.positionName || 'Unknown'
                                             if (filterPosition && filterPosition !== 'all' && pos !== filterPosition) {

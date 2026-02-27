@@ -10,15 +10,19 @@ import {
 import { Button } from '@/shared/components/ui/button'
 import { XCircle, Loader2, Trash2 } from 'lucide-react'
 import { useSchedule } from '../hooks/useSchedule'
+import { useSelector } from 'react-redux'
+import type { RootState } from '@/app/store'
+import type { ScheduleRequest, Shift } from '@/shared/types/api'
 
 interface WeeklyRequestTableProps {
     date: string
-    shifts: any[]
+    shifts: Shift[]
     filterPosition?: string
 }
 
 export function WeeklyRequestTable({ date, shifts, filterPosition }: WeeklyRequestTableProps) {
     const [showHandled, setShowHandled] = useState(false)
+    const adminId = useSelector((state: RootState) => state.auth.admin?.id)
 
     const { fromDate, toDate, weekDates } = useMemo(() => {
         const curr = new Date(date)
@@ -78,14 +82,14 @@ export function WeeklyRequestTable({ date, shifts, filterPosition }: WeeklyReque
             filteredShifts = shifts.filter(s => s.positionName === filterPosition)
         }
 
-        return Array.from(new Set(filteredShifts.map((s: any) => s.name)))
-            .map(name => filteredShifts.find((s: any) => s.name === name))
-            .filter((s): s is any => !!s)
+        return Array.from(new Set(filteredShifts.map(s => s.name)))
+            .map(name => filteredShifts.find(s => s.name === name))
+            .filter((s): s is Shift => !!s)
             .sort((a, b) => a.startTime.localeCompare(b.startTime))
     }, [shifts, filterPosition])
 
     const requestMap = useMemo(() => {
-        const map = new Map<string, any[]>()
+        const map = new Map<string, ScheduleRequest[]>()
         requests.forEach(r => {
             const key = `${r.shiftName}-${r.workDate}`
 
@@ -167,7 +171,7 @@ export function WeeklyRequestTable({ date, shifts, filterPosition }: WeeklyReque
                                     const key = `${shift.name}-${dateStr}`
                                     const slotRequests = requestMap.get(key) || []
 
-                                    const groupedByPosition: Record<string, any[]> = {}
+                                    const groupedByPosition: Record<string, ScheduleRequest[]> = {}
                                     slotRequests.forEach(r => {
                                         const pos = r.positionName || 'Unknown'
                                         if (!groupedByPosition[pos]) groupedByPosition[pos] = []
@@ -207,7 +211,7 @@ export function WeeklyRequestTable({ date, shifts, filterPosition }: WeeklyReque
                                                                                     </div>
                                                                                     <div className="flex flex-col items-end shrink-0">
                                                                                         <span className="text-[10px] font-medium opacity-60">
-                                                                                            {req.startTime?.slice(0, 5) || req.shiftStartTime?.slice(0, 5)}
+                                                                                            {req.startTime?.slice(0, 5)}
                                                                                         </span>
                                                                                         <Button
                                                                                             size="sm"
@@ -226,7 +230,13 @@ export function WeeklyRequestTable({ date, shifts, filterPosition }: WeeklyReque
                                                                                             size="sm"
                                                                                             variant="ghost"
                                                                                             className="h-6 w-full p-0 bg-white/50 hover:bg-emerald-200 text-emerald-700 rounded text-[10px] font-bold"
-                                                                                            onClick={() => approveRequest({ requestId: req.requestId, isApproved: true })}
+                                                                                            onClick={() =>
+                                                                                                approveRequest({
+                                                                                                    requestId: req.requestId,
+                                                                                                    isApproved: true,
+                                                                                                    approvedBy: adminId,
+                                                                                                })
+                                                                                            }
                                                                                         >
                                                                                             Accept
                                                                                         </Button>
@@ -234,7 +244,13 @@ export function WeeklyRequestTable({ date, shifts, filterPosition }: WeeklyReque
                                                                                             size="sm"
                                                                                             variant="ghost"
                                                                                             className="h-6 w-8 p-0 bg-white/50 hover:bg-red-200 text-red-700 rounded"
-                                                                                            onClick={() => approveRequest({ requestId: req.requestId, isApproved: false })}
+                                                                                            onClick={() =>
+                                                                                                approveRequest({
+                                                                                                    requestId: req.requestId,
+                                                                                                    isApproved: false,
+                                                                                                    approvedBy: adminId,
+                                                                                                })
+                                                                                            }
                                                                                         >
                                                                                             <XCircle className="h-3 w-3" />
                                                                                         </Button>

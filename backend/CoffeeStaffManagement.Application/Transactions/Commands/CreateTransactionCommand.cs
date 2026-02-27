@@ -33,12 +33,20 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
         };
 
         await _transactionRepo.AddAsync(transaction, ct);
+        await _transactionRepo.SaveChangesAsync(ct);
 
-        // Logic: Update Revenue's Net amount
-        if (transaction.Type == TransactionType.Income)
-            revenue.Net += transaction.Amount;
-        else if (transaction.Type == TransactionType.Expense)
-            revenue.Net -= transaction.Amount;
+        var allTransactions = await _transactionRepo.GetByRevenueIdAsync(request.Request.RevenueId, ct);
+        decimal income = 0m;
+        decimal expenses = 0m;
+
+        foreach (var item in allTransactions)
+        {
+            if (item.Type == TransactionType.Income) income += item.Amount;
+            if (item.Type == TransactionType.Expense) expenses += item.Amount;
+        }
+
+        var actualRevenue = revenue.Cash + revenue.Bank - revenue.OpeningBalance + expenses - income;
+        revenue.Deviation = actualRevenue - revenue.Net;
 
         await _revenueRepo.UpdateAsync(revenue, ct);
 

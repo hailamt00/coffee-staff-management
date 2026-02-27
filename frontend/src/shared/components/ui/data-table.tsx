@@ -31,7 +31,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/shared/components/ui/select'
-import { Search, SlidersHorizontal } from 'lucide-react'
+import { ArrowDown, ArrowUp, ArrowUpDown, Search, SlidersHorizontal } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface DataTableProps<TData, TValue> {
@@ -45,6 +45,7 @@ interface DataTableProps<TData, TValue> {
     getRowCanExpand?: (row: any) => boolean
     showFooter?: boolean
     hideToolbar?: boolean
+    initialSorting?: SortingState
 }
 
 export const DataTable = <TData, TValue>({
@@ -58,8 +59,9 @@ export const DataTable = <TData, TValue>({
     getRowCanExpand,
     showFooter = false,
     hideToolbar = false,
+    initialSorting = [],
 }: DataTableProps<TData, TValue>) => {
-    const [sorting, setSorting] = useState<SortingState>([])
+    const [sorting, setSorting] = useState<SortingState>(initialSorting)
     const [globalFilter, setGlobalFilter] = useState('')
     const [expanded, setExpanded] = useState<ExpandedState>({})
     const [pagination, setPagination] = useState({
@@ -150,12 +152,32 @@ export const DataTable = <TData, TValue>({
                             <TableRow key={headerGroup.id} className="hover:bg-transparent border-b">
                                 {headerGroup.headers.map((header) => (
                                     <TableHead key={header.id} className="font-black uppercase text-[10px] text-slate-500 tracking-wider h-12 py-0">
-                                        {header.isPlaceholder
-                                            ? null
-                                            : flexRender(
+                                        {header.isPlaceholder ? null : header.column.getCanSort() ? (
+                                            <button
+                                                type="button"
+                                                onClick={header.column.getToggleSortingHandler()}
+                                                className="w-full inline-flex items-center gap-1.5 hover:text-slate-900 dark:hover:text-white transition-colors"
+                                            >
+                                                <span className="inline-flex items-center">
+                                                    {flexRender(
+                                                        header.column.columnDef.header,
+                                                        header.getContext()
+                                                    )}
+                                                </span>
+                                                {header.column.getIsSorted() === 'asc' ? (
+                                                    <ArrowUp className="h-3.5 w-3.5 shrink-0" />
+                                                ) : header.column.getIsSorted() === 'desc' ? (
+                                                    <ArrowDown className="h-3.5 w-3.5 shrink-0" />
+                                                ) : (
+                                                    <ArrowUpDown className="h-3.5 w-3.5 shrink-0 opacity-60" />
+                                                )}
+                                            </button>
+                                        ) : (
+                                            flexRender(
                                                 header.column.columnDef.header,
                                                 header.getContext()
-                                            )}
+                                            )
+                                        )}
                                     </TableHead>
                                 ))}
                             </TableRow>
