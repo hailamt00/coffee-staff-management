@@ -1,7 +1,7 @@
 export type DateInput = string | Date | null | undefined
 
 export const VIETNAM_TIME_ZONE = 'Asia/Ho_Chi_Minh'
-const VIETNAM_LOCALE = 'vi-VN'
+const VIETNAM_LOCALE = 'en-US'
 const TIMEZONE_SUFFIX_REGEX = /([zZ]|[-+]\d{2}:\d{2})$/
 
 function getDatePartsInVietnam(date: Date): { day: string; year: string; month: string } {

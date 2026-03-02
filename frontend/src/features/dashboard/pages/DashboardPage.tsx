@@ -76,7 +76,7 @@ export default function DashboardPage() {
 
       {/* KPI Section */}
       <section>
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-6 lg:gap-8">
           <SummaryCard
             title="Total Reports"
             value={stats?.totalReports || 0}
@@ -112,7 +112,7 @@ export default function DashboardPage() {
       </section>
 
       {/* Analytics Insight */}
-      <div className="pt-4 grid grid-cols-1 gap-10 lg:grid-cols-3">
+      <div className="pt-4 grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-10">
         {/* Main Revenue Chart */}
         <Card className="lg:col-span-2 border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm overflow-hidden group">
           <CardHeader className="flex flex-row items-center justify-between px-8 pt-8 pb-4">

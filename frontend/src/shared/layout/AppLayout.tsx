@@ -26,8 +26,7 @@ export default function AppLayout() {
         {/* ================= Desktop Sidebar ================= */}
         <aside
           className={clsx(
-            'hidden md:flex flex-col shrink-0',
-            'bg-white dark:bg-neutral-900 border-r border-slate-200 dark:border-neutral-800',
+            'hidden md:flex flex-col shrink-0 overflow-hidden',
             'transition-[width] duration-300 ease-in-out',
             collapsed ? 'w-16' : 'w-60'
           )}
@@ -57,10 +56,7 @@ export default function AppLayout() {
           {/* Drawer */}
           <div
             className={clsx(
-              'absolute left-0 top-0 h-full w-60',
-              'bg-white dark:bg-neutral-900',
-              'border-r border-slate-200 dark:border-neutral-800',
-              'shadow-2xl',
+              'absolute left-0 top-0 h-full w-64',
               'transition-transform duration-300 ease-out',
               sidebarOpen ? 'translate-x-0' : '-translate-x-full'
             )}
@@ -76,7 +72,7 @@ export default function AppLayout() {
 
           {/* Content */}
           <ScrollArea className="flex-1">
-            <main className="px-6 py-6">
+            <main className="px-4 py-4 md:px-6 md:py-6">
               <div className="mx-auto w-full max-w-7xl">
                 <AnimatePresence mode="wait">
                   <motion.div

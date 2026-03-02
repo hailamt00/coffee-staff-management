@@ -23,7 +23,6 @@ import {
   DialogFooter,
 } from '@/shared/components/ui/dialog'
 
-import { Card, CardContent } from '@/shared/components/ui/card'
 import { Button } from '@/shared/components/ui/button'
 
 import type { Employee } from '@/shared/types/api'
@@ -75,61 +74,46 @@ export default function EmployeesPage() {
     {
       accessorKey: "name",
       header: "Name",
-      cell: ({ row }) => <div className="font-semibold text-slate-900 dark:text-slate-100">{row.getValue("name") || '—'}</div>
+      cell: ({ row }) => <div className="font-bold text-slate-900 dark:text-slate-100">{row.getValue("name") || '—'}</div>
     },
     {
       accessorKey: "phone",
       header: "Phone",
-      cell: ({ row }) => <div>{row.getValue("phone") || '—'}</div>
-    },
-    {
-      accessorKey: "cid",
-      header: "CID",
-      cell: ({ row }) => <div>{row.getValue("cid") || '—'}</div>
-    },
-    {
-      accessorKey: "gender",
-      header: "Gender",
-      cell: ({ row }) => <div>{row.getValue("gender") || '—'}</div>
+      cell: ({ row }) => <div className="tabular-nums">{row.getValue("phone") || '—'}</div>
     },
     {
       accessorKey: "serviceSalary",
-      header: "Service Salary",
-      cell: ({ row }) => <div className="text-right">{formatMoney(row.getValue("serviceSalary"))}</div>
+      header: "Service",
+      cell: ({ row }) => <div className="text-right font-mono font-medium">{formatMoney(row.getValue("serviceSalary"))}</div>
     },
     {
       accessorKey: "baristaSalary",
-      header: "Barista Salary",
-      cell: ({ row }) => <div className="text-right">{formatMoney(row.getValue("baristaSalary"))}</div>
-    },
-    {
-      accessorKey: "dob",
-      header: "DOB",
-      cell: ({ row }) => <div>{formatDate(row.getValue("dob"))}</div>
+      header: "Barista",
+      cell: ({ row }) => <div className="text-right font-mono font-medium">{formatMoney(row.getValue("baristaSalary"))}</div>
     },
     {
       accessorKey: "hireDate",
-      header: "Hire Date",
-      cell: ({ row }) => <div>{formatDate(row.getValue("hireDate"))}</div>
+      header: "Hired",
+      cell: ({ row }) => <div className="text-right tabular-nums">{formatDate(row.getValue("hireDate"))}</div>
     },
     {
       id: "actions",
       header: "Actions",
       cell: ({ row }) => {
         return (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-end gap-2">
             <Button
               size="icon"
-              variant="ghost"
-              className="h-8 w-8 rounded-full bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-slate-200"
+              variant="outline"
+              className="h-9 w-9 rounded-xl border-slate-200 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all"
               onClick={() => navigate(`/employees/${row.original.id}/edit`)}
             >
               <Pencil size={14} />
             </Button>
             <Button
               size="icon"
-              variant="ghost"
-              className="h-8 w-8 rounded-full bg-red-500 hover:bg-red-600 text-white"
+              variant="outline"
+              className="h-9 w-9 rounded-xl border-red-100 text-red-600 hover:bg-red-600 hover:text-white transition-all"
               onClick={() => setDeleteTarget(row.original)}
             >
               <Trash2 size={14} />
@@ -153,99 +137,89 @@ export default function EmployeesPage() {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.25 }}
-        className="space-y-6"
+        className="space-y-6 pb-20"
       >
         {/* HEADER */}
-        <div className="flex flex-wrap items-end justify-between gap-4 px-2">
-          <div>
-            <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
-              Employees
-            </h1>
-            <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-              Staff_Directory
-            </p>
-          </div>
+        <div className="flex flex-col gap-6 px-1">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
+                Employees
+              </h1>
+              <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest hidden sm:block">
+                Staff_Directory
+              </p>
+            </div>
 
-          <Button onClick={() => navigate('/employees/add')} className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 border-none h-10 px-6 rounded-lg font-bold uppercase tracking-widest text-[10px]">
-            <Plus className="mr-2 h-4 w-4" />
-            Add Employee
-          </Button>
+            <Button onClick={() => navigate('/employees/add')} className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 border-none h-10 w-10 sm:w-auto sm:px-6 rounded-xl font-bold uppercase tracking-widest text-[10px]">
+              <Plus className="sm:mr-2 h-4 w-4" />
+              <span className="hidden sm:inline">Add Employee</span>
+            </Button>
+          </div>
         </div>
 
         {/* STATS SECTION */}
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           <StatCard
-            title="Total Employees"
+            title="Total"
             value={stats.total}
-            description="Active workforce"
+            description="Staff members"
             icon={Users}
             iconColor="text-slate-900 dark:text-white"
           />
           <StatCard
-            title="Active Staff"
+            title="Active"
             value={stats.activeCount}
             description="Currently employed"
             icon={UserCheck}
-            iconColor="text-green-600 dark:text-green-400"
-            trend="up"
-            trendValue={`${stats.activeCount} of ${stats.total}`}
+            iconColor="text-emerald-600 dark:text-emerald-400"
           />
           <StatCard
-            title="Avg Service Salary"
+            title="Avg Service"
             value={stats.avgServiceSalary}
-            description="Per employee"
+            description="Base rate"
             icon={TrendingUp}
             iconColor="text-blue-600 dark:text-blue-400"
           />
           <StatCard
-            title="Avg Barista Salary"
+            title="Avg Barista"
             value={stats.avgBaristaSalary}
-            description="Per employee"
+            description="Specialist rate"
             icon={Briefcase}
             iconColor="text-purple-600 dark:text-purple-400"
           />
         </div>
 
-        <Card className="border border-slate-200/60 dark:border-neutral-800/60 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-sm rounded-xl overflow-hidden">
-          <CardContent className="p-0">
-            <div className="p-6 border-b border-slate-100 dark:border-neutral-800/50 flex items-center justify-between">
-              <h2 className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">
-                Employee_Roster
-              </h2>
-            </div>
-
-            <div className="p-2">
-              <DataTable
-                columns={columns}
-                data={employees}
-                searchKey="name"
-                loading={loading}
-              />
-            </div>
-          </CardContent>
-        </Card>
+        <div className="px-1">
+          <DataTable
+            columns={columns}
+            data={employees}
+            searchKey="name"
+            loading={loading}
+          />
+        </div>
       </motion.div>
 
       {/* ===== DELETE CONFIRM (SHADCN) ===== */}
       <Dialog open={!!deleteTarget} onOpenChange={() => setDeleteTarget(null)}>
-        <DialogContent>
+        <DialogContent className="max-w-md w-[95vw] rounded-[2rem] border-none shadow-2xl p-6">
           <DialogHeader>
-            <DialogTitle>Delete employee</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-2xl font-black tracking-tighter text-red-600">Delete employee</DialogTitle>
+            <DialogDescription className="text-slate-500 font-medium py-4">
               Are you sure you want to delete{' '}
-              <span className="font-semibold">
+              <span className="font-black text-slate-900 dark:text-white underline decoration-red-500/30">
                 {deleteTarget?.name}
               </span>
-              ? This action cannot be undone.
+              ? This action is irreversible and will remove all related records.
             </DialogDescription>
           </DialogHeader>
 
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteTarget(null)}>
+          <DialogFooter className="flex sm:flex-row gap-2">
+            <Button variant="ghost" onClick={() => setDeleteTarget(null)} className="flex-1 h-12 rounded-xl font-bold">
               Cancel
             </Button>
-            <Button variant="destructive" onClick={confirmDelete}>
-              Delete
+            <Button variant="destructive" onClick={confirmDelete} className="flex-1 h-12 rounded-xl font-black uppercase tracking-widest text-[10px]">
+              Confirm Delete
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -253,6 +227,3 @@ export default function EmployeesPage() {
     </>
   )
 }
-
-/* ================= SMALL COMPONENTS ================= */
-

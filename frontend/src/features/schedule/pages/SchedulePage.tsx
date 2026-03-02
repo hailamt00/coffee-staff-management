@@ -19,13 +19,15 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/shared/components/ui/select'
-import { Plus } from 'lucide-react'
+import { Plus, Filter } from 'lucide-react'
 import { formatDate } from '@/shared/utils/format'
 import { useEmployee } from '@/features/employees/hooks/useEmployee'
 import { usePosition } from '@/features/positions/hooks/usePosition'
 import { WeeklyScheduleTable } from '../components/WeeklyScheduleTable'
 import { WeeklyRequestTable } from '../components/WeeklyRequestTable'
 import type { Shift } from '@/shared/types/api'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/shared/components/ui/sheet'
+import { Badge } from '@/shared/components/ui/badge'
 
 export default function SchedulePage() {
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10))
@@ -83,42 +85,189 @@ export default function SchedulePage() {
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 pb-20">
             {/* HEADER */}
-            <div className="flex flex-wrap items-end justify-between gap-4 px-2">
-                <div className="flex items-end gap-12">
+            <div className="flex flex-col gap-6 px-1">
+                <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
+                        <h1 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
                             Schedule
                         </h1>
-                        <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                        <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest hidden sm:block">
                             Shift_Operations
                         </p>
                     </div>
 
-                    {/* Filter UI */}
-                    <div className="flex items-center gap-3">
-                        <Label htmlFor="positionFilter" className="text-[10px] font-black uppercase tracking-widest text-slate-400">Filter_By:</Label>
-                        <Select value={filterPosition} onValueChange={setFilterPosition}>
-                            <SelectTrigger id="positionFilter" className="w-[160px] h-9 bg-slate-50/50 border-slate-200 dark:bg-neutral-900/50 dark:border-neutral-800 text-xs font-bold">
-                                <SelectValue placeholder="All Positions" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="all">All Positions</SelectItem>
-                                {positions.map(p => (
-                                    <SelectItem key={p.id} value={p.name}>{p.name}</SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
+                    <div className="flex items-center gap-2">
+                        {/* Mobile Filter Drawer */}
+                        <div className="md:hidden">
+                            <Sheet>
+                                <SheetTrigger asChild>
+                                    <Button variant="outline" size="icon" className="h-10 w-10 relative rounded-xl">
+                                        <Filter className="h-4 w-4" />
+                                        {filterPosition !== 'all' && (
+                                            <span className="absolute -top-1 -right-1 w-3 h-3 bg-black dark:bg-white rounded-full border-2 border-white dark:border-neutral-900" />
+                                        )}
+                                    </Button>
+                                </SheetTrigger>
+                                <SheetContent side="bottom" className="h-[300px] rounded-t-[2.5rem] border-none shadow-2xl">
+                                    <SheetHeader className="mb-6">
+                                        <SheetTitle className="text-left font-black tracking-tighter text-2xl px-2">Filters</SheetTitle>
+                                    </SheetHeader>
+                                    <div className="space-y-6 px-2">
+                                        <div className="space-y-3">
+                                            <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Position</Label>
+                                            <div className="flex flex-wrap gap-2">
+                                                <Badge
+                                                    variant={filterPosition === 'all' ? 'default' : 'outline'}
+                                                    className="px-5 py-2 cursor-pointer text-xs font-bold rounded-xl border-slate-200"
+                                                    onClick={() => setFilterPosition('all')}
+                                                >
+                                                    All Positions
+                                                </Badge>
+                                                {positions.map(p => (
+                                                    <Badge
+                                                        key={p.id}
+                                                        variant={filterPosition === p.name ? 'default' : 'outline'}
+                                                        className="px-5 py-2 cursor-pointer text-xs font-bold rounded-xl border-slate-200"
+                                                        onClick={() => setFilterPosition(p.name)}
+                                                    >
+                                                        {p.name}
+                                                    </Badge>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </SheetContent>
+                            </Sheet>
+                        </div>
+
+                        {/* Desktop Filter */}
+                        <div className="hidden md:flex items-center gap-3">
+                            <Label htmlFor="positionFilter" className="text-[10px] font-black uppercase tracking-widest text-slate-400">Filter_By:</Label>
+                            <Select value={filterPosition} onValueChange={setFilterPosition}>
+                                <SelectTrigger id="positionFilter" className="w-[160px] h-10 bg-slate-50 border-slate-200 dark:bg-neutral-900 dark:border-neutral-800 text-xs font-bold rounded-xl">
+                                    <SelectValue placeholder="All Positions" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="all">All Positions</SelectItem>
+                                    {positions.map(p => (
+                                        <SelectItem key={p.id} value={p.name}>{p.name}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <Dialog open={openAdd} onOpenChange={setOpenAdd}>
+                            <DialogTrigger asChild>
+                                <Button className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 border-none h-10 w-10 sm:w-auto sm:px-6 rounded-xl font-bold uppercase tracking-widest text-[10px]">
+                                    <Plus className="sm:mr-2 h-4 w-4" />
+                                    <span className="hidden sm:inline">Add</span>
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-md w-[95vw] rounded-[2rem] border-none shadow-2xl p-6">
+                                <DialogHeader>
+                                    <DialogTitle className="text-2xl font-black tracking-tighter">Add to Schedule</DialogTitle>
+                                    <DialogDescription className="text-slate-500 font-medium">
+                                        Select employee, position, and shifts for the roster.
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <div className="space-y-4 py-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="addDate" className="text-[10px] font-black uppercase tracking-widest text-slate-400">Date</Label>
+                                        <Input
+                                            id="addDate"
+                                            type="date"
+                                            value={addDate}
+                                            onChange={e => setAddDate(e.target.value)}
+                                            className="h-12 rounded-xl border-slate-200 font-bold"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="addEmployee" className="text-[10px] font-black uppercase tracking-widest text-slate-400">Employee</Label>
+                                        <Select value={addEmployeeId} onValueChange={setAddEmployeeId}>
+                                            <SelectTrigger id="addEmployee" className="h-12 rounded-xl border-slate-200 font-bold">
+                                                <SelectValue placeholder="Select Employee" />
+                                            </SelectTrigger>
+                                            <SelectContent className="rounded-xl">
+                                                {employees.map(e => (
+                                                    <SelectItem key={e.id} value={String(e.id)}>
+                                                        {e.name} ({e.code})
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="addPosition" className="text-[10px] font-black uppercase tracking-widest text-slate-400">Position</Label>
+                                        <Select value={addPositionId} onValueChange={setAddPositionId}>
+                                            <SelectTrigger id="addPosition" className="h-12 rounded-xl border-slate-200 font-bold">
+                                                <SelectValue placeholder="Select Position" />
+                                            </SelectTrigger>
+                                            <SelectContent className="rounded-xl">
+                                                {positions.map(p => (
+                                                    <SelectItem key={p.id} value={String(p.id)}>
+                                                        {p.name}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    {availableShifts.length > 0 && (
+                                        <div className="space-y-2">
+                                            <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Shifts</Label>
+                                            <div className="grid grid-cols-1 gap-2 border border-slate-100 rounded-2xl p-4 bg-slate-50/50">
+                                                {availableShifts.map(s => (
+                                                    <div key={s.id} className="flex items-center gap-3">
+                                                        <input
+                                                            type="checkbox"
+                                                            id={`shift-${s.id}`}
+                                                            checked={addSelectedShifts.includes(s.id)}
+                                                            onChange={e => {
+                                                                if (e.target.checked) {
+                                                                    setAddSelectedShifts([...addSelectedShifts, s.id])
+                                                                } else {
+                                                                    setAddSelectedShifts(addSelectedShifts.filter(id => id !== s.id))
+                                                                }
+                                                            }}
+                                                            className="h-5 w-5 rounded-lg border-slate-300 text-black focus:ring-black accent-black"
+                                                        />
+                                                        <Label htmlFor={`shift-${s.id}`} className="text-sm font-bold cursor-pointer">
+                                                            {s.name} <span className="text-[10px] opacity-50 ml-1">({s.startTime?.slice(0, 5)} - {s.endTime?.slice(0, 5)})</span>
+                                                        </Label>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    <div className="space-y-2">
+                                        <Label htmlFor="addNote" className="text-[10px] font-black uppercase tracking-widest text-slate-400">Note (Optional)</Label>
+                                        <Input
+                                            id="addNote"
+                                            value={addNote}
+                                            onChange={e => setAddNote(e.target.value)}
+                                            placeholder="Add a note..."
+                                            className="h-12 rounded-xl border-slate-200 font-bold"
+                                        />
+                                    </div>
+
+                                    <Button onClick={handleAdd} className="w-full bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-slate-200 uppercase font-black text-[10px] tracking-[0.2em] h-14 rounded-2xl mt-4">
+                                        Confirm Schedule
+                                    </Button>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2 bg-slate-100 dark:bg-neutral-800 p-1 rounded-lg">
+                <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-2 bg-slate-100 dark:bg-neutral-800 p-1.5 rounded-2xl w-full sm:w-auto">
                         <Button
                             variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0"
+                            size="icon"
+                            className="h-10 w-10 p-0 hover:bg-white dark:hover:bg-black rounded-xl shadow-none"
                             onClick={() => {
                                 const d = new Date(date)
                                 d.setDate(d.getDate() - 7)
@@ -127,7 +276,7 @@ export default function SchedulePage() {
                         >
                             &lt;
                         </Button>
-                        <div className="px-2 text-sm font-bold min-w-[140px] text-center">
+                        <div className="flex-1 sm:flex-none px-4 text-[11px] sm:text-[10px] font-black uppercase tracking-[0.2em] min-w-[160px] text-center">
                             {(() => {
                                 const curr = new Date(date)
                                 const day = curr.getDay()
@@ -139,8 +288,8 @@ export default function SchedulePage() {
                         </div>
                         <Button
                             variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0"
+                            size="icon"
+                            className="h-10 w-10 p-0 hover:bg-white dark:hover:bg-black rounded-xl shadow-none"
                             onClick={() => {
                                 const d = new Date(date)
                                 d.setDate(d.getDate() + 7)
@@ -151,139 +300,50 @@ export default function SchedulePage() {
                         </Button>
                     </div>
 
+                    <div className="hidden sm:block">
+                        <Tabs value={activeTab} onValueChange={setActiveTab} className="bg-slate-100 dark:bg-neutral-800 p-1 rounded-2xl">
+                            <TabsList className="bg-transparent border-none">
+                                <TabsTrigger value="weekly" className="h-10 px-6 data-[state=active]:bg-white data-[state=active]:text-black dark:data-[state=active]:bg-black dark:data-[state=active]:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">Roster</TabsTrigger>
+                                <TabsTrigger value="requests" className="h-10 px-6 data-[state=active]:bg-white data-[state=active]:text-black dark:data-[state=active]:bg-black dark:data-[state=active]:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">Requests</TabsTrigger>
+                            </TabsList>
+                        </Tabs>
+                    </div>
+                </div>
+
+                <div className="sm:hidden">
+                    <Tabs value={activeTab} onValueChange={setActiveTab} className="bg-slate-100/50 dark:bg-neutral-800/50 border border-slate-100 dark:border-neutral-800 p-1 rounded-[1.5rem] w-full">
+                        <TabsList className="bg-transparent border-none w-full grid grid-cols-2 gap-1 h-12">
+                            <TabsTrigger value="weekly" className="h-10 data-[state=active]:bg-white data-[state=active]:text-black dark:data-[state=active]:bg-black dark:data-[state=active]:text-white rounded-[1.25rem] text-[10px] font-black uppercase tracking-widest shadow-none">Roster</TabsTrigger>
+                            <TabsTrigger value="requests" className="h-10 data-[state=active]:bg-white data-[state=active]:text-black dark:data-[state=active]:bg-black dark:data-[state=active]:text-white rounded-[1.25rem] text-[10px] font-black uppercase tracking-widest shadow-none">Requests</TabsTrigger>
+                        </TabsList>
+                    </Tabs>
                 </div>
             </div>
 
-            <div className="flex items-center justify-between">
-                <Tabs value={activeTab} onValueChange={setActiveTab} className="bg-slate-100/50 dark:bg-neutral-900/50 border h-10 p-1 rounded-lg">
-                    <TabsList className="bg-transparent border-none">
-                        <TabsTrigger value="weekly" className="h-8 px-4 data-[state=active]:bg-white data-[state=active]:text-black dark:data-[state=active]:bg-black dark:data-[state=active]:text-white">Weekly Schedule</TabsTrigger>
-                        <TabsTrigger value="requests" className="h-8 px-4 data-[state=active]:bg-white data-[state=active]:text-black dark:data-[state=active]:bg-black dark:data-[state=active]:text-white">Requests</TabsTrigger>
-                    </TabsList>
-                </Tabs>
-
-                <Dialog open={openAdd} onOpenChange={setOpenAdd}>
-                    <DialogTrigger asChild>
-                        <Button className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 border-none h-10 px-6 rounded-lg font-bold uppercase tracking-widest text-[10px]">
-                            <Plus className="mr-2 h-4 w-4" />
-                            Add
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-md">
-                        <DialogHeader>
-                            <DialogTitle>Add to Schedule</DialogTitle>
-                            <DialogDescription>
-                                Select employee, position, and shifts for the roster.
-                            </DialogDescription>
-                        </DialogHeader>
-                        <div className="space-y-4 py-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="addDate">Date</Label>
-                                <Input
-                                    id="addDate"
-                                    type="date"
-                                    value={addDate}
-                                    onChange={e => setAddDate(e.target.value)}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="addEmployee">Employee</Label>
-                                <Select value={addEmployeeId} onValueChange={setAddEmployeeId}>
-                                    <SelectTrigger id="addEmployee">
-                                        <SelectValue placeholder="Select Employee" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {employees.map(e => (
-                                            <SelectItem key={e.id} value={String(e.id)}>
-                                                {e.name} ({e.code})
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="addPosition">Position</Label>
-                                <Select value={addPositionId} onValueChange={setAddPositionId}>
-                                    <SelectTrigger id="addPosition">
-                                        <SelectValue placeholder="Select Position" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {positions.map(p => (
-                                            <SelectItem key={p.id} value={String(p.id)}>
-                                                {p.name}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-
-                            {availableShifts.length > 0 && (
-                                <div className="space-y-2">
-                                    <div className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Shifts</div>
-                                    <div className="grid grid-cols-1 gap-2 border rounded-lg p-3">
-                                        {availableShifts.map(s => (
-                                            <div key={s.id} className="flex items-center gap-2">
-                                                <input
-                                                    type="checkbox"
-                                                    id={`shift-${s.id}`}
-                                                    checked={addSelectedShifts.includes(s.id)}
-                                                    onChange={e => {
-                                                        if (e.target.checked) {
-                                                            setAddSelectedShifts([...addSelectedShifts, s.id])
-                                                        } else {
-                                                            setAddSelectedShifts(addSelectedShifts.filter(id => id !== s.id))
-                                                        }
-                                                    }}
-                                                    className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
-                                                />
-                                                <Label htmlFor={`shift-${s.id}`} className="text-sm cursor-pointer">
-                                                    {s.name} ({s.startTime?.slice(0, 5)} - {s.endTime?.slice(0, 5)})
-                                                </Label>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-                            <div className="space-y-2">
-                                <Label htmlFor="addNote">Note (Optional)</Label>
-                                <Input
-                                    id="addNote"
-                                    value={addNote}
-                                    onChange={e => setAddNote(e.target.value)}
-                                    placeholder="Add a note..."
-                                />
-                            </div>
-
-                            <Button onClick={handleAdd} className="w-full bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-slate-200 uppercase font-black text-[10px] tracking-[0.2em] py-6 rounded-xl">
-                                Add to Schedule
-                            </Button>
+            <div className="mt-2">
+                <Tabs value={activeTab} className="w-full">
+                    <TabsContent value="weekly" className="space-y-4 focus-visible:outline-none">
+                        <div className="px-1">
+                            <WeeklyScheduleTable
+                                date={date}
+                                shifts={allWeeklyShifts}
+                                filterPosition={filterPosition}
+                                onCellClick={handleQuickAdd}
+                            />
                         </div>
-                    </DialogContent>
-                </Dialog >
-            </div >
+                    </TabsContent>
 
-
-            <Tabs value={activeTab} className="w-full">
-                {/* ===== TAB: WEEKLY ===== */}
-                <TabsContent value="weekly" className="space-y-4">
-                    <WeeklyScheduleTable
-                        date={date}
-                        shifts={allWeeklyShifts}
-                        filterPosition={filterPosition}
-                        onCellClick={handleQuickAdd}
-                    />
-                </TabsContent>
-
-                {/* ===== TAB: REQUESTS ===== */}
-                <TabsContent value="requests" className="space-y-4">
-                    <WeeklyRequestTable
-                        date={date}
-                        shifts={allWeeklyShifts}
-                        filterPosition={filterPosition}
-                    />
-                </TabsContent>
-            </Tabs>
-        </div >
+                    <TabsContent value="requests" className="space-y-4 focus-visible:outline-none">
+                        <div className="px-1">
+                            <WeeklyRequestTable
+                                date={date}
+                                shifts={allWeeklyShifts}
+                                filterPosition={filterPosition}
+                            />
+                        </div>
+                    </TabsContent>
+                </Tabs>
+            </div>
+        </div>
     )
 }

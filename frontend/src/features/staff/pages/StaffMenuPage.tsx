@@ -50,11 +50,11 @@ export default function StaffMenuPage() {
                 <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight relative z-10 leading-none">{staff.name}</h2>
                 <div className="mt-4 flex items-center gap-2 text-[11px] font-bold text-slate-600 dark:text-slate-300 tracking-wide relative z-10 bg-slate-50 dark:bg-neutral-800 w-fit px-3 py-1 rounded-full border border-slate-100 dark:border-neutral-700">
                     <Clock size={12} className="text-slate-500" />
-                    {new Date().toLocaleDateString('vi-VN', { weekday: 'long', month: 'short', day: 'numeric' })}
+                    {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
                 </div>
             </div>
 
-            <div className="grid gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                 {menuItems.map((item) => (
                     <Card
                         key={item.path}

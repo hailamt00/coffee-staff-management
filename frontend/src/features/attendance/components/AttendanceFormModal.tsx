@@ -113,15 +113,15 @@ export function AttendanceFormModal({
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>{isEditMode ? "Sửa Điểm Danh" : "Thêm mới Điểm Danh"}</DialogTitle>
+                    <DialogTitle>{isEditMode ? "Edit Attendance" : "Add New Attendance"}</DialogTitle>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
 
                     <div className="space-y-2">
-                        <Label htmlFor="employeeForm">Nhân viên</Label>
+                        <Label htmlFor="employeeForm">Employee</Label>
                         <Select value={employeeId} onValueChange={setEmployeeId} disabled={isEditMode}>
                             <SelectTrigger id="employeeForm">
-                                <SelectValue placeholder="Chọn nhân viên" />
+                                <SelectValue placeholder="Select Employee" />
                             </SelectTrigger>
                             <SelectContent>
                                 {employees.map(emp => (
@@ -132,7 +132,7 @@ export function AttendanceFormModal({
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="positionForm">Chức vụ (Vị trí)</Label>
+                        <Label htmlFor="positionForm">Position</Label>
                         <Select
                             value={positionId}
                             onValueChange={(val) => {
@@ -142,7 +142,7 @@ export function AttendanceFormModal({
                             disabled={isEditMode}
                         >
                             <SelectTrigger id="positionForm">
-                                <SelectValue placeholder="Chọn chức vụ" />
+                                <SelectValue placeholder="Select Position" />
                             </SelectTrigger>
                             <SelectContent>
                                 {positions.map(pos => (
@@ -153,10 +153,10 @@ export function AttendanceFormModal({
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="shiftForm">Ca làm việc (Mặc định)</Label>
+                        <Label htmlFor="shiftForm">Shift (Default)</Label>
                         <Select value={shiftId} onValueChange={setShiftId} disabled={isEditMode || !positionId}>
                             <SelectTrigger id="shiftForm">
-                                <SelectValue placeholder="Chọn ca làm" />
+                                <SelectValue placeholder="Select Shift" />
                             </SelectTrigger>
                             <SelectContent>
                                 {
@@ -165,14 +165,14 @@ export function AttendanceFormModal({
                                             <SelectItem key={shift.id} value={String(shift.id)}>
                                                 {shift.name} ({shift.startTime.slice(0, 5)} - {shift.endTime.slice(0, 5)})
                                             </SelectItem>
-                                        )) || <div className="p-2 text-sm text-gray-500">Chưa chọn chức vụ</div>
+                                        )) || <div className="p-2 text-sm text-gray-500">Position not selected</div>
                                 }
                             </SelectContent>
                         </Select>
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="dateForm">Ngày làm việc</Label>
+                        <Label htmlFor="dateForm">Work Date</Label>
                         <Input
                             id="dateForm"
                             type="date"
@@ -184,20 +184,20 @@ export function AttendanceFormModal({
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label htmlFor="checkInForm">Giờ Bắt đầu (Check-in)</Label>
+                            <Label htmlFor="checkInForm">Check-in Time</Label>
                             <Input id="checkInForm" type="time" value={checkIn} onChange={e => setCheckIn(e.target.value)} />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="checkOutForm">Giờ Kết thúc (Check-out)</Label>
+                            <Label htmlFor="checkOutForm">Check-out Time</Label>
                             <Input id="checkOutForm" type="time" value={checkOut} onChange={e => setCheckOut(e.target.value)} />
                         </div>
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="noteForm">Ghi chú</Label>
+                        <Label htmlFor="noteForm">Note</Label>
                         <Input
                             id="noteForm"
-                            placeholder="Nhập ghi chú..."
+                            placeholder="Enter note..."
                             value={note}
                             onChange={e => setNote(e.target.value)}
                         />
@@ -205,9 +205,9 @@ export function AttendanceFormModal({
 
                 </div>
                 <DialogFooter>
-                    <Button variant="outline" onClick={onClose} disabled={loading}>Hủy</Button>
+                    <Button variant="outline" onClick={onClose} disabled={loading}>Cancel</Button>
                     <Button onClick={handleSubmit} disabled={loading || !employeeId || !shiftId || !workDate}>
-                        {loading ? "Đang xử lý..." : "Lưu thay đổi"}
+                        {loading ? "Processing..." : "Save Changes"}
                     </Button>
                 </DialogFooter>
             </DialogContent>

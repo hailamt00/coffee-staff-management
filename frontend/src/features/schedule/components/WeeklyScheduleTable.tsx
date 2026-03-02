@@ -8,8 +8,9 @@ import {
     TableRow,
 } from '@/shared/components/ui/table'
 import { useSchedule } from '../hooks/useSchedule'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Plus } from 'lucide-react'
 import { EditScheduleDialog } from './EditScheduleDialog'
+import { Button } from '@/shared/components/ui/button'
 import type { Schedule, Shift, UpdateScheduleRequest } from '@/shared/types/api'
 
 interface WeeklyScheduleTableProps {
@@ -142,7 +143,8 @@ export function WeeklyScheduleTable({ date, shifts, onCellClick, filterPosition 
                 onDelete={handleDelete}
             />
 
-            <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-slate-200/60 dark:border-neutral-800 shadow-xl overflow-hidden">
+            {/* Desktop View */}
+            <div className="hidden md:block bg-white dark:bg-neutral-900 rounded-2xl border border-slate-200/60 dark:border-neutral-800 shadow-xl overflow-hidden">
                 <div className="overflow-x-auto">
                     <Table className="min-w-[1000px] border-collapse">
                         <TableHeader>
@@ -157,10 +159,10 @@ export function WeeklyScheduleTable({ date, shifts, onCellClick, filterPosition 
                                     <TableHead key={d.toISOString()} className="text-center min-w-[140px] border-r border-slate-200 dark:border-neutral-800 last:border-r-0 p-3">
                                         <div className="flex flex-col items-center gap-1">
                                             <span className="font-bold text-slate-700 dark:text-slate-300 capitalize tracking-wide text-sm">
-                                                {d.toLocaleDateString('vi-VN', { weekday: 'short' })}
+                                                {d.toLocaleDateString('en-US', { weekday: 'short' })}
                                             </span>
                                             <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400">
-                                                {d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' })}
+                                                {d.toLocaleDateString('en-US', { day: '2-digit', month: '2-digit' })}
                                             </span>
                                         </div>
                                     </TableHead>
@@ -231,7 +233,7 @@ export function WeeklyScheduleTable({ date, shifts, onCellClick, filterPosition 
                                                                                         </span>
                                                                                         {(schedule.checkIn || schedule.checkOut) && (
                                                                                             <span className="text-[9px] font-mono font-bold text-green-700 dark:text-green-400 bg-green-500/20 px-1 py-0.5 rounded w-max mt-1">
-                                                                                                Thực tế: {schedule.checkIn ? new Date(schedule.checkIn).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) : '--:--'} - {schedule.checkOut ? new Date(schedule.checkOut).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) : '--:--'}
+                                                                                                Thực tế: {schedule.checkIn ? new Date(schedule.checkIn).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '--:--'} - {schedule.checkOut ? new Date(schedule.checkOut).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '--:--'}
                                                                                             </span>
                                                                                         )}
                                                                                         {schedule.note && (
@@ -257,6 +259,101 @@ export function WeeklyScheduleTable({ date, shifts, onCellClick, filterPosition 
                         </TableBody>
                     </Table>
                 </div>
+            </div>
+
+            {/* Mobile View */}
+            <div className="md:hidden space-y-4">
+                {weekDates.map(d => {
+                    const dateStr = d.toISOString().slice(0, 10)
+                    const dayName = d.toLocaleDateString('en-US', { weekday: 'long' })
+                    const displayDay = d.toLocaleDateString('en-US', { day: '2-digit', month: '2-digit' })
+
+                    // Get all schedules for this day across all unique shifts
+                    const daySchedules: Schedule[] = []
+                    uniqueShifts.forEach(shift => {
+                        const key = `${shift.name}-${dateStr}`
+                        const slotSchedules = scheduleMap.get(key) || []
+                        slotSchedules.forEach(s => {
+                            const pos = s.positionName || 'Unknown'
+                            if (filterPosition && filterPosition !== 'all' && pos !== filterPosition) return
+                            daySchedules.push(s)
+                        })
+                    })
+
+                    return (
+                        <div key={dateStr} className="space-y-3">
+                            <div className="flex items-center gap-2 px-1">
+                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{dayName}</span>
+                                <span className="h-px flex-1 bg-slate-100 dark:bg-neutral-800"></span>
+                                <span className="text-[10px] font-black text-slate-900 dark:text-white tabular-nums bg-slate-100 dark:bg-neutral-800 px-2 py-0.5 rounded-full">{displayDay}</span>
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-3">
+                                {daySchedules.length === 0 ? (
+                                    <div
+                                        className="p-8 border border-dashed border-slate-200 dark:border-neutral-800 rounded-2xl flex flex-col items-center justify-center gap-2 text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors cursor-pointer"
+                                        onClick={() => onCellClick?.(dateStr, uniqueShifts[0])} // Default to first shift if empty
+                                    >
+                                        <div className="w-8 h-8 rounded-full bg-slate-50 dark:bg-neutral-800 flex items-center justify-center">
+                                            <Plus className="w-4 h-4" />
+                                        </div>
+                                        <span className="text-[10px] font-bold uppercase tracking-widest">No shifts assigned</span>
+                                    </div>
+                                ) : (
+                                    daySchedules.map(s => {
+                                        const colorClass = getPositionColor(s.positionName || '')
+                                        return (
+                                            <div
+                                                key={s.id}
+                                                onClick={() => handleScheduleClick(s)}
+                                                className={`p-4 rounded-2xl border shadow-sm transition-all active:scale-[0.98] ${colorClass}`}
+                                            >
+                                                <div className="flex justify-between items-start">
+                                                    <div className="flex flex-col gap-1">
+                                                        <span className="text-[10px] font-black uppercase tracking-wider opacity-60">{s.positionName}</span>
+                                                        <span className="text-sm font-black tracking-tight">{s.employeeName}</span>
+                                                    </div>
+                                                    <div className="text-right flex flex-col items-end gap-1">
+                                                        <span className="text-[10px] font-black bg-white/50 dark:bg-black/20 px-2 py-1 rounded-lg">
+                                                            {s.shiftName}
+                                                        </span>
+                                                        <span className="text-[10px] font-mono font-bold opacity-70 tabular-nums">
+                                                            {s.shiftStartTime?.slice(0, 5)} - {s.shiftEndTime?.slice(0, 5)}
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                {(s.checkIn || s.checkOut) && (
+                                                    <div className="mt-3 pt-3 border-t border-black/5 flex flex-col gap-1">
+                                                        <span className="text-[9px] font-black uppercase tracking-widest opacity-40">Actual Attendance</span>
+                                                        <span className="text-[10px] font-mono font-black text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-lg w-fit">
+                                                            {s.checkIn ? new Date(s.checkIn).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '--:--'} - {s.checkOut ? new Date(s.checkOut).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '--:--'}
+                                                        </span>
+                                                    </div>
+                                                )}
+
+                                                {s.note && (
+                                                    <div className="mt-2 text-[10px] italic opacity-70 leading-relaxed font-medium">
+                                                        "{s.note}"
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )
+                                    })
+                                )}
+
+                                <Button
+                                    variant="outline"
+                                    className="w-full h-11 rounded-xl border-dashed border-slate-200 dark:border-neutral-800 text-[10px] font-black uppercase tracking-widest gap-2 bg-transparent hover:bg-slate-50 dark:hover:bg-white/5"
+                                    onClick={() => onCellClick?.(dateStr, uniqueShifts[0])}
+                                >
+                                    <Plus className="w-3 h-3" />
+                                    Quick Add Shift
+                                </Button>
+                            </div>
+                        </div>
+                    )
+                })}
             </div>
         </div>
     )

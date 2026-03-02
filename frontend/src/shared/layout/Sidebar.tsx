@@ -40,13 +40,13 @@ export default function Sidebar({
   const sections = getRoutesBySection()
 
   return (
-    <aside className="flex h-full flex-col bg-white dark:bg-neutral-900 text-slate-900 dark:text-white transition-all duration-300 border-none">
+    <aside className="flex h-full w-full flex-col bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl text-slate-900 dark:text-white transition-all duration-300 border-r border-slate-200/60 dark:border-neutral-800/60 shadow-sm">
       {/* ===== Header / Branding ===== */}
       <div className="flex h-14 items-center justify-between px-4 border-b border-slate-200 dark:border-neutral-800 bg-slate-50/50 dark:bg-black/20">
         {!collapsed && (
           <div className="flex flex-col leading-none">
-            <span className="text-sm font-black tracking-tight text-slate-900 dark:text-white">CSM Elite</span>
-            <span className="text-[11px] font-bold text-slate-500 tracking-wide mt-0.5">V.2.0 Pro</span>
+            <span className="text-sm font-black tracking-tight text-slate-900 dark:text-white uppercase">CSM Elite</span>
+            <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 tracking-[0.2em] mt-1">V.2.0 PRO</span>
           </div>
         )}
         {collapsed && (
@@ -105,12 +105,12 @@ export default function Sidebar({
                           onClose?.()
                         }}
                         className={clsx(
-                          'relative h-10 w-full rounded-lg group font-bold overflow-hidden transition-all duration-200',
+                          'relative h-11 w-full rounded-xl group font-bold overflow-hidden transition-all duration-300',
                           collapsed
                             ? 'justify-center px-0'
-                            : 'justify-start gap-3 px-3',
+                            : 'justify-start gap-3 px-4',
                           isActive
-                            ? 'bg-slate-900 text-white dark:bg-white dark:text-black shadow-lg shadow-black/10 dark:shadow-white/5'
+                            ? 'bg-slate-900 text-white dark:bg-white dark:text-black shadow-lg shadow-black/10 dark:shadow-white/5 active:scale-[0.98]'
                             : 'text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5'
                         )}
                       >
@@ -123,7 +123,7 @@ export default function Sidebar({
                         />
 
                         {!collapsed && (
-                          <span className="relative z-10 truncate text-[11px] uppercase tracking-tight">
+                          <span className="relative z-10 truncate text-[10px] font-black uppercase tracking-widest">
                             {item.label}
                           </span>
                         )}
@@ -151,12 +151,12 @@ export default function Sidebar({
       {/* ===== Account Section ===== */}
       <div className="p-6 mt-auto">
         <div className={clsx(
-          "flex items-center gap-3 rounded-[1.5rem] bg-white/[0.03] p-3 border border-white/10 transition-all duration-500 hover:bg-white/10 hover:border-white/20 group",
-          collapsed ? "justify-center p-2" : "px-4"
+          "flex items-center gap-3 rounded-[1.25rem] bg-slate-50/50 dark:bg-white/[0.03] p-2.5 border border-slate-200/50 dark:border-white/5 transition-all duration-500 hover:bg-slate-100/80 dark:hover:bg-white/10 group",
+          collapsed ? "justify-center p-2" : "px-3"
         )}>
-          <Avatar className="h-10 w-10 rounded-2xl border-2 border-white/10 group-hover:border-white/30 transition-colors">
+          <Avatar className="h-9 w-9 rounded-xl border-2 border-white/10 dark:border-white/5 group-hover:border-slate-900/20 dark:group-hover:border-white/30 transition-all duration-500">
             <AvatarImage src="/avatar.png" />
-            <AvatarFallback className="bg-white text-black font-black text-xs">AD</AvatarFallback>
+            <AvatarFallback className="bg-slate-900 text-white dark:bg-white dark:text-black font-black text-xs">AD</AvatarFallback>
           </Avatar>
 
           {!collapsed && (

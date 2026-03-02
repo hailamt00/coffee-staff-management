@@ -92,21 +92,21 @@ export default function StaffAttendancePage() {
                 </Button>
             </div>
 
-            <div className="px-2 flex items-center justify-between">
+            <div className="px-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-none">
+                    <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-none">
                         Attendance
                     </h1>
-                    <p className="mt-1 text-[11px] font-bold text-slate-500 tracking-wide">
+                    <p className="mt-1 text-[10px] sm:text-[11px] font-bold text-slate-500 tracking-wide">
                         Shift Check In/Out
                     </p>
                 </div>
                 <Button
                     onClick={() => setIsSubstituteOpen(true)}
-                    className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 font-bold tracking-wide text-xs rounded-xl h-9 px-3"
+                    className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 font-bold tracking-wide text-xs rounded-xl h-10 sm:h-9 w-full sm:w-auto"
                 >
                     <Plus className="h-4 w-4 mr-1" />
-                    Substitute
+                    Substitute Check-In
                 </Button>
             </div>
 

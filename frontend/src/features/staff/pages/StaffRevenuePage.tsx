@@ -211,36 +211,36 @@ export default function StaffRevenuePage() {
                         onClick={() => setShowPreview(false)}
                         className="flex items-center gap-1.5 text-[11px] font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white tracking-wide transition-colors"
                     >
-                        <ChevronLeft className="h-4 w-4" /> Sửa lại
+                        <ChevronLeft className="h-4 w-4" /> Edit
                     </button>
                 </div>
 
                 <div className="px-2">
-                    <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight leading-none">Xem trước</h1>
-                    <p className="mt-1 text-[11px] font-bold text-slate-500 tracking-wide">Kiểm tra lại trước khi nộp</p>
+                    <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight leading-none">Preview</h1>
+                    <p className="mt-1 text-[11px] font-bold text-slate-500 tracking-wide">Check carefully before submitting</p>
                 </div>
 
                 <Card className="border border-slate-200/60 dark:border-neutral-800/60 bg-white dark:bg-neutral-900 rounded-2xl overflow-hidden shadow-sm">
                     <CardContent className="p-0">
-                        <PreviewRow label="Nhân viên" value={staff?.name} bold />
-                        <PreviewRow label="Đầu kỳ" value={Number(openingBalance).toLocaleString()} alt />
-                        <PreviewRow label="Tiền mặt (TM)" value={Number(cash).toLocaleString()} />
-                        <PreviewRow label="Ngân hàng (CK)" value={Number(bank).toLocaleString()} alt />
-                        <PreviewRow label="Doanh thu NET" value={Number(netInput).toLocaleString()} bold />
-                        <PreviewRow label="Thực tế" value={doanhThuThucTe.toLocaleString()} alt />
+                        <PreviewRow label="Staff" value={staff?.name} bold />
+                        <PreviewRow label="Opening" value={Number(openingBalance).toLocaleString()} alt />
+                        <PreviewRow label="Cash (TM)" value={Number(cash).toLocaleString()} />
+                        <PreviewRow label="Bank (CK)" value={Number(bank).toLocaleString()} alt />
+                        <PreviewRow label="Net Revenue" value={Number(netInput).toLocaleString()} bold />
+                        <PreviewRow label="Actual" value={doanhThuThucTe.toLocaleString()} alt />
                         <PreviewRow
-                            label="Sai lệch"
+                            label="Deviation"
                             value={saiLech.toLocaleString()}
                             valueClassName={`text-sm tabular-nums font-black ${saiLech === 0 ? 'text-slate-500' : saiLech > 0 ? 'text-amber-600' : 'text-rose-600'}`}
                         />
-                        {note ? <PreviewRow label="Ghi chú" value={note} alt /> : null}
+                        {note ? <PreviewRow label="Notes" value={note} alt /> : null}
                     </CardContent>
                 </Card>
 
                 {validExpenses.length > 0 && (
                     <Card className="border border-rose-100 dark:border-rose-900/30 bg-white dark:bg-neutral-900 rounded-2xl overflow-hidden shadow-sm">
                         <div className="px-4 py-2 bg-rose-50/60 dark:bg-rose-900/10 border-b border-rose-100 dark:border-rose-900/20">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-rose-600">Khoản Chi ({validExpenses.length})</span>
+                            <span className="text-[10px] font-black uppercase tracking-widest text-rose-600">Expenses ({validExpenses.length})</span>
                         </div>
                         <CardContent className="p-0">
                             {validExpenses.map((e, i) => (
@@ -250,7 +250,7 @@ export default function StaffRevenuePage() {
                                 </div>
                             ))}
                             <div className="flex justify-between px-4 py-2 bg-rose-50/50 dark:bg-rose-900/10">
-                                <span className="text-[10px] font-black uppercase text-rose-500">Tổng chi</span>
+                                <span className="text-[10px] font-black uppercase text-rose-500">Total Expenses</span>
                                 <span className="font-black text-sm tabular-nums text-rose-600">{totalExpenses.toLocaleString()}</span>
                             </div>
                         </CardContent>
@@ -260,7 +260,7 @@ export default function StaffRevenuePage() {
                 {validIncomes.length > 0 && (
                     <Card className="border border-emerald-100 dark:border-emerald-900/30 bg-white dark:bg-neutral-900 rounded-2xl overflow-hidden shadow-sm">
                         <div className="px-4 py-2 bg-emerald-50/60 dark:bg-emerald-900/10 border-b border-emerald-100 dark:border-emerald-900/20">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">Khoản Thu ({validIncomes.length})</span>
+                            <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">Incomes ({validIncomes.length})</span>
                         </div>
                         <CardContent className="p-0">
                             {validIncomes.map((inc, idx) => (
@@ -270,7 +270,7 @@ export default function StaffRevenuePage() {
                                 </div>
                             ))}
                             <div className="flex justify-between px-4 py-2 bg-emerald-50/50 dark:bg-emerald-900/10">
-                                <span className="text-[10px] font-black uppercase text-emerald-500">Tổng thu</span>
+                                <span className="text-[10px] font-black uppercase text-emerald-500">Total Incomes</span>
                                 <span className="font-black text-sm tabular-nums text-emerald-600">{totalIncomes.toLocaleString()}</span>
                             </div>
                         </CardContent>
@@ -283,14 +283,14 @@ export default function StaffRevenuePage() {
                         className="flex-1 h-14 rounded-2xl font-bold border-slate-200 dark:border-neutral-800"
                         onClick={() => setShowPreview(false)}
                     >
-                        <ChevronLeft className="h-4 w-4 mr-1" /> Sửa lại
+                        <ChevronLeft className="h-4 w-4 mr-1" /> Edit
                     </Button>
                     <Button
                         className="flex-[2] h-14 bg-black hover:bg-slate-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200 text-sm font-bold tracking-wide shadow-lg rounded-2xl transition-all active:scale-[0.98]"
                         onClick={() => handleSubmit()}
                         disabled={isLoading}
                     >
-                        {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : '✓ Xác nhận & Nộp'}
+                        {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : '✓ Confirm & Submit'}
                     </Button>
                 </div>
             </div>
@@ -301,13 +301,13 @@ export default function StaffRevenuePage() {
         <div className="space-y-5 pb-10">
             <div className="flex items-center gap-2 px-2">
                 <Button variant="ghost" size="sm" onClick={() => navigate('/staff/menu')} className="hover:bg-slate-100 dark:hover:bg-neutral-800 rounded-lg h-10 px-4 font-bold text-[11px] tracking-wide">
-                    ← Về Menu
+                    ← Back to Menu
                 </Button>
             </div>
 
             <div className="px-2">
                 <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-none">
-                    Kết sổ ca
+                    End Shift Report
                 </h1>
                 <p className="mt-1 text-[11px] font-bold text-slate-500 tracking-wide">
                     End Shift Revenue Report
@@ -316,7 +316,7 @@ export default function StaffRevenuePage() {
 
             {noSchedule && (
                 <div className="mx-2 p-4 bg-amber-50 border border-amber-200 rounded-xl text-[12px] text-amber-800 font-medium">
-                    ⚠ Không tìm thấy lịch ca hôm nay. Cần có lịch ca để gửi báo cáo doanh thu.
+                    ⚠ Today's schedule not found. A schedule is required to submit revenue.
                 </div>
             )}
 
@@ -325,17 +325,17 @@ export default function StaffRevenuePage() {
                 <Card className="border border-slate-200/60 dark:border-neutral-800/60 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-sm rounded-2xl overflow-hidden">
                     <CardContent className="p-0">
                         {/* Opening Balance */}
-                        <Row label="Đầu kỳ">
+                        <Row label="Opening">
                             <MoneyInput id="opening" value={openingBalance} onChange={setOpeningBalance} />
                         </Row>
 
                         {/* Cash */}
-                        <Row label="Tiền mặt (TM)" alt>
+                        <Row label="Cash (TM)" alt>
                             <MoneyInput id="cash" value={cash} onChange={setCash} color="text-teal-600 dark:text-teal-400" />
                         </Row>
 
                         {/* Bank */}
-                        <Row label="Ngân hàng (CK/MM/VCB)">
+                        <Row label="Bank (CK)">
                             <MoneyInput id="bank" value={bank} onChange={setBank} color="text-blue-600 dark:text-blue-400" />
                         </Row>
                     </CardContent>
@@ -344,28 +344,28 @@ export default function StaffRevenuePage() {
                 {/* Expenses Card */}
                 <Card className="border border-rose-100 dark:border-rose-900/30 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-sm rounded-2xl overflow-hidden">
                     <div className="flex items-center justify-between px-4 py-3 border-b border-rose-50 dark:border-rose-900/20 bg-rose-50/50 dark:bg-rose-900/10">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-rose-600">Khoản Chi</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-rose-600">Expenses</span>
                         <Button type="button" variant="ghost" size="sm" onClick={addExpense}
                             className="h-7 px-2 text-rose-600 hover:bg-rose-100 dark:hover:bg-rose-900/20 rounded-lg text-[11px] font-bold">
-                            <Plus className="h-3.5 w-3.5 mr-1" /> Thêm
+                            <Plus className="h-3.5 w-3.5 mr-1" /> Add
                         </Button>
                     </div>
                     <CardContent className="p-0">
                         {expenses.length === 0 && (
-                            <p className="text-center text-[11px] text-slate-400 py-4">Không có khoản chi</p>
+                            <p className="text-center text-[11px] text-slate-400 py-4">No expenses</p>
                         )}
                         {expenses.map((exp, idx) => (
                             <div key={idx} className="flex items-center gap-2 px-4 py-3 border-b border-slate-50 dark:border-neutral-800 last:border-0">
                                 <div className="flex flex-col gap-1.5 flex-1">
                                     <Input
                                         type="number"
-                                        placeholder="Số tiền"
+                                        placeholder="Amount"
                                         value={exp.amount}
                                         onChange={e => updateExpense(idx, 'amount', e.target.value)}
                                         className="h-9 border-slate-200 dark:border-neutral-700 font-bold text-rose-600 text-sm"
                                     />
                                     <Input
-                                        placeholder="Lý do (tiền hàng, tiền đá...)"
+                                        placeholder="Reason (supplies, ice...)"
                                         value={exp.reason}
                                         onChange={e => updateExpense(idx, 'reason', e.target.value)}
                                         className="h-9 border-slate-200 dark:border-neutral-700 text-sm text-slate-600"
@@ -380,7 +380,7 @@ export default function StaffRevenuePage() {
                         ))}
                         {expenses.some(e => Number(e.amount) > 0) && (
                             <div className="flex justify-between items-center px-4 py-2 bg-rose-50/50 dark:bg-rose-900/10 border-t border-rose-100 dark:border-rose-900/20">
-                                <span className="text-[10px] font-black uppercase tracking-wider text-rose-500">Tổng chi</span>
+                                <span className="text-[10px] font-black uppercase tracking-wider text-rose-500">Total Expenses</span>
                                 <span className="text-sm font-black tabular-nums text-rose-600">{totalExpenses.toLocaleString()}</span>
                             </div>
                         )}
@@ -390,28 +390,28 @@ export default function StaffRevenuePage() {
                 {/* Incomes Card */}
                 <Card className="border border-emerald-100 dark:border-emerald-900/30 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-sm rounded-2xl overflow-hidden">
                     <div className="flex items-center justify-between px-4 py-3 border-b border-emerald-50 dark:border-emerald-900/20 bg-emerald-50/50 dark:bg-emerald-900/10">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">Khoản Thu</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">Incomes</span>
                         <Button type="button" variant="ghost" size="sm" onClick={addIncome}
                             className="h-7 px-2 text-emerald-600 hover:bg-emerald-100 dark:hover:bg-emerald-900/20 rounded-lg text-[11px] font-bold">
-                            <Plus className="h-3.5 w-3.5 mr-1" /> Thêm
+                            <Plus className="h-3.5 w-3.5 mr-1" /> Add
                         </Button>
                     </div>
                     <CardContent className="p-0">
                         {incomes.length === 0 && (
-                            <p className="text-center text-[11px] text-slate-400 py-4">Không có khoản thu</p>
+                            <p className="text-center text-[11px] text-slate-400 py-4">No incomes</p>
                         )}
                         {incomes.map((inc, idx) => (
                             <div key={idx} className="flex items-center gap-2 px-4 py-3 border-b border-slate-50 dark:border-neutral-800 last:border-0">
                                 <div className="flex flex-col gap-1.5 flex-1">
                                     <Input
                                         type="number"
-                                        placeholder="Số tiền"
+                                        placeholder="Amount"
                                         value={inc.amount}
                                         onChange={e => updateIncome(idx, 'amount', e.target.value)}
                                         className="h-9 border-slate-200 dark:border-neutral-700 font-bold text-emerald-600 text-sm"
                                     />
                                     <Input
-                                        placeholder="Lý do (tiền thưởng, hoàn trả...)"
+                                        placeholder="Reason (bonus, refund...)"
                                         value={inc.reason}
                                         onChange={e => updateIncome(idx, 'reason', e.target.value)}
                                         className="h-9 border-slate-200 dark:border-neutral-700 text-sm text-slate-600"
@@ -426,7 +426,7 @@ export default function StaffRevenuePage() {
                         ))}
                         {incomes.some(i => Number(i.amount) > 0) && (
                             <div className="flex justify-between items-center px-4 py-2 bg-emerald-50/50 dark:bg-emerald-900/10 border-t border-emerald-100 dark:border-emerald-900/20">
-                                <span className="text-[10px] font-black uppercase tracking-wider text-emerald-500">Tổng thu</span>
+                                <span className="text-[10px] font-black uppercase tracking-wider text-emerald-500">Total Incomes</span>
                                 <span className="text-sm font-black tabular-nums text-emerald-600">{totalIncomes.toLocaleString()}</span>
                             </div>
                         )}
@@ -439,32 +439,32 @@ export default function StaffRevenuePage() {
                         {/* NET (manual input) */}
                         <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-900/80">
                             <div className="flex flex-col gap-0.5 w-2/5 shrink-0">
-                                <Label className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest">Doanh thu NET</Label>
-                                <span className="text-[10px] text-slate-400 tabular-nums">Thực tế: {doanhThuThucTe.toLocaleString()}</span>
+                                <Label className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest">Net Revenue</Label>
+                                <span className="text-[10px] text-slate-400 tabular-nums">Actual: {doanhThuThucTe.toLocaleString()}</span>
                             </div>
                             <Input
                                 id="net"
                                 type="number"
                                 value={netInput}
                                 onChange={e => setNetInput(e.target.value)}
-                                placeholder="Nhập NET..."
+                                placeholder="Enter NET..."
                                 className="h-10 border-0 bg-transparent text-right font-black shadow-none focus-visible:ring-0 pr-0 text-base text-slate-900 dark:text-white"
                             />
                         </div>
 
                         {/* Note */}
-                        <Row label="Ghi chú" alt>
+                        <Row label="Notes" alt>
                             <Input
                                 id="note"
                                 value={note}
                                 onChange={e => setNote(e.target.value)}
-                                placeholder="Ghi chú tuỳ chọn..."
+                                placeholder="Optional notes..."
                                 className="h-10 border-0 bg-transparent text-right font-medium text-slate-700 dark:text-slate-300 shadow-none focus-visible:ring-0 pr-0 text-sm"
                             />
                         </Row>
 
                         {/* Nhân viên chốt ca */}
-                        <Row label="Nhân viên chốt ca">
+                        <Row label="Closing Staff">
                             <div className="text-right font-black text-slate-900 dark:text-white text-sm pr-0">
                                 {staff?.name || '—'}
                             </div>
@@ -480,7 +480,7 @@ export default function StaffRevenuePage() {
                     {isLoading ? (
                         <Loader2 className="h-5 w-5 animate-spin" />
                     ) : (
-                        'Xem trước →'
+                        'Preview →'
                     )}
                 </Button>
             </form>
@@ -491,9 +491,9 @@ export default function StaffRevenuePage() {
 // ─── Small helpers ───────────────────────────────────────────────
 function Row({ label, children, alt }: { label: string; children: React.ReactNode; alt?: boolean }) {
     return (
-        <div className={`flex items-center justify-between p-4 border-b border-slate-100 dark:border-neutral-800 last:border-0 ${alt ? 'bg-slate-50/50 dark:bg-neutral-900/50' : ''}`}>
-            <Label className="text-xs font-bold text-slate-500 uppercase tracking-widest w-2/5 shrink-0">{label}</Label>
-            <div className="flex-1">{children}</div>
+        <div className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 border-b border-slate-100 dark:border-neutral-800 last:border-0 ${alt ? 'bg-slate-50/50 dark:bg-neutral-900/50' : ''}`}>
+            <Label className="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-widest sm:w-2/5 shrink-0 mb-1 sm:mb-0">{label}</Label>
+            <div className="flex-1 w-full">{children}</div>
         </div>
     )
 }
@@ -507,7 +507,7 @@ function MoneyInput({ id, value, onChange, color }: {
             type="number"
             value={value}
             onChange={e => onChange(e.target.value)}
-            className={`h-10 border-0 bg-transparent text-right font-black shadow-none focus-visible:ring-0 pr-0 text-base ${color ?? 'text-slate-900 dark:text-white'}`}
+            className={`h-10 border-0 bg-transparent text-left sm:text-right font-black shadow-none focus-visible:ring-0 pr-0 text-base ${color ?? 'text-slate-900 dark:text-white'}`}
         />
     )
 }

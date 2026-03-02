@@ -3,10 +3,6 @@ import { motion } from 'framer-motion'
 import { useAttendance } from '../hooks/useAttendance'
 import { useEmployee } from '@/features/employees/hooks/useEmployee'
 import { MultiSelect } from '@/shared/components/ui/multi-select'
-import {
-  Card,
-  CardContent,
-} from '@/shared/components/ui/card'
 import { Badge } from '@/shared/components/ui/badge'
 import { Input } from '@/shared/components/ui/input'
 import {
@@ -17,6 +13,7 @@ import {
   Edit2,
   Trash2,
   Plus,
+  Filter,
 } from 'lucide-react'
 import { Label } from '@/shared/components/ui/label'
 import { Button } from '@/shared/components/ui/button'
@@ -27,25 +24,31 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select'
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/shared/components/ui/sheet'
 import { StatCard } from '@/shared/components/StatCard'
 import { DataTable } from '@/shared/components/ui/data-table'
 import type { ColumnDef } from '@tanstack/react-table'
 import { AttendanceFormModal } from '../components/AttendanceFormModal'
 import { formatDateInVietnam } from '@/shared/utils/datetime'
-// Removed unused Attendance import
 
 /* ================= HELPERS ================= */
 
 function StatusBadge({ status }: { status: string }) {
   switch (status) {
     case 'present':
-      return <Badge className="bg-black text-white dark:bg-white dark:text-black border-black dark:border-white">Present</Badge>
+      return <Badge className="bg-black text-white dark:bg-white dark:text-black border-black dark:border-white h-5 text-[9px] font-black uppercase tracking-widest px-2">Present</Badge>
     case 'late':
-      return <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20">Late</Badge>
+      return <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 h-5 text-[9px] font-black uppercase tracking-widest px-2">Late</Badge>
     case 'absent':
-      return <Badge className="bg-red-500/10 text-red-600 border-red-500/20">Absent</Badge>
+      return <Badge className="bg-red-500/10 text-red-600 border-red-500/20 h-5 text-[9px] font-black uppercase tracking-widest px-2">Absent</Badge>
     default:
-      return <Badge variant="outline">{status}</Badge>
+      return <Badge variant="outline" className="h-5 text-[9px] font-black uppercase tracking-widest px-2">{status}</Badge>
   }
 }
 
@@ -98,8 +101,8 @@ export default function AttendancePage() {
 
       // Logic for position
       const positionMatch = queryPositionFilter === 'all' ||
-        (queryPositionFilter === 'phache' && record.positionName?.toLowerCase() === 'pha chế') ||
-        (queryPositionFilter === 'phucvu' && record.positionName?.toLowerCase() === 'phục vụ')
+        (queryPositionFilter === 'phache' && (record.positionName?.toLowerCase().includes('pha chế') || record.positionName?.toLowerCase().includes('barista') || record.positionName?.toLowerCase().includes('pha che'))) ||
+        (queryPositionFilter === 'phucvu' && (record.positionName?.toLowerCase().includes('phục vụ') || record.positionName?.toLowerCase().includes('server') || record.positionName?.toLowerCase().includes('phuc vu')))
 
       // Logic for missing check-in/out
       const missingMatch = !queryMissingFilter || (!record.checkIn || !record.checkOut)
@@ -132,100 +135,89 @@ export default function AttendancePage() {
         const localIndex = table.getRowModel().rows.findIndex((r) => r.id === row.id)
         const displayIndex = pageIndex * pageSize + (localIndex >= 0 ? localIndex : row.index) + 1
 
-        return <span className="font-mono text-xs text-slate-500">{displayIndex}</span>
+        return <span className="font-mono text-[10px] text-slate-400">{displayIndex}</span>
       }
     },
     {
       accessorKey: "workDate",
-      header: "Ngày",
-      cell: ({ row }) => {
-        const workDate = row.original.workDate
-        return <span className="text-sm">{workDate ? formatDateInVietnam(workDate) : '—'}</span>
-      }
+      header: "Timeline",
+      cell: ({ row }) => (
+        <div className="flex flex-col gap-0.5">
+          <span className="font-bold text-slate-900 dark:text-slate-100 whitespace-nowrap">
+            {formatDateInVietnam(row.original.workDate)}
+          </span>
+          <span className="text-[10px] text-slate-400 font-black uppercase tracking-tighter">
+            {row.original.shiftName || "Unknown"}
+          </span>
+        </div>
+      )
     },
     {
-      id: "employeeName",
-      header: "Tên NV",
-      cell: ({ row }) => {
-        return <span className="font-semibold">{row.original.employeeName || "Unknown"}</span>
-      }
+      id: "employee",
+      header: "Staff / Position",
+      cell: ({ row }) => (
+        <div className="flex flex-col gap-0.5">
+          <span className="font-bold text-slate-900">{row.original.employeeName || "Unknown"}</span>
+          <span className="text-[10px] text-slate-500 font-medium">{row.original.positionName || "—"}</span>
+        </div>
+      )
     },
     {
-      id: "employeePhone",
-      header: "Sdt",
+      id: "log",
+      header: "In / Out",
       cell: ({ row }) => {
-        return <span className="font-mono text-xs text-slate-600 dark:text-slate-400">{row.original.employeePhone || "—"}</span>
-      }
-    },
-    {
-      id: "position",
-      header: "Vị trí",
-      cell: ({ row }) => {
+        const checkIn = row.original.checkIn;
+        const checkOut = row.original.checkOut;
+        const formatTime = (t: string) => t ? new Date(t).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }) : '—';
+
         return (
-          <div className="flex flex-col gap-1 items-start">
-            <span className="font-semibold text-xs">{row.original.positionName || "—"}</span>
-            <span className="text-[10px] text-muted-foreground">{row.original.shiftName || "—"}</span>
+          <div className="flex items-center gap-3 font-mono text-[11px] font-bold">
+            <span className={!checkIn ? "bg-amber-100 text-amber-700 px-1 rounded" : ""}>{formatTime(checkIn)}</span>
+            <span className="text-slate-300">→</span>
+            <span className={!checkOut ? "bg-amber-100 text-amber-700 px-1 rounded" : ""}>{formatTime(checkOut)}</span>
           </div>
         )
       }
     },
     {
-      accessorKey: "checkIn",
-      header: "Bắt đầu",
-      cell: ({ row }) => {
-        const checkIn = row.getValue("checkIn") as string;
-        if (!checkIn) return <span className="font-mono text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded dark:bg-yellow-900/30">—</span>;
-        return <span className="font-mono text-xs">{new Date(checkIn).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}</span>
-      }
-    },
-    {
-      accessorKey: "checkOut",
-      header: "Kết thúc",
-      cell: ({ row }) => {
-        const checkOut = row.getValue("checkOut") as string;
-        if (!checkOut) return <span className="font-mono text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded dark:bg-yellow-900/30">—</span>;
-        return <span className="font-mono text-xs">{new Date(checkOut).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}</span>
-      }
-    },
-    {
-      id: "totalHours",
-      header: () => <div className="text-right">Diff</div>,
-      cell: ({ row }) => {
-        const total = row.original.totalHours;
-        return <div className="text-right font-medium">{total ? parseFloat(total).toFixed(2) : "—"}</div>
-      }
-    },
-    {
-      accessorKey: "note",
-      header: "Note",
-      cell: ({ row }) => <span className="text-xs text-muted-foreground">{row.original.note || "—"}</span>
-    },
-    {
-      accessorKey: "status",
-      header: "Actions",
+      id: "diff",
+      header: "Diff",
       cell: ({ row }) => (
-        <div className="flex items-center gap-3">
-          <StatusBadge status={row.getValue("status")} />
-          <div className="flex gap-1 ml-auto">
-            <button
+        <div className="text-right font-black tabular-nums text-slate-900">
+          {row.original.totalHours ? parseFloat(row.original.totalHours).toFixed(2) : "—"}
+        </div>
+      )
+    },
+    {
+      id: "status_actions",
+      header: "Status / Actions",
+      cell: ({ row }) => (
+        <div className="flex items-center justify-end gap-3">
+          <StatusBadge status={row.original.status} />
+          <div className="flex gap-1">
+            <Button
+              size="icon"
+              variant="outline"
+              className="h-8 w-8 rounded-lg border-slate-200"
               onClick={() => {
                 setEditingAttendance(row.original)
                 setIsModalOpen(true)
               }}
-              className="p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-full transition-colors"
             >
-              <Edit2 className="w-4 h-4" />
-            </button>
-            <button
+              <Edit2 className="w-3.5 h-3.5" />
+            </Button>
+            <Button
+              size="icon"
+              variant="outline"
+              className="h-8 w-8 rounded-lg border-red-100 text-red-600 hover:bg-red-600 hover:text-white"
               onClick={async () => {
-                if (window.confirm("Bạn có chắc chắn muốn xóa bản ghi điểm danh này?")) {
+                if (window.confirm("Are you sure?")) {
                   await deleteAttendance(row.original.id)
                 }
               }}
-              className="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-full transition-colors"
             >
-              <Trash2 className="w-4 h-4" />
-            </button>
+              <Trash2 className="w-3.5 h-3.5" />
+            </Button>
           </div>
         </div>
       )
@@ -237,80 +229,145 @@ export default function AttendancePage() {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25 }}
-      className="space-y-8"
+      className="space-y-6 pb-20"
     >
-      {/* ===== Header ===== */}
-      <div>
-        <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none mb-4">
-          Báo cáo lương NV (Điểm danh)
-        </h1>
-      </div>
-
-      {/* ===== Filters ===== */}
-      <div className="bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-lg p-5 space-y-4 shadow-sm">
-        <div className="flex flex-col md:flex-row gap-4 items-end justify-between">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 flex-1">
-            <div className="space-y-1.5">
-              <Label htmlFor="startDateFilter" className="text-xs font-semibold text-slate-600">Từ ngày</Label>
-              <Input
-                id="startDateFilter"
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="h-9"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="endDateFilter" className="text-xs font-semibold text-slate-600">Đến ngày</Label>
-              <Input
-                id="endDateFilter"
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="h-9"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="positionFilter" className="text-xs font-semibold text-slate-600">Chức vụ</Label>
-              <Select value={positionFilter} onValueChange={setPositionFilter}>
-                <SelectTrigger id="positionFilter" className="h-9">
-                  <SelectValue placeholder="Tất cả" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Tất cả</SelectItem>
-                  <SelectItem value="phache">Pha chế</SelectItem>
-                  <SelectItem value="phucvu">Phục vụ</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-1.5 min-w-[200px]">
-              <div className="text-xs font-semibold text-slate-600 mb-1.5">Nhân viên</div>
-              <div>
-                <MultiSelect
-                  options={employees.map(emp => ({ label: emp.name, value: String(emp.id) }))}
-                  selectedValues={selectedEmployeeIds}
-                  onChange={setSelectedEmployeeIds}
-                  placeholder="Chọn nhân viên..."
-                />
-              </div>
-            </div>
-            <div className="flex items-center gap-2 h-9 mt-auto">
-              <input
-                type="checkbox"
-                id="missingInOut"
-                className="rounded border-slate-300 w-4 h-4 text-[#1a73e8] focus:ring-[#1a73e8]"
-                checked={missingFilter}
-                onChange={(e) => setMissingFilter(e.target.checked)}
-              />
-              <Label htmlFor="missingInOut" className="text-sm font-semibold text-slate-600 cursor-pointer">
-                Quên check-in/out
-              </Label>
-            </div>
+      {/* HEADER */}
+      <div className="flex flex-col gap-6 px-1">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
+              Attendance
+            </h1>
+            <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest hidden sm:block">
+              Daily_Audit_Logs
+            </p>
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Mobile Filter Sheet */}
+            <div className="md:hidden">
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="icon" className="h-10 w-10 relative rounded-xl">
+                    <Filter className="h-4 w-4" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="bottom" className="h-[80vh] rounded-t-[2.5rem] border-none shadow-2xl p-0 overflow-hidden">
+                  <SheetHeader className="p-6 border-b border-slate-100 dark:border-neutral-800">
+                    <SheetTitle className="text-left font-black tracking-tighter text-2xl">Filters</SheetTitle>
+                  </SheetHeader>
+                  <div className="p-6 space-y-6 overflow-y-auto max-h-[calc(80vh-100px)]">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Start Date</Label>
+                        <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="h-12 rounded-xl" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">End Date</Label>
+                        <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="h-12 rounded-xl" />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Position</Label>
+                      <Select value={positionFilter} onValueChange={setPositionFilter}>
+                        <SelectTrigger className="h-12 rounded-xl">
+                          <SelectValue placeholder="All" />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-xl">
+                          <SelectItem value="all">All Positions</SelectItem>
+                          <SelectItem value="phache">Barista</SelectItem>
+                          <SelectItem value="phucvu">Server</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Employees</Label>
+                      <MultiSelect
+                        options={employees.map(emp => ({ label: emp.name, value: String(emp.id) }))}
+                        selectedValues={selectedEmployeeIds}
+                        onChange={setSelectedEmployeeIds}
+                        placeholder="Select employees..."
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-neutral-800 rounded-2xl">
+                      <Label htmlFor="missingInOutMob" className="text-xs font-bold">Missing check-in/out</Label>
+                      <input
+                        type="checkbox"
+                        id="missingInOutMob"
+                        className="rounded-full w-6 h-6 accent-black"
+                        checked={missingFilter}
+                        onChange={(e) => setMissingFilter(e.target.checked)}
+                      />
+                    </div>
+
+                    <Button
+                      className="w-full h-14 bg-black dark:bg-white text-white dark:text-black rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] mt-4"
+                      onClick={() => {
+                        setQueryStartDate(startDate)
+                        setQueryEndDate(endDate)
+                        setQueryEmployeeIds(selectedEmployeeIds)
+                        setQueryPositionFilter(positionFilter)
+                        setQueryMissingFilter(missingFilter)
+                      }}
+                    >
+                      Apply Filters
+                    </Button>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
+
             <Button
-              className="h-9 bg-[#1a73e8] hover:bg-blue-700 text-white border-none px-6"
+              onClick={() => {
+                setEditingAttendance(null)
+                setIsModalOpen(true)
+              }}
+              className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 border-none h-10 w-10 sm:w-auto sm:px-6 rounded-xl font-bold uppercase tracking-widest text-[10px]"
+            >
+              <Plus className="sm:mr-2 h-4 w-4" />
+              <span className="hidden sm:inline">Add Record</span>
+            </Button>
+          </div>
+        </div>
+
+        {/* Desktop Filter Bar */}
+        <div className="hidden md:flex items-center gap-4 bg-slate-100 dark:bg-neutral-800 p-2 rounded-[1.5rem]">
+          <div className="grid grid-cols-5 gap-3 flex-1 items-end">
+            <div className="space-y-1">
+              <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">Start</Label>
+              <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="h-10 rounded-xl bg-white border-none text-xs" />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">End</Label>
+              <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="h-10 rounded-xl bg-white border-none text-xs" />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">Position</Label>
+              <Select value={positionFilter} onValueChange={setPositionFilter}>
+                <SelectTrigger className="h-10 rounded-xl bg-white border-none text-xs">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="phache">Barista</SelectItem>
+                  <SelectItem value="phucvu">Server</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="col-span-1 space-y-1">
+              <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">Employees</Label>
+              <MultiSelect
+                options={employees.map(emp => ({ label: emp.name, value: String(emp.id) }))}
+                selectedValues={selectedEmployeeIds}
+                onChange={setSelectedEmployeeIds}
+                placeholder="All staff"
+              />
+            </div>
+            <Button
+              className="h-10 bg-black text-white hover:bg-slate-800 rounded-xl font-black uppercase tracking-widest text-[10px]"
               onClick={() => {
                 setQueryStartDate(startDate)
                 setQueryEndDate(endDate)
@@ -319,79 +376,59 @@ export default function AttendancePage() {
                 setQueryMissingFilter(missingFilter)
               }}
             >
-              Lọc
+              Apply
             </Button>
           </div>
         </div>
       </div>
 
       {/* STATS SECTION */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         <StatCard
-          title="Total Records"
+          title="Total"
           value={stats.total}
-          description="Today's shifts"
+          description="Shift entries"
           icon={Users}
           iconColor="text-slate-900 dark:text-white"
         />
         <StatCard
           title="Present"
           value={stats.present}
-          description={`${stats.presentRate}% attendance`}
+          description={`${stats.presentRate}% rate`}
           icon={CheckCircle}
-          iconColor="text-green-600 dark:text-green-400"
-          trend="up"
-          trendValue={`${stats.presentRate}%`}
+          iconColor="text-emerald-600 dark:text-emerald-400"
         />
         <StatCard
-          title="Late Arrivals"
+          title="Late"
           value={stats.late}
-          description="Delayed check-ins"
+          description="Delayed start"
           icon={AlertCircle}
           iconColor="text-amber-600 dark:text-amber-400"
-          trend={stats.late > 0 ? 'down' : 'neutral'}
-          trendValue={stats.late > 0 ? `${stats.late} late` : 'On time'}
         />
         <StatCard
           title="Absent"
           value={stats.absent}
-          description="No show"
+          description="Unexcused"
           icon={XCircle}
-          iconColor="text-red-600 dark:text-red-400"
-          trend={stats.absent > 0 ? 'down' : 'up'}
-          trendValue={stats.absent === 0 ? 'Perfect' : `${stats.absent} absent`}
+          iconColor="text-rose-600 dark:text-rose-400"
         />
       </div>
 
-      {/* ===== Table ===== */}
-      <Card className="border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
-              Attendance Records
-            </h2>
-            <Button
-              onClick={() => {
-                setEditingAttendance(null)
-                setIsModalOpen(true)
-              }}
-              className="h-9 bg-black hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 dark:text-black"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Thêm mới
-            </Button>
-          </div>
-
-          <DataTable
-            columns={columns}
-            data={filteredAttendances}
-            loading={loading}
-            searchKey="employeeName"
-            defaultPageSize={100}
-            searchPosition="top"
-          />
-        </CardContent>
-      </Card>
+      {/* DATA TABLE */}
+      <div className="px-1">
+        <div className="mb-4">
+          <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-1">
+            Attendance_Registry
+          </h2>
+        </div>
+        <DataTable
+          columns={columns}
+          data={filteredAttendances}
+          loading={loading}
+          searchKey="employeeName"
+          defaultPageSize={100}
+        />
+      </div>
 
       <AttendanceFormModal
         isOpen={isModalOpen}
@@ -411,5 +448,3 @@ export default function AttendancePage() {
     </motion.div>
   )
 }
-
-

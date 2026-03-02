@@ -46,10 +46,10 @@ export default function StaffRevenueResultPage() {
       <div className="space-y-4 pb-10">
         <Card className="border border-slate-200/60 dark:border-neutral-800/60 bg-white dark:bg-neutral-900 rounded-2xl overflow-hidden shadow-sm">
           <CardContent className="p-6 space-y-3">
-            <h2 className="text-xl font-black text-slate-900 dark:text-white">Không có dữ liệu kết quả</h2>
-            <p className="text-sm text-slate-500">Bạn cần hoàn tất bước xác nhận ở trang kết sổ ca trước.</p>
+            <h2 className="text-xl font-black text-slate-900 dark:text-white">No result data</h2>
+            <p className="text-sm text-slate-500">Please complete the confirmation step on the End Shift Report page first.</p>
             <Button onClick={() => navigate('/staff/revenue')} className="bg-black text-white hover:bg-slate-800">
-              Quay lại kết sổ ca
+              Back to End Shift Report
             </Button>
           </CardContent>
         </Card>
@@ -72,7 +72,7 @@ export default function StaffRevenueResultPage() {
     <div className="space-y-5 pb-10">
       <div className="px-2">
         <h1 className="text-2xl font-black tracking-tight text-blue-600">
-          Chốt ca kết quả [{titleTime}]
+          Shift Results [{titleTime}]
         </h1>
       </div>
 
@@ -81,12 +81,12 @@ export default function StaffRevenueResultPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <tbody>
-                <ResultRow label="Ngày giờ" value={fullTime} />
-                <ResultRow label="Đầu kỳ" value={result.openingBalance.toLocaleString()} />
-                <ResultRow label="Tiền mặt" value={result.cash.toLocaleString()} />
-                <ResultRow label="Chuyển khoản" value={result.bank.toLocaleString()} />
+                <ResultRow label="Date & Time" value={fullTime} />
+                <ResultRow label="Opening" value={result.openingBalance.toLocaleString()} />
+                <ResultRow label="Cash" value={result.cash.toLocaleString()} />
+                <ResultRow label="Bank" value={result.bank.toLocaleString()} />
                 <ResultRow
-                  label="Khoản chi"
+                  label="Expenses"
                   value={(
                     <div className="space-y-1">
                       <div className="font-semibold">{result.totalExpenses.toLocaleString()}</div>
@@ -95,7 +95,7 @@ export default function StaffRevenueResultPage() {
                   )}
                 />
                 <ResultRow
-                  label="Khoản thu"
+                  label="Incomes"
                   value={(
                     <div className="space-y-1">
                       <div className="font-semibold">{result.totalIncomes.toLocaleString()}</div>
@@ -103,11 +103,11 @@ export default function StaffRevenueResultPage() {
                     </div>
                   )}
                 />
-                <ResultRow label="Doanh thu NET" value={result.netRevenue.toLocaleString()} />
-                <ResultRow label="Doanh thu thực tế" value={result.actualRevenue.toLocaleString()} />
-                <ResultRow label="Sai lệch" value={result.deviation.toLocaleString()} valueClassName={`font-black ${deviationClass}`} />
-                <ResultRow label="Ghi chú" value={result.note || '—'} />
-                <ResultRow label="Nhân viên chốt ca" value={result.employeeName} />
+                <ResultRow label="Net Revenue" value={result.netRevenue.toLocaleString()} />
+                <ResultRow label="Actual Revenue" value={result.actualRevenue.toLocaleString()} />
+                <ResultRow label="Deviation" value={result.deviation.toLocaleString()} valueClassName={`font-black ${deviationClass}`} />
+                <ResultRow label="Notes" value={result.note || '—'} />
+                <ResultRow label="Closing Staff" value={result.employeeName} />
               </tbody>
             </table>
           </div>
@@ -115,7 +115,7 @@ export default function StaffRevenueResultPage() {
       </Card>
 
       <div className="rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 p-4 text-sm font-semibold">
-        Thông tin chốt ca đã được lưu và đồng bộ về trang Revenue của Admin.
+        Shift results have been saved and synced to the Admin Revenue module.
       </div>
 
       <div className="flex gap-3">
@@ -124,13 +124,13 @@ export default function StaffRevenueResultPage() {
           className="flex-1 h-12 rounded-xl font-bold border-slate-200 dark:border-neutral-800"
           onClick={() => navigate('/staff/revenue')}
         >
-          Tạo báo cáo mới
+          New Report
         </Button>
         <Button
           className="flex-1 h-12 bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-slate-200 rounded-xl font-bold"
           onClick={() => navigate('/staff/menu')}
         >
-          Về Menu
+          Back to Menu
         </Button>
       </div>
     </div>

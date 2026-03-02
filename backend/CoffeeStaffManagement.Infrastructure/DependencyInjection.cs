@@ -29,7 +29,8 @@ public static class DependencyInjection
         services.AddDbContext<AppDbContext>((sp, options) =>
         {
             var ds = sp.GetRequiredService<NpgsqlDataSource>();
-            options.UseNpgsql(ds);
+            options.UseNpgsql(ds, o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
+                   .ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
         });
 
         // ===== REPOSITORIES =====

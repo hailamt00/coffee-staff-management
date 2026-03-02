@@ -31,10 +31,10 @@ export function PositionTable({
             cell: ({ row }) => (
                 <button
                     onClick={() => row.toggleExpanded()}
-                    className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
+                    className="flex h-10 w-10 items-center justify-center rounded-xl hover:bg-slate-100 dark:hover:bg-white/10 transition-all shadow-sm active:scale-95"
                 >
                     {row.getIsExpanded() ? (
-                        <ChevronDown className="h-4 w-4 text-slate-800 dark:text-white" />
+                        <ChevronDown className="h-4 w-4 text-slate-900 dark:text-white" />
                     ) : (
                         <ChevronRight className="h-4 w-4 text-slate-400" />
                     )}
@@ -43,17 +43,17 @@ export function PositionTable({
         },
         {
             accessorKey: "name",
-            header: "Position Name",
-            cell: ({ row }) => <div className="font-bold text-slate-900 dark:text-white uppercase tracking-tight">{row.getValue("name")}</div>
+            header: "Role / Position",
+            cell: ({ row }) => <div className="font-black text-slate-900 dark:text-white uppercase tracking-tighter text-sm">{row.getValue("name")}</div>
         },
         {
             id: "shifts_count",
-            header: "Shifts",
+            header: "Slots",
             cell: ({ row }) => {
                 const shifts = row.original.shifts ?? []
                 const enabledCount = shifts.filter(s => s.isEnabled).length
                 return (
-                    <div className="font-bold text-slate-500">
+                    <div className="font-bold text-slate-500 text-xs tabular-nums">
                         {enabledCount} / {shifts.length}
                     </div>
                 )
@@ -61,26 +61,26 @@ export function PositionTable({
         },
         {
             accessorKey: "status",
-            header: "Status",
+            header: "State",
             cell: ({ row }) => <StatusBadge active={row.getValue("status")} />
         },
         {
             id: "actions",
-            header: () => <div className="text-center">Actions</div>,
+            header: () => <div className="text-right px-4">Actions</div>,
             cell: ({ row }) => (
-                <div className="flex justify-center gap-2">
+                <div className="flex justify-end gap-2 pr-2">
                     <Button
                         size="icon"
-                        variant="ghost"
-                        className="h-8 w-8 rounded-lg bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200"
+                        variant="outline"
+                        className="h-9 w-9 rounded-xl border-slate-200 hover:bg-black hover:text-white transition-all shadow-sm"
                         onClick={() => onEdit(row.original.id)}
                     >
                         <Pencil size={14} />
                     </Button>
                     <Button
                         size="icon"
-                        variant="ghost"
-                        className="h-8 w-8 rounded-lg bg-red-500 hover:bg-red-600 text-white"
+                        variant="outline"
+                        className="h-9 w-9 rounded-xl border-red-100 text-red-600 hover:bg-red-600 hover:text-white transition-all shadow-sm"
                         onClick={() => onDelete(row.original.id, row.original.name)}
                     >
                         <Trash2 size={14} />
@@ -98,23 +98,25 @@ export function PositionTable({
                     shifts.map((s: any, i: number) => (
                         <div
                             key={i}
-                            className="grid grid-cols-[3fr_2fr_2fr_120px] items-center px-12 py-3 border-t first:border-0 border-slate-100 dark:border-neutral-800/50 transition-colors hover:bg-white dark:hover:bg-white/5"
+                            className="flex items-center justify-between px-6 py-4 border-t first:border-0 border-slate-100 dark:border-neutral-800/50 transition-colors hover:bg-white dark:hover:bg-white/5"
                         >
-                            <div className="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-wider">
-                                {s.name}
+                            <div className="flex flex-col gap-0.5">
+                                <span className="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest leading-none">
+                                    {s.name}
+                                </span>
+                                <span className="text-[10px] font-bold text-slate-400 tabular-nums">
+                                    {s.startTime?.slice(0, 5)} – {s.endTime?.slice(0, 5)}
+                                </span>
                             </div>
-                            <div className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">
-                                {s.startTime} – {s.endTime}
-                            </div>
-                            <div>
+                            <div className="flex items-center gap-4">
                                 <StatusBadge active={s.isEnabled} />
+                                <div className="w-10" />
                             </div>
-                            <div />
                         </div>
                     ))
                 ) : (
-                    <div className="p-4 text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                        No shifts configured for this position
+                    <div className="p-8 text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest italic">
+                        No operational shifts configured
                     </div>
                 )}
             </div>
@@ -126,7 +128,6 @@ export function PositionTable({
             columns={columns}
             data={data}
             loading={loading}
-            searchKey="name"
             getRowCanExpand={() => true}
             renderSubComponent={renderShifts}
         />
