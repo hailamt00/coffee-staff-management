@@ -251,10 +251,10 @@ export default function PayrollPage() {
       <div className="flex flex-wrap items-end justify-between gap-4 px-2">
         <div>
           <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
-            Staff_Payroll_Report
+            Staff Payroll Report
           </h1>
           <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-            Payroll_Reports
+            Payroll Reports
           </p>
         </div>
       </div>
@@ -345,7 +345,7 @@ export default function PayrollPage() {
       <Card className="border border-slate-200/60 dark:border-neutral-800/60 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-sm rounded-xl overflow-hidden">
         <div className="p-6 border-b border-slate-100 dark:border-neutral-800/50 flex items-center justify-between">
           <h2 className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">
-            Payroll_Summary
+            Payroll Summary
           </h2>
         </div>
         <div className="overflow-x-auto">
@@ -425,7 +425,7 @@ export default function PayrollPage() {
       <Card className="border border-slate-200/60 dark:border-neutral-800/60 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-sm rounded-xl overflow-hidden">
         <div className="flex items-center justify-between p-6 border-b border-slate-100 dark:border-neutral-800/50">
           <h2 className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">
-            Timekeeping_Details
+            Timekeeping Details
           </h2>
           <Button
             className="h-8 bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-500 dark:text-black dark:hover:bg-emerald-400 border-none px-4 font-bold text-[10px] uppercase tracking-widest shadow-md transition-all shadow-emerald-500/20"

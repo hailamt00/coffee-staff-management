@@ -73,8 +73,8 @@ export default function LoginPage() {
                 <Coffee className="w-8 h-8 text-white dark:text-black" />
               </motion.div>
 
-              <h1 className="text-3xl font-black tracking-tighter text-slate-900 dark:text-white uppercase">
-                CSM Elite
+              <h1 className="text-3xl font-black tracking-tighter text-slate-900 dark:text-white">
+                Welcome Back
               </h1>
               <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1">
                 Administrator Portal

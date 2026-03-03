@@ -50,8 +50,13 @@ public class GetAttendanceByDateRangeQueryHandler
                 EmployeeName = att.Employee?.Name ?? schedule?.Employee?.Name ?? "Unknown",
                 EmployeePhone = att.Employee?.Phone ?? schedule?.Employee?.Phone ?? "—",
                 ShiftId = schedule?.ShiftId,
-                ShiftName = schedule?.Shift?.Name ?? "—",
-                PositionName = schedule?.Shift?.Position?.Name ?? "—",
+                ShiftName = schedule?.Shift?.Name ?? "Ca linh động",
+                PositionName = schedule?.Shift?.Position?.Name ??
+                               (att.Employee != null
+                                   ? (att.Employee.BaristaSalary > 0 && (att.Employee.ServiceSalary == 0 || att.Employee.ServiceSalary == null) ? "Pha chế"
+                                      : att.Employee.ServiceSalary > 0 && (att.Employee.BaristaSalary == 0 || att.Employee.BaristaSalary == null) ? "Phục vụ"
+                                      : "Pha chế & Phục vụ")
+                                   : "—"),
                 WorkDate = schedule?.WorkDate ?? (att.CheckIn.HasValue ? DateOnly.FromDateTime(att.CheckIn.Value) : DateOnly.MinValue),
                 CheckIn = att.CheckIn,
                 CheckOut = att.CheckOut,

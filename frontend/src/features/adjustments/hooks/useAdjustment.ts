@@ -50,15 +50,15 @@ export function useAdjustment() {
             queryClient.invalidateQueries({ queryKey: ['adjustments'] })
             dispatch(addNotification({
                 type: 'success',
-                title: 'Thành công',
-                message: 'Đã áp dụng điều chỉnh thành công'
+                title: 'Success',
+                message: 'Adjustment applied successfully'
             }))
         },
         onError: () => {
             dispatch(addNotification({
                 type: 'error',
-                title: 'Lỗi',
-                message: 'Có lỗi xảy ra khi áp dụng điều chỉnh'
+                title: 'Error',
+                message: 'Failed to apply adjustment'
             }))
         }
     })
@@ -71,15 +71,15 @@ export function useAdjustment() {
             queryClient.invalidateQueries({ queryKey: ['adjustments'] })
             dispatch(addNotification({
                 type: 'success',
-                title: 'Thành công',
-                message: 'Đã cập nhật điều chỉnh'
+                title: 'Success',
+                message: 'Adjustment updated successfully'
             }))
         },
         onError: () => {
             dispatch(addNotification({
                 type: 'error',
-                title: 'Lỗi',
-                message: 'Không thể cập nhật điều chỉnh'
+                title: 'Error',
+                message: 'Failed to update adjustment'
             }))
         }
     })
@@ -92,15 +92,15 @@ export function useAdjustment() {
             queryClient.invalidateQueries({ queryKey: ['adjustments'] })
             dispatch(addNotification({
                 type: 'success',
-                title: 'Thành công',
-                message: 'Đã xóa điều chỉnh'
+                title: 'Success',
+                message: 'Adjustment deleted'
             }))
         },
         onError: () => {
             dispatch(addNotification({
                 type: 'error',
-                title: 'Lỗi',
-                message: 'Không thể xóa điều chỉnh'
+                title: 'Error',
+                message: 'Failed to delete adjustment'
             }))
         }
     })

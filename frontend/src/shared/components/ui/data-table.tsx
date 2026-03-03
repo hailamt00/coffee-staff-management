@@ -167,36 +167,43 @@ export const DataTable = <TData, TValue>({
                         <TableHeader className="bg-slate-50 dark:bg-neutral-900/50">
                             {table.getHeaderGroups().map((headerGroup) => (
                                 <TableRow key={headerGroup.id} className="hover:bg-transparent border-b">
-                                    {headerGroup.headers.map((header) => (
-                                        <TableHead key={header.id} className="font-black uppercase text-[10px] text-slate-500 tracking-wider h-12 py-0 pl-6">
-                                            {header.isPlaceholder ? null : header.column.getCanSort() ? (
-                                                <button
-                                                    type="button"
-                                                    onClick={header.column.getToggleSortingHandler()}
-                                                    className="w-full inline-flex items-center gap-1.5 hover:text-slate-900 dark:hover:text-white transition-colors"
-                                                >
-                                                    <span className="inline-flex items-center">
+                                    {headerGroup.headers.map((header) => {
+                                        const align = (header.column.columnDef.meta as any)?.align || 'left';
+                                        return (
+                                            <TableHead key={header.id} className={`font-black uppercase text-[10px] text-slate-500 tracking-wider h-12 py-0 px-6 ${align === 'right' ? 'text-right' : align === 'center' ? 'text-center' : 'text-left'}`}>
+                                                {header.isPlaceholder ? null : header.column.getCanSort() ? (
+                                                    <button
+                                                        type="button"
+                                                        onClick={header.column.getToggleSortingHandler()}
+                                                        className={`w-full inline-flex items-center gap-1.5 hover:text-slate-900 dark:hover:text-white transition-colors ${align === 'right' ? 'justify-end' : align === 'center' ? 'justify-center' : 'justify-start'}`}
+                                                    >
+                                                        <span className="inline-flex items-center">
+                                                            {flexRender(
+                                                                header.column.columnDef.header,
+                                                                header.getContext()
+                                                            )}
+                                                        </span>
+                                                        {!(header.column.columnDef.meta as any)?.hideSortIcon && (
+                                                            header.column.getIsSorted() === 'asc' ? (
+                                                                <ArrowUp className="h-3.5 w-3.5 shrink-0" />
+                                                            ) : header.column.getIsSorted() === 'desc' ? (
+                                                                <ArrowDown className="h-3.5 w-3.5 shrink-0" />
+                                                            ) : (
+                                                                <ArrowUpDown className="h-3.5 w-3.5 shrink-0 opacity-60" />
+                                                            )
+                                                        )}
+                                                    </button>
+                                                ) : (
+                                                    <div className={`w-full flex items-center ${align === 'right' ? 'justify-end' : align === 'center' ? 'justify-center' : 'justify-start'}`}>
                                                         {flexRender(
                                                             header.column.columnDef.header,
                                                             header.getContext()
                                                         )}
-                                                    </span>
-                                                    {header.column.getIsSorted() === 'asc' ? (
-                                                        <ArrowUp className="h-3.5 w-3.5 shrink-0" />
-                                                    ) : header.column.getIsSorted() === 'desc' ? (
-                                                        <ArrowDown className="h-3.5 w-3.5 shrink-0" />
-                                                    ) : (
-                                                        <ArrowUpDown className="h-3.5 w-3.5 shrink-0 opacity-60" />
-                                                    )}
-                                                </button>
-                                            ) : (
-                                                flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext()
-                                                )
-                                            )}
-                                        </TableHead>
-                                    ))}
+                                                    </div>
+                                                )}
+                                            </TableHead>
+                                        )
+                                    })}
                                 </TableRow>
                             ))}
                         </TableHeader>
@@ -221,11 +228,15 @@ export const DataTable = <TData, TValue>({
                                                 transition={{ duration: 0.2, delay: i * 0.03 }}
                                                 className="group border-b last:border-0 even:bg-slate-50/20 dark:even:bg-white/[0.01] hover:bg-slate-100/50 dark:hover:bg-neutral-800/40 transition-colors"
                                             >
-                                                {row.getVisibleCells().map((cell) => (
-                                                    <TableCell key={cell.id} className="py-4 px-6 text-xs font-medium whitespace-nowrap">
-                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                                    </TableCell>
-                                                ))}
+                                                {row.getVisibleCells().map((cell) => {
+                                                    const align = (cell.column.columnDef.meta as any)?.align || 'left';
+                                                    const width = (cell.column.columnDef.meta as any)?.width;
+                                                    return (
+                                                        <TableCell key={cell.id} style={{ width }} className={`py-4 px-6 text-xs font-medium whitespace-nowrap ${align === 'right' ? 'text-right' : align === 'center' ? 'text-center' : 'text-left'}`}>
+                                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                        </TableCell>
+                                                    )
+                                                })}
                                             </motion.tr>
                                             {row.getIsExpanded() && renderSubComponent && (
                                                 <TableRow>
@@ -253,16 +264,19 @@ export const DataTable = <TData, TValue>({
                             <TableFooter className="bg-slate-50 dark:bg-neutral-900/50">
                                 {table.getFooterGroups().map((footerGroup) => (
                                     <TableRow key={footerGroup.id}>
-                                        {footerGroup.headers.map((header) => (
-                                            <TableCell key={header.id} className="py-3 px-6 text-xs font-black border-t">
-                                                {header.isPlaceholder
-                                                    ? null
-                                                    : flexRender(
-                                                        header.column.columnDef.footer,
-                                                        header.getContext()
-                                                    )}
-                                            </TableCell>
-                                        ))}
+                                        {footerGroup.headers.map((header) => {
+                                            const align = (header.column.columnDef.meta as any)?.align || 'left';
+                                            return (
+                                                <TableCell key={header.id} className={`py-3 px-6 text-xs font-black border-t ${align === 'right' ? 'text-right' : align === 'center' ? 'text-center' : 'text-left'}`}>
+                                                    {header.isPlaceholder
+                                                        ? null
+                                                        : flexRender(
+                                                            header.column.columnDef.footer,
+                                                            header.getContext()
+                                                        )}
+                                                </TableCell>
+                                            )
+                                        })}
                                     </TableRow>
                                 ))}
                             </TableFooter>

@@ -26,17 +26,42 @@ public class UpdatePositionCommandHandler
         position.Name = request.Request.Name;
         // position.Status = request.Request.IsActive; // If Request has IsActive? Check properties. Assuming validation only for Name/Shifts based on code.
 
-        position.Shifts.Clear();
+        var incomingShiftIds = request.Request.Shifts.Where(s => s.Id.HasValue).Select(s => s.Id!.Value).ToList();
+
+        var shiftsToRemove = position.Shifts.Where(s => !incomingShiftIds.Contains(s.Id)).ToList();
+        foreach (var shift in shiftsToRemove)
+        {
+            // We soft-delete removed shifts to avoid breaking existing foreign key constraints gracefully.
+            // A more robust system would check if they are in-use, but this solves the immediate 500 error on update.
+            shift.IsEnabled = false;
+            shift.Status = false;
+        }
+
         foreach (var s in request.Request.Shifts)
         {
-            position.Shifts.Add(new Shift
+            if (s.Id.HasValue && s.Id.Value > 0)
             {
-                Name = s.Name,
-                StartTime = TimeSpan.Parse(s.StartTime),
-                EndTime = TimeSpan.Parse(s.EndTime),
-                Status = s.Status,
-                IsEnabled = s.IsEnabled
-            });
+                var existing = position.Shifts.FirstOrDefault(x => x.Id == s.Id.Value);
+                if (existing != null)
+                {
+                    existing.Name = s.Name;
+                    existing.StartTime = TimeSpan.Parse(s.StartTime);
+                    existing.EndTime = TimeSpan.Parse(s.EndTime);
+                    existing.Status = s.Status;
+                    existing.IsEnabled = s.IsEnabled;
+                }
+            }
+            else
+            {
+                position.Shifts.Add(new Shift
+                {
+                    Name = s.Name,
+                    StartTime = TimeSpan.Parse(s.StartTime),
+                    EndTime = TimeSpan.Parse(s.EndTime),
+                    Status = s.Status,
+                    IsEnabled = s.IsEnabled
+                });
+            }
         }
 
         _repo.Update(position);

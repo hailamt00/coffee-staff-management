@@ -13,7 +13,7 @@ import {
   AlertDialogFooter,
 } from '@/shared/components/ui/alert-dialog'
 import { Plus, Briefcase, Clock, Settings2 } from 'lucide-react'
-import { StatCard } from '@/shared/components/StatCard'
+import { SummaryCard } from '@/shared/components/ui/summary-card'
 
 export default function PositionPage() {
   const { positions, loading, createPosition, updatePosition, deletePosition } =
@@ -50,13 +50,13 @@ export default function PositionPage() {
             <h1 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
               Positions
             </h1>
-            <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest hidden sm:block">
-              Role & Shift_Blueprint
+            <p className="mt-1 text-[11px] font-medium text-slate-500 hidden sm:block">
+              Role & Shift Blueprint
             </p>
           </div>
 
           <Button
-            className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 border-none h-10 w-10 sm:w-auto sm:px-6 rounded-xl font-bold uppercase tracking-widest text-[10px]"
+            className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 border-none h-10 w-10 sm:w-auto sm:px-6 rounded-xl font-semibold text-[11px]"
             onClick={() => {
               setEditingId(null)
               setDialogOpen(true)
@@ -69,35 +69,35 @@ export default function PositionPage() {
       </div>
 
       {/* STATS SECTION */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
-        <StatCard
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <SummaryCard
           title="Positions"
           value={stats.totalPositions}
           description="Job roles"
           icon={Briefcase}
-          iconColor="text-slate-900 dark:text-white"
+          color="cyan"
         />
-        <StatCard
+        <SummaryCard
           title="Total Shifts"
           value={stats.totalShifts}
           description="Active slots"
           icon={Clock}
-          iconColor="text-blue-600 dark:text-blue-400"
+          color="blue"
         />
-        <StatCard
+        <SummaryCard
           title="Status"
           value={stats.totalPositions > 0 ? "Active" : "Setup"}
           description="System config"
           icon={Settings2}
-          iconColor="text-emerald-600 dark:text-emerald-400"
+          color="green"
           className="col-span-2 lg:col-span-1"
         />
       </div>
 
       <div className="px-1">
         <div className="mb-4">
-          <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-1">
-            Position_Architecture
+          <h2 className="text-[11px] font-semibold text-slate-400 px-1">
+            Position Architecture
           </h2>
         </div>
 
@@ -140,7 +140,7 @@ export default function PositionPage() {
             </Button>
             <Button
               variant="destructive"
-              className="flex-1 h-12 rounded-xl font-black uppercase tracking-widest text-[10px]"
+              className="flex-1 h-12 rounded-xl font-semibold text-[12px]"
               onClick={() => {
                 deletePosition(deleteTarget!.id)
                 setDeleteTarget(null)

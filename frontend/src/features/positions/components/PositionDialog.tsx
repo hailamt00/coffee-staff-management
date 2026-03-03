@@ -19,9 +19,9 @@ import type {
 import { DialogDescription } from '@radix-ui/react-dialog'
 
 const DEFAULT_SHIFTS: SaveShiftRequest[] = [
-  { name: 'Morning Shift', startTime: '06:00', endTime: '12:00', isEnabled: true },
-  { name: 'Afternoon Shift', startTime: '12:00', endTime: '18:00', isEnabled: true },
-  { name: 'Evening Shift', startTime: '18:00', endTime: '22:00', isEnabled: true },
+  { name: 'Shift 1', startTime: '06:00', endTime: '14:00', isEnabled: true },
+  { name: 'Shift 2', startTime: '14:00', endTime: '22:00', isEnabled: true },
+  { name: 'Shift 3', startTime: '22:00', endTime: '06:00', isEnabled: false },
 ]
 
 export function PositionDialog({

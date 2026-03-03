@@ -29,11 +29,16 @@ public class AttendanceRepository : GenericRepository<Attendance>, IAttendanceRe
 
     public async Task<List<Attendance>> GetByDateAsync(DateOnly workDate)
     {
+        var fromDateTime = workDate.ToDateTime(TimeOnly.MinValue);
+        var toDateTime = workDate.ToDateTime(TimeOnly.MaxValue).AddTicks(-1);
+
         return await _context.Attendances
             .Include(a => a.Employee)
             .Include(a => a.Schedule)
             .ThenInclude(s => s!.Shift)
-            .Where(a => a.Schedule != null && a.Schedule.WorkDate == workDate)
+            .Where(a =>
+                (a.Schedule != null && a.Schedule.WorkDate == workDate) ||
+                (a.Schedule == null && a.CheckIn != null && a.CheckIn >= fromDateTime && a.CheckIn <= toDateTime))
             .OrderBy(a => a.EmployeeId)
             .ToListAsync();
     }
@@ -44,6 +49,9 @@ public class AttendanceRepository : GenericRepository<Attendance>, IAttendanceRe
     DateOnly fromDate,
     DateOnly toDate)
     {
+        var fromDateTime = fromDate.ToDateTime(TimeOnly.MinValue);
+        var toDateTime = toDate.ToDateTime(TimeOnly.MaxValue).AddTicks(-1);
+
         return await _context.Attendances
             .Include(a => a.Employee)
             .Include(a => a.Schedule)
@@ -54,16 +62,18 @@ public class AttendanceRepository : GenericRepository<Attendance>, IAttendanceRe
             .Include(a => a.RewardsPenalties)
             .Where(a =>
                 a.EmployeeId == employeeId &&
-                a.Schedule != null &&
-                a.Schedule.WorkDate >= fromDate &&
-                a.Schedule.WorkDate <= toDate &&
-                a.CheckIn != null)
+                a.CheckIn != null &&
+                ((a.Schedule != null && a.Schedule.WorkDate >= fromDate && a.Schedule.WorkDate <= toDate) ||
+                 (a.Schedule == null && a.CheckIn >= fromDateTime && a.CheckIn <= toDateTime)))
             .ToListAsync();
     }
 
 
     public async Task<List<Attendance>> GetByDateRangeAsync(DateOnly fromDate, DateOnly toDate)
     {
+        var fromDateTime = fromDate.ToDateTime(TimeOnly.MinValue);
+        var toDateTime = toDate.ToDateTime(TimeOnly.MaxValue).AddTicks(-1);
+
         return await _context.Attendances
             .Include(a => a.Employee)
             .Include(a => a.Schedule)
@@ -72,9 +82,8 @@ public class AttendanceRepository : GenericRepository<Attendance>, IAttendanceRe
                 .ThenInclude(s => s!.Shift)
                     .ThenInclude(sh => sh!.Position)
             .Where(a =>
-                a.Schedule != null &&
-                a.Schedule.WorkDate >= fromDate &&
-                a.Schedule.WorkDate <= toDate)
+                (a.Schedule != null && a.Schedule.WorkDate >= fromDate && a.Schedule.WorkDate <= toDate) ||
+                (a.Schedule == null && a.CheckIn != null && a.CheckIn >= fromDateTime && a.CheckIn <= toDateTime))
             .ToListAsync();
     }
 

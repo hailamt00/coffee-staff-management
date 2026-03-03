@@ -31,7 +31,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/shared/components/ui/sheet'
-import { StatCard } from '@/shared/components/StatCard'
+import { SummaryCard } from '@/shared/components/ui/summary-card'
 import { DataTable } from '@/shared/components/ui/data-table'
 import type { ColumnDef } from '@tanstack/react-table'
 import { AttendanceFormModal } from '../components/AttendanceFormModal'
@@ -154,71 +154,80 @@ export default function AttendancePage() {
     },
     {
       id: "employee",
-      header: "Staff / Position",
+      header: "Staff",
       cell: ({ row }) => (
-        <div className="flex flex-col gap-0.5">
-          <span className="font-bold text-slate-900">{row.original.employeeName || "Unknown"}</span>
-          <span className="text-[10px] text-slate-500 font-medium">{row.original.positionName || "—"}</span>
-        </div>
+        <span className="font-bold text-slate-900">{row.original.employeeName || "Unknown"}</span>
       )
     },
     {
-      id: "log",
-      header: "In / Out",
+      id: "position",
+      header: "Position",
+      cell: ({ row }) => {
+        let pos = row.original.positionName || "—"
+        if (pos.includes('Pha chế')) pos = 'Pha chế'
+        return <span className="text-[11px] text-slate-500 font-medium">{pos}</span>
+      }
+    },
+    {
+      id: "checkIn",
+      header: "In",
       cell: ({ row }) => {
         const checkIn = row.original.checkIn;
+        const formatTime = (t: string) => t ? new Date(t).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }) : '—';
+        return <span className={!checkIn ? "bg-amber-100 text-amber-700 px-1 rounded font-mono text-[11px] font-bold" : "font-mono text-[11px] font-bold"}>{formatTime(checkIn)}</span>
+      }
+    },
+    {
+      id: "checkOut",
+      header: "Out",
+      cell: ({ row }) => {
         const checkOut = row.original.checkOut;
         const formatTime = (t: string) => t ? new Date(t).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }) : '—';
-
-        return (
-          <div className="flex items-center gap-3 font-mono text-[11px] font-bold">
-            <span className={!checkIn ? "bg-amber-100 text-amber-700 px-1 rounded" : ""}>{formatTime(checkIn)}</span>
-            <span className="text-slate-300">→</span>
-            <span className={!checkOut ? "bg-amber-100 text-amber-700 px-1 rounded" : ""}>{formatTime(checkOut)}</span>
-          </div>
-        )
+        return <span className={!checkOut ? "bg-amber-100 text-amber-700 px-1 rounded font-mono text-[11px] font-bold" : "font-mono text-[11px] font-bold"}>{formatTime(checkOut)}</span>
       }
     },
     {
       id: "diff",
       header: "Diff",
       cell: ({ row }) => (
-        <div className="text-right font-black tabular-nums text-slate-900">
+        <div className="font-black tabular-nums text-slate-900">
           {row.original.totalHours ? parseFloat(row.original.totalHours).toFixed(2) : "—"}
         </div>
       )
     },
     {
-      id: "status_actions",
-      header: "Status / Actions",
+      id: "status",
+      header: "Status",
+      cell: ({ row }) => <StatusBadge status={row.original.status} />
+    },
+    {
+      id: "actions",
+      header: "Actions",
       cell: ({ row }) => (
-        <div className="flex items-center justify-end gap-3">
-          <StatusBadge status={row.original.status} />
-          <div className="flex gap-1">
-            <Button
-              size="icon"
-              variant="outline"
-              className="h-8 w-8 rounded-lg border-slate-200"
-              onClick={() => {
-                setEditingAttendance(row.original)
-                setIsModalOpen(true)
-              }}
-            >
-              <Edit2 className="w-3.5 h-3.5" />
-            </Button>
-            <Button
-              size="icon"
-              variant="outline"
-              className="h-8 w-8 rounded-lg border-red-100 text-red-600 hover:bg-red-600 hover:text-white"
-              onClick={async () => {
-                if (window.confirm("Are you sure?")) {
-                  await deleteAttendance(row.original.id)
-                }
-              }}
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-            </Button>
-          </div>
+        <div className="flex gap-1 justify-end">
+          <Button
+            size="icon"
+            variant="outline"
+            className="h-8 w-8 rounded-lg border-slate-200"
+            onClick={() => {
+              setEditingAttendance(row.original)
+              setIsModalOpen(true)
+            }}
+          >
+            <Edit2 className="w-3.5 h-3.5" />
+          </Button>
+          <Button
+            size="icon"
+            variant="outline"
+            className="h-8 w-8 rounded-lg border-red-100 text-red-600 hover:bg-red-600 hover:text-white"
+            onClick={async () => {
+              if (window.confirm("Are you sure?")) {
+                await deleteAttendance(row.original.id)
+              }
+            }}
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+          </Button>
         </div>
       )
     }
@@ -239,7 +248,7 @@ export default function AttendancePage() {
               Attendance
             </h1>
             <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest hidden sm:block">
-              Daily_Audit_Logs
+              Daily Audit Logs
             </p>
           </div>
 
@@ -325,9 +334,9 @@ export default function AttendancePage() {
                 setEditingAttendance(null)
                 setIsModalOpen(true)
               }}
-              className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 border-none h-10 w-10 sm:w-auto sm:px-6 rounded-xl font-bold uppercase tracking-widest text-[10px]"
+              className="h-10 w-10 rounded-xl border-none bg-black text-[10px] font-bold uppercase tracking-widest text-white hover:bg-slate-800 sm:w-auto sm:px-6 dark:bg-white dark:text-black dark:hover:bg-neutral-200"
             >
-              <Plus className="sm:mr-2 h-4 w-4" />
+              <Plus className="h-4 w-4 sm:mr-2" />
               <span className="hidden sm:inline">Add Record</span>
             </Button>
           </div>
@@ -383,42 +392,42 @@ export default function AttendancePage() {
       </div>
 
       {/* STATS SECTION */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
-        <StatCard
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <SummaryCard
           title="Total"
           value={stats.total}
           description="Shift entries"
           icon={Users}
-          iconColor="text-slate-900 dark:text-white"
+          color="cyan"
         />
-        <StatCard
+        <SummaryCard
           title="Present"
           value={stats.present}
           description={`${stats.presentRate}% rate`}
           icon={CheckCircle}
-          iconColor="text-emerald-600 dark:text-emerald-400"
+          color="green"
         />
-        <StatCard
+        <SummaryCard
           title="Late"
           value={stats.late}
           description="Delayed start"
           icon={AlertCircle}
-          iconColor="text-amber-600 dark:text-amber-400"
+          color="orange"
         />
-        <StatCard
+        <SummaryCard
           title="Absent"
           value={stats.absent}
           description="Unexcused"
           icon={XCircle}
-          iconColor="text-rose-600 dark:text-rose-400"
+          color="red"
         />
-      </div>
+      </div >
 
       {/* DATA TABLE */}
-      <div className="px-1">
+      < div className="px-1" >
         <div className="mb-4">
           <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-1">
-            Attendance_Registry
+            Attendance Registry
           </h2>
         </div>
         <DataTable
@@ -428,7 +437,7 @@ export default function AttendancePage() {
           searchKey="employeeName"
           defaultPageSize={100}
         />
-      </div>
+      </div >
 
       <AttendanceFormModal
         isOpen={isModalOpen}
@@ -445,6 +454,6 @@ export default function AttendancePage() {
         }}
         initialData={editingAttendance}
       />
-    </motion.div>
+    </motion.div >
   )
 }

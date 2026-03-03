@@ -70,7 +70,7 @@ export default function AdjustmentTable({ data, loading, onEdit, onDelete }: Pro
   const columns = useMemo<ColumnDef<RewardPenalty>[]>(() => [
     {
       accessorKey: 'createdAt',
-      header: 'Ngay',
+      header: 'Date',
       cell: ({ row }) => (
         <span className="text-sm font-medium text-slate-700">
           {formatDate(String(row.getValue('createdAt') ?? ''))}
@@ -79,12 +79,12 @@ export default function AdjustmentTable({ data, loading, onEdit, onDelete }: Pro
     },
     {
       accessorKey: 'employeeName',
-      header: 'Nhan Vien',
+      header: 'Employee',
       cell: ({ row }) => <div className="font-semibold text-slate-900 dark:text-slate-100">{row.getValue('employeeName')}</div>
     },
     {
       accessorKey: 'typeName',
-      header: 'Noi dung',
+      header: 'Type',
       cell: ({ row }) => {
         const isBonus = row.original.kind === 'Reward'
         return (
@@ -99,7 +99,7 @@ export default function AdjustmentTable({ data, loading, onEdit, onDelete }: Pro
     },
     {
       accessorKey: 'amount',
-      header: () => <div className="text-right">So tien (VND)</div>,
+      header: () => <div className="text-right">Amount (VND)</div>,
       cell: ({ row }) => {
         const rowAmount = Number(row.getValue('amount') ?? 0)
         const isBonus = row.original.kind === 'Reward'
@@ -107,14 +107,14 @@ export default function AdjustmentTable({ data, loading, onEdit, onDelete }: Pro
 
         return (
           <div className={`text-right font-mono font-bold ${isWarning ? 'text-slate-400' : isBonus ? 'text-emerald-600' : 'text-red-600'}`}>
-            {isWarning ? 'Nhac nho' : `${isBonus ? '+' : '-'}${formatMoney(Math.abs(rowAmount))}`}
+            {isWarning ? 'Warning' : `${isBonus ? '+' : '-'}${formatMoney(Math.abs(rowAmount))}`}
           </div>
         )
       }
     },
     {
       accessorKey: 'reason',
-      header: 'Ly do / Ghi chu',
+      header: 'Reason / Note',
       cell: ({ row }) => (
         <div className="text-xs text-muted-foreground whitespace-normal min-w-[150px]">
           {row.original.reason || '-'}
@@ -123,7 +123,7 @@ export default function AdjustmentTable({ data, loading, onEdit, onDelete }: Pro
     },
     {
       id: 'actions',
-      header: () => <div className="text-right">Thao tac</div>,
+      header: () => <div className="text-right">Actions</div>,
       cell: ({ row }) => (
         <div className="flex items-center justify-end gap-2">
           <Button
@@ -152,7 +152,7 @@ export default function AdjustmentTable({ data, loading, onEdit, onDelete }: Pro
       <Card className="border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm overflow-hidden">
         <CardHeader className="bg-slate-50/50 dark:bg-black/20 border-b border-slate-100 dark:border-neutral-800">
           <CardTitle className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-            Lich su vi pham / khen thuong
+            Adjustment History
           </CardTitle>
         </CardHeader>
 
@@ -167,37 +167,39 @@ export default function AdjustmentTable({ data, loading, onEdit, onDelete }: Pro
       </Card>
 
       <Dialog open={!!editingItem} onOpenChange={(open) => !open && setEditingItem(null)}>
-        <DialogContent className="sm:max-w-[420px]">
+        <DialogContent className="sm:max-w-[420px] rounded-[2rem] p-6 border-none shadow-2xl">
           <DialogHeader>
-            <DialogTitle>Chinh sua dieu chinh</DialogTitle>
+            <DialogTitle className="text-2xl font-black tracking-tighter text-slate-900 dark:text-white">Edit Adjustment</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div className="space-y-2">
-              <Label htmlFor="adjustmentAmount">So tien</Label>
+              <Label htmlFor="adjustmentAmount" className="text-sm font-bold text-slate-500 uppercase tracking-widest">Amount (VND)</Label>
               <Input
                 id="adjustmentAmount"
                 type="number"
                 min={0}
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
+                className="h-12 border-slate-200 dark:border-neutral-800 rounded-xl"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="adjustmentReason">Ly do / Ghi chu</Label>
+              <Label htmlFor="adjustmentReason" className="text-sm font-bold text-slate-500 uppercase tracking-widest">Reason / Note</Label>
               <Input
                 id="adjustmentReason"
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
-                placeholder="Nhap ghi chu..."
+                placeholder="Enter note..."
+                className="h-12 border-slate-200 dark:border-neutral-800 rounded-xl"
               />
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingItem(null)} disabled={isSaving}>
-              Huy
+          <DialogFooter className="flex sm:flex-row gap-2 pt-4">
+            <Button variant="ghost" onClick={() => setEditingItem(null)} disabled={isSaving} className="flex-1 h-12 rounded-xl font-bold bg-slate-100 hover:bg-slate-200 dark:bg-neutral-800 dark:hover:bg-neutral-700">
+              Cancel
             </Button>
-            <Button onClick={handleSaveEdit} disabled={isSaving}>
-              Luu
+            <Button onClick={handleSaveEdit} disabled={isSaving} className="flex-1 h-12 rounded-xl font-black uppercase tracking-widest text-[10px] bg-black hover:bg-slate-800 text-white">
+              Save Changes
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -206,8 +208,8 @@ export default function AdjustmentTable({ data, loading, onEdit, onDelete }: Pro
       <DeleteConfirmDialog
         open={!!deletingItem}
         onOpenChange={(open) => !open && setDeletingItem(null)}
-        title="Xac nhan xoa dieu chinh"
-        description={deletingItem ? `Ban co chac chan muon xoa muc "${deletingItem.typeName}"?` : undefined}
+        title="Delete Adjustment"
+        description={deletingItem ? `Are you sure you want to delete "${deletingItem.typeName}"?` : undefined}
         onConfirm={handleDelete}
       />
     </>

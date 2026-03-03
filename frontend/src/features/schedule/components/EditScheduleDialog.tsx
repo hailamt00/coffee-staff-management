@@ -211,10 +211,10 @@ export function EditScheduleDialog({
             <DeleteConfirmDialog
                 open={showDeleteConfirm}
                 onOpenChange={setShowDeleteConfirm}
-                title="Xác nhận xóa xếp ca"
-                description="Bạn có chắc chắn muốn xóa ca làm việc này không? Hành động này không thể hoàn tác."
+                title="Delete Shift"
+                description="Are you sure you want to delete this shift? This action cannot be undone."
                 onConfirm={handleDelete}
             />
-        </Dialog>
+        </Dialog >
     )
 }

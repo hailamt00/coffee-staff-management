@@ -26,24 +26,24 @@ export function DeleteConfirmDialog({
 }: DeleteConfirmDialogProps) {
     return (
         <AlertDialog open={open} onOpenChange={onOpenChange}>
-            <AlertDialogContent className="rounded-2xl border-slate-200 dark:border-neutral-800 shadow-2xl">
+            <AlertDialogContent className="max-w-md w-[95vw] rounded-[2rem] border-none shadow-2xl p-6">
                 <AlertDialogHeader>
-                    <AlertDialogTitle className="text-[13px] font-black uppercase tracking-widest">{title}</AlertDialogTitle>
+                    <AlertDialogTitle className="text-2xl font-black tracking-tighter text-red-600">{title}</AlertDialogTitle>
                     {description && (
-                        <AlertDialogDescription className="text-[11px] font-bold text-slate-500 uppercase tracking-tight">
+                        <AlertDialogDescription className="text-slate-500 font-medium py-4">
                             {description}
                         </AlertDialogDescription>
                     )}
                 </AlertDialogHeader>
-                <AlertDialogFooter className="mt-4 gap-2">
-                    <AlertDialogCancel className="rounded-lg h-9 text-[10px] font-black uppercase tracking-widest border-slate-200 dark:border-neutral-800">
+                <AlertDialogFooter className="flex sm:flex-row gap-2">
+                    <AlertDialogCancel className="mt-0 flex-1 h-12 rounded-xl font-bold border-none bg-slate-100 hover:bg-slate-200 dark:bg-neutral-800 dark:hover:bg-neutral-700">
                         Cancel
                     </AlertDialogCancel>
                     <AlertDialogAction
                         onClick={onConfirm}
-                        className="rounded-lg h-9 text-[10px] font-black uppercase tracking-widest bg-slate-900 dark:bg-white dark:text-black hover:bg-slate-800 dark:hover:bg-slate-200"
+                        className="flex-1 h-12 rounded-xl font-black uppercase tracking-widest text-[10px] bg-red-600 hover:bg-red-700 text-white"
                     >
-                        Delete
+                        Confirm Delete
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>

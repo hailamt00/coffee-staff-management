@@ -12,16 +12,9 @@ import {
 } from 'lucide-react'
 import type { ColumnDef } from '@tanstack/react-table'
 import { DataTable } from '@/shared/components/ui/data-table'
-import { StatCard } from '@/shared/components/StatCard'
+import { SummaryCard } from '@/shared/components/ui/summary-card'
 
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from '@/shared/components/ui/dialog'
+import { DeleteConfirmDialog } from '@/shared/components/ui/delete-confirm-dialog'
 
 import { Button } from '@/shared/components/ui/button'
 
@@ -57,51 +50,71 @@ export default function EmployeesPage() {
     {
       id: "index",
       header: "#",
+      meta: { align: 'center', hideSortIcon: true },
       cell: ({ row, table }) => {
         const pageIndex = table.getState().pagination.pageIndex
         const pageSize = table.getState().pagination.pageSize
         const localIndex = table.getRowModel().rows.findIndex((r) => r.id === row.id)
         const displayIndex = pageIndex * pageSize + (localIndex >= 0 ? localIndex : row.index) + 1
 
-        return <div className="text-muted-foreground">{displayIndex}</div>
+        return <span className="text-slate-500">{displayIndex}</span>
       }
     },
     {
       accessorKey: "code",
       header: "Code",
-      cell: ({ row }) => <div className="font-medium">{row.getValue("code") || '—'}</div>
+      meta: { align: 'center', hideSortIcon: true },
+      cell: ({ row }) => <span>{row.getValue("code") || '—'}</span>
     },
     {
       accessorKey: "name",
       header: "Name",
-      cell: ({ row }) => <div className="font-bold text-slate-900 dark:text-slate-100">{row.getValue("name") || '—'}</div>
+      meta: { align: 'left', hideSortIcon: true },
+      cell: ({ row }) => <span className="font-semibold text-slate-900 dark:text-slate-100">{row.getValue("name") || '—'}</span>
+    },
+    {
+      accessorKey: "cid",
+      header: "CID",
+      meta: { align: 'center', hideSortIcon: true },
+      cell: ({ row }) => <span>{row.getValue("cid") || '—'}</span>
+    },
+    {
+      accessorKey: "dob",
+      header: "DOB",
+      meta: { align: 'center', hideSortIcon: true },
+      cell: ({ row }) => <span>{row.getValue("dob") ? formatDate(row.getValue("dob")) : '—'}</span>
     },
     {
       accessorKey: "phone",
       header: "Phone",
-      cell: ({ row }) => <div className="tabular-nums">{row.getValue("phone") || '—'}</div>
+      meta: { align: 'center', hideSortIcon: true },
+      cell: ({ row }) => <span>{row.getValue("phone") || '—'}</span>
     },
     {
       accessorKey: "serviceSalary",
       header: "Service",
-      cell: ({ row }) => <div className="text-right font-mono font-medium">{formatMoney(row.getValue("serviceSalary"))}</div>
+      meta: { align: 'right', hideSortIcon: true },
+      cell: ({ row }) => <span>{formatMoney(row.getValue("serviceSalary"))}</span>
     },
     {
       accessorKey: "baristaSalary",
       header: "Barista",
-      cell: ({ row }) => <div className="text-right font-mono font-medium">{formatMoney(row.getValue("baristaSalary"))}</div>
+      meta: { align: 'right', hideSortIcon: true },
+      cell: ({ row }) => <span>{formatMoney(row.getValue("baristaSalary"))}</span>
     },
     {
       accessorKey: "hireDate",
       header: "Hired",
-      cell: ({ row }) => <div className="text-right tabular-nums">{formatDate(row.getValue("hireDate"))}</div>
+      meta: { align: 'center', hideSortIcon: true },
+      cell: ({ row }) => <span>{formatDate(row.getValue("hireDate"))}</span>
     },
     {
       id: "actions",
       header: "Actions",
+      meta: { align: 'center', hideSortIcon: true },
       cell: ({ row }) => {
         return (
-          <div className="flex items-center justify-end gap-2">
+          <div className="flex items-center justify-center gap-2">
             <Button
               size="icon"
               variant="outline"
@@ -147,7 +160,7 @@ export default function EmployeesPage() {
                 Employees
               </h1>
               <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest hidden sm:block">
-                Staff_Directory
+                Staff Directory
               </p>
             </div>
 
@@ -159,34 +172,34 @@ export default function EmployeesPage() {
         </div>
 
         {/* STATS SECTION */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
-          <StatCard
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <SummaryCard
             title="Total"
-            value={stats.total}
+            value={stats.total.toLocaleString()}
             description="Staff members"
             icon={Users}
-            iconColor="text-slate-900 dark:text-white"
+            color="cyan"
           />
-          <StatCard
+          <SummaryCard
             title="Active"
-            value={stats.activeCount}
+            value={stats.activeCount.toLocaleString()}
             description="Currently employed"
             icon={UserCheck}
-            iconColor="text-emerald-600 dark:text-emerald-400"
+            color="green"
           />
-          <StatCard
+          <SummaryCard
             title="Avg Service"
             value={stats.avgServiceSalary}
             description="Base rate"
             icon={TrendingUp}
-            iconColor="text-blue-600 dark:text-blue-400"
+            color="blue"
           />
-          <StatCard
+          <SummaryCard
             title="Avg Barista"
             value={stats.avgBaristaSalary}
             description="Specialist rate"
             icon={Briefcase}
-            iconColor="text-purple-600 dark:text-purple-400"
+            color="orange"
           />
         </div>
 
@@ -201,29 +214,13 @@ export default function EmployeesPage() {
       </motion.div>
 
       {/* ===== DELETE CONFIRM (SHADCN) ===== */}
-      <Dialog open={!!deleteTarget} onOpenChange={() => setDeleteTarget(null)}>
-        <DialogContent className="max-w-md w-[95vw] rounded-[2rem] border-none shadow-2xl p-6">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-black tracking-tighter text-red-600">Delete employee</DialogTitle>
-            <DialogDescription className="text-slate-500 font-medium py-4">
-              Are you sure you want to delete{' '}
-              <span className="font-black text-slate-900 dark:text-white underline decoration-red-500/30">
-                {deleteTarget?.name}
-              </span>
-              ? This action is irreversible and will remove all related records.
-            </DialogDescription>
-          </DialogHeader>
-
-          <DialogFooter className="flex sm:flex-row gap-2">
-            <Button variant="ghost" onClick={() => setDeleteTarget(null)} className="flex-1 h-12 rounded-xl font-bold">
-              Cancel
-            </Button>
-            <Button variant="destructive" onClick={confirmDelete} className="flex-1 h-12 rounded-xl font-black uppercase tracking-widest text-[10px]">
-              Confirm Delete
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <DeleteConfirmDialog
+        open={!!deleteTarget}
+        onOpenChange={(open) => !open && setDeleteTarget(null)}
+        title="Delete employee"
+        description={deleteTarget ? `Are you sure you want to delete ${deleteTarget.name}? This action is irreversible and will remove all related records.` : undefined}
+        onConfirm={confirmDelete}
+      />
     </>
   )
 }

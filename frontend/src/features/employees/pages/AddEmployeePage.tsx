@@ -78,11 +78,11 @@ export default function AddEmployeePage() {
         <CardHeader className="border-b border-slate-100 dark:border-neutral-800/50 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter uppercase">
-                Add_New_Employee
+              <CardTitle className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">
+                Add Profile
               </CardTitle>
               <p className="mt-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                Entry_Information
+                Entry Information
               </p>
             </div>
           </div>

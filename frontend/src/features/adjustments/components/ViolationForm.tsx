@@ -76,7 +76,7 @@ export default function ViolationForm() {
 
   const handleAction = async (typeId: number, amount: number, isWarning: boolean) => {
     if (!employeeId) {
-      alert('Vui long chon nhan vien truoc')
+      alert('Please select an employee first')
       return
     }
 
@@ -85,7 +85,7 @@ export default function ViolationForm() {
         employeeId: Number(employeeId),
         typeId,
         amount: isWarning ? 0 : amount,
-        reason: reason.trim() || (isWarning ? 'Nhac nho' : undefined),
+        reason: reason.trim() || (isWarning ? 'Warning' : undefined),
       })
       setReason('')
     } catch (error) {
@@ -98,12 +98,12 @@ export default function ViolationForm() {
     const parsedAmount = Number(typeAmount)
 
     if (!normalizedName) {
-      alert('Vui long nhap ten loai thuong/phat')
+      alert('Please enter a name for the adjustment type')
       return
     }
 
     if (!Number.isFinite(parsedAmount) || parsedAmount < 0) {
-      alert('So tien khong hop le')
+      alert('Invalid amount')
       return
     }
 
@@ -149,14 +149,14 @@ export default function ViolationForm() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="employeeSelect" className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-              Ten Nhan Vien
+              Employee Name
             </Label>
             <Select value={employeeId} onValueChange={setEmployeeId}>
               <SelectTrigger
                 id="employeeSelect"
                 className="w-full h-10 bg-white dark:bg-neutral-900 border-slate-200 dark:border-neutral-800"
               >
-                <SelectValue placeholder="Chon nhan vien" />
+                <SelectValue placeholder="Select employee" />
               </SelectTrigger>
               <SelectContent>
                 {employees.map((staff) => (
@@ -170,11 +170,11 @@ export default function ViolationForm() {
 
           <div className="space-y-2">
             <Label htmlFor="reasonInput" className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-              Ly do / Ghi chu (Tuy chon)
+              Reason / Note (Optional)
             </Label>
             <Input
               id="reasonInput"
-              placeholder="Nhap ly do cu the..."
+              placeholder="Specific reason..."
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               className="h-10 border-slate-200 dark:border-neutral-800"
@@ -188,13 +188,13 @@ export default function ViolationForm() {
               value="reward"
               className="px-6 font-semibold data-[state=active]:bg-emerald-500 data-[state=active]:text-white"
             >
-              Khen Thuong
+              Rewards
             </TabsTrigger>
             <TabsTrigger
               value="penalty"
               className="px-6 font-semibold data-[state=active]:bg-red-500 data-[state=active]:text-white"
             >
-              Vi Pham
+              Penalties
             </TabsTrigger>
           </TabsList>
 
@@ -207,7 +207,7 @@ export default function ViolationForm() {
                 disabled={loading || savingType}
               >
                 <Plus size={14} className="mr-1" />
-                Them loai khen thuong
+                Add Reward Type
               </Button>
             </div>
 
@@ -217,9 +217,9 @@ export default function ViolationForm() {
                   <table className="w-full text-left">
                     <thead className="bg-slate-50/50 dark:bg-black/20 text-slate-500 uppercase text-[10px] font-bold tracking-wider">
                       <tr>
-                        <th className="px-6 py-4 font-medium border-b border-slate-100 dark:border-neutral-800">Loai khen thuong</th>
-                        <th className="px-6 py-4 font-medium border-b border-slate-100 dark:border-neutral-800">Tien thuong (VND)</th>
-                        <th className="px-6 py-4 text-right font-medium border-b border-slate-100 dark:border-neutral-800">Hanh dong</th>
+                        <th className="px-6 py-4 font-medium border-b border-slate-100 dark:border-neutral-800">Reward Type</th>
+                        <th className="px-6 py-4 font-medium border-b border-slate-100 dark:border-neutral-800">Amount (VND)</th>
+                        <th className="px-6 py-4 text-right font-medium border-b border-slate-100 dark:border-neutral-800">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 dark:divide-neutral-800">
@@ -235,7 +235,7 @@ export default function ViolationForm() {
                                 className="bg-emerald-500 hover:bg-emerald-600 text-white border-none"
                                 onClick={() => handleAction(type.id, type.amount, false)}
                               >
-                                Thuong
+                                Reward
                               </Button>
                               <Button
                                 size="icon"
@@ -262,7 +262,7 @@ export default function ViolationForm() {
                       {rewardTypes.length === 0 && (
                         <tr>
                           <td colSpan={3} className="px-6 py-8 text-center text-slate-400 italic">
-                            Chua co loai khen thuong nao.
+                            No reward types configured yet.
                           </td>
                         </tr>
                       )}
@@ -282,7 +282,7 @@ export default function ViolationForm() {
                 disabled={loading || savingType}
               >
                 <Plus size={14} className="mr-1" />
-                Them loai vi pham
+                Add Penalty Type
               </Button>
             </div>
 
@@ -292,9 +292,9 @@ export default function ViolationForm() {
                   <table className="w-full text-left">
                     <thead className="bg-slate-50/50 dark:bg-black/20 text-slate-500 uppercase text-[10px] font-bold tracking-wider">
                       <tr>
-                        <th className="px-6 py-4 font-medium border-b border-slate-100 dark:border-neutral-800">Loai vi pham</th>
-                        <th className="px-6 py-4 font-medium border-b border-slate-100 dark:border-neutral-800">So tien (VND)</th>
-                        <th className="px-6 py-4 text-right font-medium border-b border-slate-100 dark:border-neutral-800">Hanh dong</th>
+                        <th className="px-6 py-4 font-medium border-b border-slate-100 dark:border-neutral-800">Penalty Type</th>
+                        <th className="px-6 py-4 font-medium border-b border-slate-100 dark:border-neutral-800">Amount (VND)</th>
+                        <th className="px-6 py-4 text-right font-medium border-b border-slate-100 dark:border-neutral-800">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 dark:divide-neutral-800">
@@ -311,7 +311,7 @@ export default function ViolationForm() {
                                 className="bg-yellow-50 text-yellow-600 border-yellow-200 hover:bg-yellow-100 dark:bg-yellow-900/20 dark:border-yellow-900/50 dark:text-yellow-500 dark:hover:bg-yellow-900/40"
                                 onClick={() => handleAction(type.id, 0, true)}
                               >
-                                Nhac nho
+                                Warn
                               </Button>
                               <Button
                                 size="sm"
@@ -319,7 +319,7 @@ export default function ViolationForm() {
                                 className="bg-red-500 hover:bg-red-600 text-white border-none"
                                 onClick={() => handleAction(type.id, type.amount, false)}
                               >
-                                Phat
+                                Penalize
                               </Button>
                               <Button
                                 size="icon"
@@ -346,7 +346,7 @@ export default function ViolationForm() {
                       {penaltyTypes.length === 0 && (
                         <tr>
                           <td colSpan={3} className="px-6 py-8 text-center text-slate-400 italic">
-                            Chua co loai vi pham nao.
+                            No penalty types configured yet.
                           </td>
                         </tr>
                       )}
@@ -360,48 +360,49 @@ export default function ViolationForm() {
       </div>
 
       <Dialog open={typeDialogOpen} onOpenChange={(open) => !open && resetTypeDialog()}>
-        <DialogContent className="sm:max-w-[420px]">
+        <DialogContent className="sm:max-w-[420px] rounded-[2rem] p-6 border-none shadow-2xl">
           <DialogHeader>
-            <DialogTitle>{editingType ? 'Chinh sua loai thuong/phat' : 'Them loai thuong/phat'}</DialogTitle>
+            <DialogTitle className="text-2xl font-black tracking-tighter text-slate-900 dark:text-white">{editingType ? 'Edit Type' : 'Add Type'}</DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4 py-2">
             <div className="space-y-2">
-              <Label htmlFor="typeKind">Loai</Label>
+              <Label htmlFor="typeKind" className="text-sm font-bold text-slate-500 uppercase tracking-widest">Kind</Label>
               <Select value={typeKind} onValueChange={(value) => setTypeKind(value as AdjustmentKind)}>
                 <SelectTrigger id="typeKind">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Reward">Khen thuong</SelectItem>
-                  <SelectItem value="Penalty">Vi pham</SelectItem>
+                  <SelectItem value="Reward">Reward</SelectItem>
+                  <SelectItem value="Penalty">Penalty</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="typeName">Ten loai</Label>
-              <Input id="typeName" value={typeName} onChange={(e) => setTypeName(e.target.value)} placeholder="Nhap ten loai..." />
+              <Label htmlFor="typeName" className="text-sm font-bold text-slate-500 uppercase tracking-widest">Name</Label>
+              <Input id="typeName" value={typeName} onChange={(e) => setTypeName(e.target.value)} placeholder="Enter name..." className="h-12 border-slate-200 dark:border-neutral-800 rounded-xl" />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="typeAmount">So tien</Label>
+              <Label htmlFor="typeAmount" className="text-sm font-bold text-slate-500 uppercase tracking-widest">Amount (VND)</Label>
               <Input
                 id="typeAmount"
                 type="number"
                 min={0}
                 value={typeAmount}
                 onChange={(e) => setTypeAmount(e.target.value)}
+                className="h-12 border-slate-200 dark:border-neutral-800 rounded-xl"
               />
             </div>
           </div>
 
-          <DialogFooter>
-            <Button variant="outline" onClick={resetTypeDialog} disabled={savingType}>
-              Huy
+          <DialogFooter className="flex sm:flex-row gap-2 pt-4">
+            <Button variant="ghost" onClick={resetTypeDialog} disabled={savingType} className="flex-1 h-12 rounded-xl font-bold bg-slate-100 hover:bg-slate-200 dark:bg-neutral-800 dark:hover:bg-neutral-700">
+              Cancel
             </Button>
-            <Button onClick={handleSaveType} disabled={savingType}>
-              Luu
+            <Button onClick={handleSaveType} disabled={savingType} className="flex-1 h-12 rounded-xl font-black uppercase tracking-widest text-[10px] bg-black hover:bg-slate-800 text-white">
+              Save
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -410,8 +411,8 @@ export default function ViolationForm() {
       <DeleteConfirmDialog
         open={!!deletingType}
         onOpenChange={(open) => !open && setDeletingType(null)}
-        title="Xac nhan xoa loai thuong/phat"
-        description={deletingType ? `Ban co chac muon xoa "${deletingType.name}"?` : undefined}
+        title="Delete Config"
+        description={deletingType ? `Are you sure you want to delete "${deletingType.name}"?` : undefined}
         onConfirm={handleDeleteType}
       />
     </>

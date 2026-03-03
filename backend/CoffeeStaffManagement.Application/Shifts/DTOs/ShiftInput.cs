@@ -1,6 +1,7 @@
 namespace CoffeeStaffManagement.Application.Shifts.DTOs;
 
 public record ShiftInput(
+    int? Id,
     string Name,
     string StartTime,
     string EndTime,

@@ -213,10 +213,10 @@ export default function StaffSchedulePage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between px-2 gap-6">
                 <div className="flex flex-col sm:flex-row sm:items-end gap-4 sm:gap-12">
                     <div>
-                        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
+                        <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
                             My Schedule
                         </h1>
-                        <p className="mt-1 text-[10px] sm:text-[11px] font-bold text-slate-500 tracking-wide">
+                        <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
                             Roster Management
                         </p>
                     </div>

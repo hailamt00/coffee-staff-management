@@ -68,7 +68,7 @@ export default function ActivityLogPage() {
           Activity Log
         </h1>
         <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-          Audit_Trail & System_Pulse
+          Audit Trail & System Pulse
         </p>
       </div>
 

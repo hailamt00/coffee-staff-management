@@ -1,0 +1,4540 @@
+﻿DELETE 0
+psql : psql:d:/GitHub
+/coffee-staff-managem
+ent/seed_mar_attendan
+ce.sql:5: ERROR:  
+update or delete on 
+table "schedules" 
+violates foreign key 
+constraint "revenues_
+schedule_id_fkey" on 
+table "revenues"
+At line:1 char:16
++ ... v:PAGER=""; 
+psql -U csm_user -d 
+csm_db -f d:\GitHub\c
+offee-staff-mana ...
++                 ~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: (psql:d:   
+ /GitHub/...able     
+"revenues":Strin    
+g) [], RemoteExc    
+eption
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+DETAIL:  Key 
+(id)=(1032) is still 
+referenced from 
+table "revenues".
+ setval 
+--------
+   1037
+(1 row)
+
+ setval 
+--------
+   1584
+(1 row)
+
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+22: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (78, 64, 
+'2026-03-01', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+34: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (74, 59, 
+'2026-03-01', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+46: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (75, 64, 
+'2026-03-01', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+58: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (79, 59, 
+'2026-03-01', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+70: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (70, 61, 
+'2026-03-01', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+82: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (71, 62, 
+'2026-03-02', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+94: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (73, 63, 
+'2026-03-02', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+106: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (72, 63, 
+'2026-03-02', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+118: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (70, 63, 
+'2026-03-02', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+130: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (75, 62, 
+'2026-03-02', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+142: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (76, 62, 
+'2026-03-03', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+154: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (77, 61, 
+'2026-03-03', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+166: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (71, 64, 
+'2026-03-03', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+178: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (72, 59, 
+'2026-03-03', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+190: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (78, 62, 
+'2026-03-03', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+202: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (70, 60, 
+'2026-03-04', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+214: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (77, 64, 
+'2026-03-04', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+226: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (78, 63, 
+'2026-03-04', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+238: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (71, 59, 
+'2026-03-04', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+250: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (72, 61, 
+'2026-03-04', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+262: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (73, 63, 
+'2026-03-05', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+274: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (71, 63, 
+'2026-03-05', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+286: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (72, 62, 
+'2026-03-05', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+298: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (70, 59, 
+'2026-03-05', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+310: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (79, 62, 
+'2026-03-05', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+322: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (77, 61, 
+'2026-03-06', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+334: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (72, 64, 
+'2026-03-06', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+346: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (71, 62, 
+'2026-03-06', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+358: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (73, 62, 
+'2026-03-06', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+370: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (78, 63, 
+'2026-03-06', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+382: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (79, 62, 
+'2026-03-07', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+394: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (76, 64, 
+'2026-03-07', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+406: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (75, 59, 
+'2026-03-07', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+418: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (70, 60, 
+'2026-03-07', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+430: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (77, 60, 
+'2026-03-07', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+442: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (78, 64, 
+'2026-03-08', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+454: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (74, 61, 
+'2026-03-08', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+466: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (77, 63, 
+'2026-03-08', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+478: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (70, 63, 
+'2026-03-08', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+490: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (71, 59, 
+'2026-03-08', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+502: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (75, 64, 
+'2026-03-09', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+514: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (79, 60, 
+'2026-03-09', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+526: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (76, 59, 
+'2026-03-09', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+538: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (74, 63, 
+'2026-03-09', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+550: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (78, 64, 
+'2026-03-09', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+562: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (76, 61, 
+'2026-03-10', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+574: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (75, 61, 
+'2026-03-10', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+586: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (79, 60, 
+'2026-03-10', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+598: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (71, 63, 
+'2026-03-10', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+610: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (70, 60, 
+'2026-03-10', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+622: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (72, 64, 
+'2026-03-11', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+634: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (76, 62, 
+'2026-03-11', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+646: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (75, 59, 
+'2026-03-11', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+658: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (74, 61, 
+'2026-03-11', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+670: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (73, 63, 
+'2026-03-11', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+682: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (73, 61, 
+'2026-03-12', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+694: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (72, 59, 
+'2026-03-12', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+706: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (78, 60, 
+'2026-03-12', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+718: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (77, 60, 
+'2026-03-12', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+730: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (79, 62, 
+'2026-03-12', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+742: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (70, 61, 
+'2026-03-13', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+754: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (73, 61, 
+'2026-03-13', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+766: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (75, 64, 
+'2026-03-13', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+778: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (76, 62, 
+'2026-03-13', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+790: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (78, 63, 
+'2026-03-13', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+802: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (78, 64, 
+'2026-03-14', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+814: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (70, 61, 
+'2026-03-14', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+826: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (71, 61, 
+'2026-03-14', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+838: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (72, 61, 
+'2026-03-14', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+850: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (73, 61, 
+'2026-03-14', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+862: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (72, 60, 
+'2026-03-15', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+874: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (70, 60, 
+'2026-03-15', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+886: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (74, 59, 
+'2026-03-15', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+898: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (78, 60, 
+'2026-03-15', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+910: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (77, 64, 
+'2026-03-15', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+922: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (75, 59, 
+'2026-03-16', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+934: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (74, 64, 
+'2026-03-16', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+946: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (79, 64, 
+'2026-03-16', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+958: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (73, 59, 
+'2026-03-16', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+970: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (72, 62, 
+'2026-03-16', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+982: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (73, 60, 
+'2026-03-17', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+994: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (79, 61, 
+'2026-03-17', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1006: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (70, 63, 
+'2026-03-17', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1018: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (75, 60, 
+'2026-03-17', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1030: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (78, 64, 
+'2026-03-17', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1042: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (71, 63, 
+'2026-03-18', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1054: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (70, 59, 
+'2026-03-18', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1066: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (72, 61, 
+'2026-03-18', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1078: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (73, 59, 
+'2026-03-18', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1090: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (75, 62, 
+'2026-03-18', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1102: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (75, 63, 
+'2026-03-19', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1114: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (70, 62, 
+'2026-03-19', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1126: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (71, 63, 
+'2026-03-19', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1138: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (72, 60, 
+'2026-03-19', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1150: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (79, 60, 
+'2026-03-19', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1162: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (75, 63, 
+'2026-03-20', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1174: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (70, 63, 
+'2026-03-20', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1186: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (71, 61, 
+'2026-03-20', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1198: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (74, 61, 
+'2026-03-20', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1210: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (72, 59, 
+'2026-03-20', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1222: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (72, 63, 
+'2026-03-21', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1234: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (73, 64, 
+'2026-03-21', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1246: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (71, 61, 
+'2026-03-21', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1258: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (74, 64, 
+'2026-03-21', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1270: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (70, 61, 
+'2026-03-21', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1282: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (71, 61, 
+'2026-03-22', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1294: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (73, 61, 
+'2026-03-22', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1306: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (74, 59, 
+'2026-03-22', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1318: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (78, 64, 
+'2026-03-22', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1330: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (70, 62, 
+'2026-03-22', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1342: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (76, 59, 
+'2026-03-23', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1354: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (72, 60, 
+'2026-03-23', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1366: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (70, 59, 
+'2026-03-23', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1378: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (77, 63, 
+'2026-03-23', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1390: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (78, 60, 
+'2026-03-23', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1402: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (78, 59, 
+'2026-03-24', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1414: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (75, 64, 
+'2026-03-24', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1426: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (74, 61, 
+'2026-03-24', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1438: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (73, 61, 
+'2026-03-24', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1450: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (72, 64, 
+'2026-03-24', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1462: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (79, 63, 
+'2026-03-25', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1474: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (74, 63, 
+'2026-03-25', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1486: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (72, 59, 
+'2026-03-25', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1498: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (76, 60, 
+'2026-03-25', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1510: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (77, 59, 
+'2026-03-25', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1522: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (78, 59, 
+'2026-03-26', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1534: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (74, 63, 
+'2026-03-26', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1546: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (79, 61, 
+'2026-03-26', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1558: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (70, 59, 
+'2026-03-26', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1570: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (75, 61, 
+'2026-03-26', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1582: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (77, 59, 
+'2026-03-27', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1594: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (70, 60, 
+'2026-03-27', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1606: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (79, 64, 
+'2026-03-27', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1618: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (72, 62, 
+'2026-03-27', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1630: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (73, 63, 
+'2026-03-27', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1642: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (77, 62, 
+'2026-03-28', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1654: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (73, 59, 
+'2026-03-28', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1666: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (72, 64, 
+'2026-03-28', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1678: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (76, 64, 
+'2026-03-28', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1690: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (79, 60, 
+'2026-03-28', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1702: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (74, 59, 
+'2026-03-29', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1714: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (73, 63, 
+'2026-03-29', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1726: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (76, 62, 
+'2026-03-29', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1738: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (72, 59, 
+'2026-03-29', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1750: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (71, 61, 
+'2026-03-29', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1762: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (72, 64, 
+'2026-03-30', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1774: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (71, 61, 
+'2026-03-30', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1786: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (76, 59, 
+'2026-03-30', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1798: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (77, 62, 
+'2026-03-30', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1810: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (79, 60, 
+'2026-03-30', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1822: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (74, 63, 
+'2026-03-31', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1834: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (72, 59, 
+'2026-03-31', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1846: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (71, 59, 
+'2026-03-31', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1858: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (77, 63, 
+'2026-03-31', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL
+psql:d:/GitHub/coffee
+-staff-management/see
+d_mar_attendance.sql:
+1870: ERROR:  column 
+"created_at" of 
+relation "schedules" 
+does not exist
+LINE 1: ...INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at...
+                     
+                     
+                   ^
+QUERY:  INSERT INTO 
+schedules 
+(employee_id, 
+shift_id, work_date, 
+created_at, note)
+    VALUES (78, 63, 
+'2026-03-31', NOW(), 
+'Seeded')
+    RETURNING id
+CONTEXT:  H├ám 
+PL/pgSQL 
+inline_code_block 
+d├▓ng 5 tß║íi C├óu 
+lß╗çnh SQL

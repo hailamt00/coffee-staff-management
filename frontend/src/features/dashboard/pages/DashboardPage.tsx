@@ -79,7 +79,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-6 lg:gap-8">
           <SummaryCard
             title="Total Reports"
-            value={stats?.totalReports || 0}
+            value={(stats?.totalReports || 0).toLocaleString()}
             description="Revenue Submissions"
             icon={Users}
             color="cyan"
@@ -95,7 +95,7 @@ export default function DashboardPage() {
           />
           <SummaryCard
             title="Live Shifts"
-            value={stats?.liveShifts || 0}
+            value={(stats?.liveShifts || 0).toLocaleString()}
             description="Current Operations"
             icon={Clock}
             color="orange"
@@ -103,7 +103,7 @@ export default function DashboardPage() {
           />
           <SummaryCard
             title="Active Staff"
-            value={stats?.activeStaff || 0}
+            value={(stats?.activeStaff || 0).toLocaleString()}
             description="Clocked In"
             icon={Shield}
             color="blue"

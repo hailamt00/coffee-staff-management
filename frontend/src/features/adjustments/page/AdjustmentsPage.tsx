@@ -45,16 +45,17 @@ export default function AdjustmentsPage() {
     }
   }, [adjustments])
 
+
   return (
     <div className="space-y-8">
       {/* Header */}
       <div className="flex flex-wrap items-end justify-between gap-4 px-2">
         <div>
           <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
-            Khen Thưởng & Vi Phạm
+            Adjustments
           </h1>
           <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-            Employee Adjustments
+            Rewards & Penalties
           </p>
         </div>
 
@@ -93,8 +94,8 @@ export default function AdjustmentsPage() {
       {/* Tabs Layout */}
       <Tabs defaultValue="form" className="w-full space-y-6">
         <TabsList className="bg-slate-100 dark:bg-neutral-900 p-1">
-          <TabsTrigger value="form" className="px-6 font-semibold">Ghi Nhận Thưởng/Phạt</TabsTrigger>
-          <TabsTrigger value="report" className="px-6 font-semibold">Báo Cáo Tổng Hợp</TabsTrigger>
+          <TabsTrigger value="form" className="px-6 font-semibold">Record Action</TabsTrigger>
+          <TabsTrigger value="report" className="px-6 font-semibold">Summary Report</TabsTrigger>
         </TabsList>
 
         <TabsContent value="form">
@@ -105,30 +106,30 @@ export default function AdjustmentsPage() {
           {/* KPI */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <SummaryCard
-              title="Tổng lượt"
-              value={stats.totalCount}
-              description="Xử lý trong tháng"
+              title="Total Actions"
+              value={stats.totalCount.toLocaleString()}
+              description="Processed this month"
               icon={ClipboardList}
               color="cyan"
             />
             <SummaryCard
-              title="Khen thưởng"
-              value={stats.bonusCount}
+              title="Rewards"
+              value={stats.bonusCount.toLocaleString()}
               description={`${formatMoney(stats.bonusAmount)} VND`}
               icon={TrendingUp}
               color="green"
             />
             <SummaryCard
-              title="Vi phạm"
-              value={stats.penaltyCount}
+              title="Penalties"
+              value={stats.penaltyCount.toLocaleString()}
               description={`${formatMoney(stats.penaltyAmount)} VND`}
               icon={TrendingDown}
               color="red"
             />
             <SummaryCard
-              title="Thực nhận"
+              title="Net Value"
               value={formatMoney(stats.netAmount)}
-              description="VND (Sau bù trừ)"
+              description="VND (After adjustments)"
               icon={DollarSign}
               color="cyan"
             />
