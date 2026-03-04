@@ -114,6 +114,9 @@ export interface CreateAttendancePayload {
 
 export interface UpdateAttendancePayload {
   attendanceId: number
+  employeeId?: number
+  shiftId?: number
+  workDate?: string
   checkIn?: string
   checkOut?: string
   note?: string

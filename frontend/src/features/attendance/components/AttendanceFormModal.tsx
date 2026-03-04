@@ -19,6 +19,14 @@ import {
 import { useEmployee } from "@/features/employees/hooks/useEmployee"
 import { usePosition } from "@/features/positions/hooks/usePosition"
 
+const formatTimeMask = (val: string) => {
+    const raw = val.replace(/[^0-9]/g, '')
+    if (raw.length >= 3) {
+        return `${raw.slice(0, 2)}:${raw.slice(2, 4)}`
+    }
+    return raw
+}
+
 interface AttendanceFormModalProps {
     isOpen: boolean
     onClose: () => void
@@ -119,7 +127,7 @@ export function AttendanceFormModal({
 
                     <div className="space-y-2">
                         <Label htmlFor="employeeForm">Employee</Label>
-                        <Select value={employeeId} onValueChange={setEmployeeId} disabled={isEditMode}>
+                        <Select value={employeeId} onValueChange={setEmployeeId}>
                             <SelectTrigger id="employeeForm">
                                 <SelectValue placeholder="Select Employee" />
                             </SelectTrigger>
@@ -139,7 +147,6 @@ export function AttendanceFormModal({
                                 setPositionId(val)
                                 setShiftId("") // Reset shift if position changes
                             }}
-                            disabled={isEditMode}
                         >
                             <SelectTrigger id="positionForm">
                                 <SelectValue placeholder="Select Position" />
@@ -154,7 +161,7 @@ export function AttendanceFormModal({
 
                     <div className="space-y-2">
                         <Label htmlFor="shiftForm">Shift (Default)</Label>
-                        <Select value={shiftId} onValueChange={setShiftId} disabled={isEditMode || !positionId}>
+                        <Select value={shiftId} onValueChange={setShiftId} disabled={!positionId}>
                             <SelectTrigger id="shiftForm">
                                 <SelectValue placeholder="Select Shift" />
                             </SelectTrigger>
@@ -178,18 +185,33 @@ export function AttendanceFormModal({
                             type="date"
                             value={workDate}
                             onChange={e => setWorkDate(e.target.value)}
-                            disabled={isEditMode}
                         />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label htmlFor="checkInForm">Check-in Time</Label>
-                            <Input id="checkInForm" type="time" value={checkIn} onChange={e => setCheckIn(e.target.value)} />
+                            <Label htmlFor="checkInForm">Check-in Time (24h)</Label>
+                            <Input
+                                id="checkInForm"
+                                type="text"
+                                placeholder="00:00"
+                                maxLength={5}
+                                value={checkIn}
+                                onChange={e => setCheckIn(formatTimeMask(e.target.value))}
+                                className="font-mono"
+                            />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="checkOutForm">Check-out Time</Label>
-                            <Input id="checkOutForm" type="time" value={checkOut} onChange={e => setCheckOut(e.target.value)} />
+                            <Label htmlFor="checkOutForm">Check-out Time (24h)</Label>
+                            <Input
+                                id="checkOutForm"
+                                type="text"
+                                placeholder="00:00"
+                                maxLength={5}
+                                value={checkOut}
+                                onChange={e => setCheckOut(formatTimeMask(e.target.value))}
+                                className="font-mono"
+                            />
                         </div>
                     </div>
 

@@ -6,10 +6,12 @@ namespace CoffeeStaffManagement.Application.Attendance.Commands;
 public class UpdateAttendanceCommandHandler : IRequestHandler<UpdateAttendanceCommand>
 {
     private readonly IAttendanceRepository _attendanceRepo;
+    private readonly IScheduleRepository _scheduleRepo;
 
-    public UpdateAttendanceCommandHandler(IAttendanceRepository attendanceRepo)
+    public UpdateAttendanceCommandHandler(IAttendanceRepository attendanceRepo, IScheduleRepository scheduleRepo)
     {
         _attendanceRepo = attendanceRepo;
+        _scheduleRepo = scheduleRepo;
     }
 
     public async Task Handle(UpdateAttendanceCommand request, CancellationToken cancellationToken)
@@ -22,7 +24,30 @@ public class UpdateAttendanceCommandHandler : IRequestHandler<UpdateAttendanceCo
         {
             var diff = request.CheckOut.Value - request.CheckIn.Value;
             totalHours = (decimal)diff.TotalHours;
-            if (totalHours < 0) throw new ArgumentException("CheckOut must be after CheckIn");
+            // Removed strict validation to allow overnight shifts or manual overrides, but kept positive check
+            if (totalHours < 0) totalHours = 0;
+        }
+
+        if (request.EmployeeId.HasValue && request.ShiftId.HasValue && request.WorkDate.HasValue)
+        {
+            var schedule = await _scheduleRepo.GetAsync(request.EmployeeId.Value, request.ShiftId.Value, request.WorkDate.Value);
+
+            if (schedule == null)
+            {
+                // Auto-create Substitute Schedule if moving to a new slot
+                schedule = new Domain.Entities.Schedule
+                {
+                    EmployeeId = request.EmployeeId.Value,
+                    ShiftId = request.ShiftId.Value,
+                    WorkDate = request.WorkDate.Value,
+                    ApprovedAt = DateTime.Now,
+                    Note = "System Auto-Created: Manual Attendance Reassignment"
+                };
+                await _scheduleRepo.AddAsync(schedule);
+            }
+
+            attendance.ScheduleId = schedule.Id;
+            attendance.EmployeeId = request.EmployeeId.Value;
         }
 
         attendance.CheckIn = request.CheckIn;

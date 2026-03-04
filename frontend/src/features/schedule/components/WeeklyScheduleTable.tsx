@@ -162,7 +162,7 @@ export function WeeklyScheduleTable({ date, shifts, onCellClick, filterPosition 
                                                 {d.toLocaleDateString('en-US', { weekday: 'short' })}
                                             </span>
                                             <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400">
-                                                {d.toLocaleDateString('en-US', { day: '2-digit', month: '2-digit' })}
+                                                {d.getDate().toString().padStart(2, '0')}/{((d.getMonth() + 1)).toString().padStart(2, '0')}
                                             </span>
                                         </div>
                                     </TableHead>
@@ -233,7 +233,7 @@ export function WeeklyScheduleTable({ date, shifts, onCellClick, filterPosition 
                                                                                         </span>
                                                                                         {(schedule.checkIn || schedule.checkOut) && (
                                                                                             <span className="text-[9px] font-mono font-bold text-green-700 dark:text-green-400 bg-green-500/20 px-1 py-0.5 rounded w-max mt-1">
-                                                                                                Thực tế: {schedule.checkIn ? new Date(schedule.checkIn).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '--:--'} - {schedule.checkOut ? new Date(schedule.checkOut).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '--:--'}
+                                                                                                Thực tế: {schedule.checkIn ? new Date(schedule.checkIn).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }) : '--:--'} - {schedule.checkOut ? new Date(schedule.checkOut).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }) : '--:--'}
                                                                                             </span>
                                                                                         )}
                                                                                         {schedule.note && (
@@ -266,7 +266,7 @@ export function WeeklyScheduleTable({ date, shifts, onCellClick, filterPosition 
                 {weekDates.map(d => {
                     const dateStr = d.toISOString().slice(0, 10)
                     const dayName = d.toLocaleDateString('en-US', { weekday: 'long' })
-                    const displayDay = d.toLocaleDateString('en-US', { day: '2-digit', month: '2-digit' })
+                    const displayDay = `${d.getDate().toString().padStart(2, '0')}/${((d.getMonth() + 1)).toString().padStart(2, '0')}`
 
                     // Get all schedules for this day across all unique shifts
                     const daySchedules: Schedule[] = []
@@ -327,7 +327,7 @@ export function WeeklyScheduleTable({ date, shifts, onCellClick, filterPosition 
                                                     <div className="mt-3 pt-3 border-t border-black/5 flex flex-col gap-1">
                                                         <span className="text-[9px] font-black uppercase tracking-widest opacity-40">Actual Attendance</span>
                                                         <span className="text-[10px] font-mono font-black text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-lg w-fit">
-                                                            {s.checkIn ? new Date(s.checkIn).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '--:--'} - {s.checkOut ? new Date(s.checkOut).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '--:--'}
+                                                            {s.checkIn ? new Date(s.checkIn).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }) : '--:--'} - {s.checkOut ? new Date(s.checkOut).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }) : '--:--'}
                                                         </span>
                                                     </div>
                                                 )}

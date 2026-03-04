@@ -18,6 +18,7 @@ import PositionsPage from '@/features/positions/pages/PositionsPage'
 import SchedulePage from '@/features/schedule/pages/SchedulePage'
 import AttendancePage from '@/features/attendance/pages/AttendancePage'
 import PayrollPage from '@/features/payroll/pages/PayrollPage'
+import PayrollExportPage from '@/features/payroll/pages/PayrollExportPage'
 import AdjustmentsPage from '@/features/adjustments/page/AdjustmentsPage'
 import RevenuePage from '@/features/revenue/pages/RevenuePage'
 import ActivityLogPage from '@/features/activity-log/pages/ActivityPage'
@@ -123,6 +124,10 @@ export const router = createBrowserRouter([
           {
             path: 'payroll',
             element: <PayrollPage />,
+          },
+          {
+            path: 'payroll/export',
+            element: <PayrollExportPage />,
           },
           {
             path: 'adjustments',

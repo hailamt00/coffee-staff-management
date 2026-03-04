@@ -1,0 +1,32 @@
+[
+  {
+    "id": 60,
+    "name": "Ca Chiều",
+    "pos": "Phục vụ"
+  },
+  {
+    "id": 61,
+    "name": "Ca Tối",
+    "pos": "Phục vụ"
+  },
+  {
+    "id": 63,
+    "name": "Ca Chiều",
+    "pos": "Pha chế"
+  },
+  {
+    "id": 64,
+    "name": "Ca Tối",
+    "pos": "Pha chế"
+  },
+  {
+    "id": 62,
+    "name": "Ca Sáng",
+    "pos": "Pha chế"
+  },
+  {
+    "id": 59,
+    "name": "Ca Sáng",
+    "pos": "Phục vụ"
+  }
+]

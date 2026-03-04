@@ -93,6 +93,9 @@ export default function AttendancePage() {
   const { data: attendances = [], isLoading: queryLoading } = useAttendanceRange(queryStartDate, queryEndDate)
   const loading = mutationLoading || queryLoading || employeesLoading
 
+  // Memoize employee options for MultiSelect to prevent re-renders
+  const employeeOptions = useMemo(() => employees.map(emp => ({ label: emp.name, value: String(emp.id) })), [employees])
+
   // Client-side filtering
   const filteredAttendances = useMemo(() => {
     return attendances.filter(record => {
@@ -129,6 +132,7 @@ export default function AttendancePage() {
     {
       id: "index",
       header: "#",
+      meta: { align: 'center', width: '50px' },
       cell: ({ row, table }) => {
         const pageIndex = table.getState().pagination.pageIndex
         const pageSize = table.getState().pagination.pageSize
@@ -141,36 +145,54 @@ export default function AttendancePage() {
     {
       accessorKey: "workDate",
       header: "Timeline",
+      meta: { align: 'center', hideSortIcon: true },
       cell: ({ row }) => (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 items-center">
           <span className="font-bold text-slate-900 dark:text-slate-100 whitespace-nowrap">
             {formatDateInVietnam(row.original.workDate)}
           </span>
-          <span className="text-[10px] text-slate-400 font-black uppercase tracking-tighter">
-            {row.original.shiftName || "Unknown"}
+          <span className="text-[10px] text-slate-400 font-black tracking-tighter">
+            {(() => {
+              const name = row.original.shiftName?.toLowerCase() || "";
+              if (name.includes('sáng') || name.includes('sang')) return "Ca Sáng";
+              if (name.includes('chiều') || name.includes('chieu')) return "Ca Chiều";
+              if (name.includes('tối') || name.includes('toi')) return "Ca Tối";
+              return row.original.shiftName || "Unknown";
+            })()}
           </span>
         </div>
       )
     },
     {
       id: "employee",
+      accessorKey: "employeeName",
       header: "Staff",
+      meta: { align: 'center', hideSortIcon: true },
       cell: ({ row }) => (
         <span className="font-bold text-slate-900">{row.original.employeeName || "Unknown"}</span>
       )
     },
     {
       id: "position",
+      accessorKey: "positionName",
       header: "Position",
+      meta: { align: 'center', hideSortIcon: true },
       cell: ({ row }) => {
-        let pos = row.original.positionName || "—"
-        if (pos.includes('Pha chế')) pos = 'Pha chế'
-        return <span className="text-[11px] text-slate-500 font-medium">{pos}</span>
+        const pos = row.original.positionName?.toLowerCase() || "";
+        if (pos.includes('pha chế') || pos.includes('barista') || pos.includes('pha che')) {
+          return <span className="text-[11px] text-slate-500 font-medium">Pha chế</span>
+        }
+        if (pos.includes('phục vụ') || pos.includes('server') || pos.includes('phuc vu')) {
+          return <span className="text-[11px] text-slate-500 font-medium">Phục vụ</span>
+        }
+        return <span className="text-[11px] text-slate-500 font-medium">{row.original.positionName || "—"}</span>
       }
     },
     {
       id: "checkIn",
+      accessorKey: "checkIn",
       header: "In",
+      meta: { align: 'center', hideSortIcon: true },
       cell: ({ row }) => {
         const checkIn = row.original.checkIn;
         const formatTime = (t: string) => t ? new Date(t).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }) : '—';
@@ -179,7 +201,9 @@ export default function AttendancePage() {
     },
     {
       id: "checkOut",
+      accessorKey: "checkOut",
       header: "Out",
+      meta: { align: 'center', hideSortIcon: true },
       cell: ({ row }) => {
         const checkOut = row.original.checkOut;
         const formatTime = (t: string) => t ? new Date(t).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }) : '—';
@@ -188,7 +212,9 @@ export default function AttendancePage() {
     },
     {
       id: "diff",
+      accessorKey: "totalHours",
       header: "Diff",
+      meta: { align: 'center', hideSortIcon: true },
       cell: ({ row }) => (
         <div className="font-black tabular-nums text-slate-900">
           {row.original.totalHours ? parseFloat(row.original.totalHours).toFixed(2) : "—"}
@@ -197,14 +223,28 @@ export default function AttendancePage() {
     },
     {
       id: "status",
+      accessorKey: "status",
       header: "Status",
+      meta: { align: 'center', hideSortIcon: true },
       cell: ({ row }) => <StatusBadge status={row.original.status} />
+    },
+    {
+      id: "note",
+      accessorKey: "note",
+      header: "Note",
+      meta: { align: 'center', hideSortIcon: true },
+      cell: ({ row }) => (
+        <span className="text-[10px] text-slate-400 font-medium italic truncate max-w-[150px] inline-block" title={row.original.note}>
+          {row.original.note || "—"}
+        </span>
+      )
     },
     {
       id: "actions",
       header: "Actions",
+      meta: { align: 'center' },
       cell: ({ row }) => (
-        <div className="flex gap-1 justify-end">
+        <div className="flex gap-1 justify-center">
           <Button
             size="icon"
             variant="outline"
@@ -285,8 +325,8 @@ export default function AttendancePage() {
                         </SelectTrigger>
                         <SelectContent className="rounded-xl">
                           <SelectItem value="all">All Positions</SelectItem>
-                          <SelectItem value="phache">Barista</SelectItem>
-                          <SelectItem value="phucvu">Server</SelectItem>
+                          <SelectItem value="phache">Pha chế</SelectItem>
+                          <SelectItem value="phucvu">Phục vụ</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -294,7 +334,7 @@ export default function AttendancePage() {
                     <div className="space-y-2">
                       <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Employees</Label>
                       <MultiSelect
-                        options={employees.map(emp => ({ label: emp.name, value: String(emp.id) }))}
+                        options={employeeOptions}
                         selectedValues={selectedEmployeeIds}
                         onChange={setSelectedEmployeeIds}
                         placeholder="Select employees..."
@@ -302,7 +342,7 @@ export default function AttendancePage() {
                     </div>
 
                     <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-neutral-800 rounded-2xl">
-                      <Label htmlFor="missingInOutMob" className="text-xs font-bold">Missing check-in/out</Label>
+                      <Label htmlFor="missingInOutMob" className="text-xs font-bold">Forgot check-in/out</Label>
                       <input
                         type="checkbox"
                         id="missingInOutMob"
@@ -343,15 +383,15 @@ export default function AttendancePage() {
         </div>
 
         {/* Desktop Filter Bar */}
-        <div className="hidden md:flex items-center gap-4 bg-slate-100 dark:bg-neutral-800 p-2 rounded-[1.5rem]">
-          <div className="grid grid-cols-5 gap-3 flex-1 items-end">
+        <div className="hidden md:flex flex-col gap-4 bg-slate-100 dark:bg-neutral-800 p-4 rounded-[1.5rem]">
+          <div className="grid grid-cols-6 gap-3 items-end">
             <div className="space-y-1">
               <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">Start</Label>
-              <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="h-10 rounded-xl bg-white border-none text-xs" />
+              <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="h-10 rounded-xl bg-white border-none text-xs text-center" />
             </div>
             <div className="space-y-1">
               <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">End</Label>
-              <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="h-10 rounded-xl bg-white border-none text-xs" />
+              <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="h-10 rounded-xl bg-white border-none text-xs text-center" />
             </div>
             <div className="space-y-1">
               <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">Position</Label>
@@ -361,19 +401,31 @@ export default function AttendancePage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All</SelectItem>
-                  <SelectItem value="phache">Barista</SelectItem>
-                  <SelectItem value="phucvu">Server</SelectItem>
+                  <SelectItem value="phache">Pha chế</SelectItem>
+                  <SelectItem value="phucvu">Phục vụ</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="col-span-1 space-y-1">
               <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">Employees</Label>
               <MultiSelect
-                options={employees.map(emp => ({ label: emp.name, value: String(emp.id) }))}
+                options={employeeOptions}
                 selectedValues={selectedEmployeeIds}
                 onChange={setSelectedEmployeeIds}
                 placeholder="All staff"
               />
+            </div>
+            <div className="flex items-center gap-3 h-10 px-4 bg-white dark:bg-neutral-900 rounded-xl shadow-sm">
+              <input
+                type="checkbox"
+                id="missingFilterDesk"
+                className="w-4 h-4 accent-black rounded-md cursor-pointer"
+                checked={missingFilter}
+                onChange={(e) => setMissingFilter(e.target.checked)}
+              />
+              <Label htmlFor="missingFilterDesk" className="text-[10px] font-black uppercase tracking-widest text-slate-500 cursor-pointer select-none">
+                Forgot check-in/out
+              </Label>
             </div>
             <Button
               className="h-10 bg-black text-white hover:bg-slate-800 rounded-xl font-black uppercase tracking-widest text-[10px]"
@@ -436,6 +488,7 @@ export default function AttendancePage() {
           loading={loading}
           searchKey="employeeName"
           defaultPageSize={100}
+          initialSorting={[{ id: 'workDate', desc: true }, { id: 'checkIn', desc: true }]}
         />
       </div >
 

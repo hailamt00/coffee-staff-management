@@ -36,6 +36,7 @@ export function useAttendance() {
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({ queryKey: ['attendance', variables.workDate] })
             queryClient.invalidateQueries({ queryKey: ['schedules', variables.workDate] })
+            queryClient.invalidateQueries({ queryKey: ['schedules-weekly'] })
             dispatch(
                 addNotification({
                     type: 'success',
@@ -60,6 +61,7 @@ export function useAttendance() {
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({ queryKey: ['attendance', variables.workDate] })
             queryClient.invalidateQueries({ queryKey: ['schedules', variables.workDate] })
+            queryClient.invalidateQueries({ queryKey: ['schedules-weekly'] })
             dispatch(
                 addNotification({
                     type: 'success',
@@ -85,6 +87,7 @@ export function useAttendance() {
             queryClient.invalidateQueries({ queryKey: ['attendance'] })
             queryClient.invalidateQueries({ queryKey: ['attendance-range'] })
             queryClient.invalidateQueries({ queryKey: ['schedules'] })
+            queryClient.invalidateQueries({ queryKey: ['schedules-weekly'] })
             dispatch(addNotification({ type: 'success', title: 'Success', message: 'Attendance record created' }))
         },
         onError: (err: any) => {
@@ -99,6 +102,7 @@ export function useAttendance() {
             queryClient.invalidateQueries({ queryKey: ['attendance'] })
             queryClient.invalidateQueries({ queryKey: ['attendance-range'] })
             queryClient.invalidateQueries({ queryKey: ['schedules'] })
+            queryClient.invalidateQueries({ queryKey: ['schedules-weekly'] })
             dispatch(addNotification({ type: 'success', title: 'Success', message: 'Attendance record updated' }))
         },
         onError: (err: any) => {
@@ -113,6 +117,7 @@ export function useAttendance() {
             queryClient.invalidateQueries({ queryKey: ['attendance'] })
             queryClient.invalidateQueries({ queryKey: ['attendance-range'] })
             queryClient.invalidateQueries({ queryKey: ['schedules'] })
+            queryClient.invalidateQueries({ queryKey: ['schedules-weekly'] })
             dispatch(addNotification({ type: 'success', title: 'Success', message: 'Attendance record deleted' }))
         },
         onError: (err: any) => {
