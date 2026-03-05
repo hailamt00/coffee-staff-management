@@ -394,7 +394,9 @@ export interface Revenue {
   cash: number
   bank: number
   income: number
+  inNote?: string
   expenses: number
+  exNote?: string
   net: number
   totalRevenue: number
   deviation: number
@@ -402,8 +404,6 @@ export interface Revenue {
   createdAt: string
   transactions?: Transaction[]
 }
-
-
 
 export interface CreateTransactionRequest {
   revenueId: number
@@ -418,7 +418,12 @@ export interface CreateRevenueRequest {
   cash: number
   bank: number
   note?: string
+  income?: number
+  inNote?: string
+  expenses?: number
+  exNote?: string
   employeeId?: number
+
   submittedAt?: string
   net?: number
   deviation?: number

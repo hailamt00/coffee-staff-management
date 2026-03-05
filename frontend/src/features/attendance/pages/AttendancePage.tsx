@@ -154,9 +154,9 @@ export default function AttendancePage() {
           <span className="text-[10px] text-slate-400 font-black tracking-tighter">
             {(() => {
               const name = row.original.shiftName?.toLowerCase() || "";
-              if (name.includes('sáng') || name.includes('sang')) return "Ca Sáng";
-              if (name.includes('chiều') || name.includes('chieu')) return "Ca Chiều";
-              if (name.includes('tối') || name.includes('toi')) return "Ca Tối";
+              if (name.includes('sáng') || name.includes('sang')) return "Morning Shift";
+              if (name.includes('chiều') || name.includes('chieu')) return "Afternoon Shift";
+              if (name.includes('tối') || name.includes('toi')) return "Evening Shift";
               return row.original.shiftName || "Unknown";
             })()}
           </span>
@@ -180,10 +180,10 @@ export default function AttendancePage() {
       cell: ({ row }) => {
         const pos = row.original.positionName?.toLowerCase() || "";
         if (pos.includes('pha chế') || pos.includes('barista') || pos.includes('pha che')) {
-          return <span className="text-[11px] text-slate-500 font-medium">Pha chế</span>
+          return <span className="text-[11px] text-slate-500 font-medium">Barista</span>
         }
         if (pos.includes('phục vụ') || pos.includes('server') || pos.includes('phuc vu')) {
-          return <span className="text-[11px] text-slate-500 font-medium">Phục vụ</span>
+          return <span className="text-[11px] text-slate-500 font-medium">Server</span>
         }
         return <span className="text-[11px] text-slate-500 font-medium">{row.original.positionName || "—"}</span>
       }
@@ -383,8 +383,8 @@ export default function AttendancePage() {
         </div>
 
         {/* Desktop Filter Bar */}
-        <div className="hidden md:flex flex-col gap-4 bg-slate-100 dark:bg-neutral-800 p-4 rounded-[1.5rem]">
-          <div className="grid grid-cols-6 gap-3 items-end">
+        <div className="flex flex-col gap-3 bg-slate-50 dark:bg-neutral-900 border border-slate-100 dark:border-neutral-800 p-4 rounded-[1.5rem]">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
             <div className="space-y-1">
               <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">Start</Label>
               <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="h-10 rounded-xl bg-white border-none text-xs text-center" />
@@ -406,7 +406,7 @@ export default function AttendancePage() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="col-span-1 space-y-1">
+            <div className="col-span-2 sm:col-span-1 space-y-1">
               <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">Employees</Label>
               <MultiSelect
                 options={employeeOptions}
@@ -476,21 +476,18 @@ export default function AttendancePage() {
       </div >
 
       {/* DATA TABLE */}
-      < div className="px-1" >
-        <div className="mb-4">
-          <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-1">
-            Attendance Registry
-          </h2>
+      <div className="px-1">
+        <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-slate-100 dark:border-neutral-800 shadow-sm overflow-hidden">
+          <DataTable
+            columns={columns}
+            data={filteredAttendances}
+            loading={loading}
+            searchKey="employeeName"
+            defaultPageSize={100}
+            initialSorting={[{ id: 'workDate', desc: true }, { id: 'checkIn', desc: true }]}
+          />
         </div>
-        <DataTable
-          columns={columns}
-          data={filteredAttendances}
-          loading={loading}
-          searchKey="employeeName"
-          defaultPageSize={100}
-          initialSorting={[{ id: 'workDate', desc: true }, { id: 'checkIn', desc: true }]}
-        />
-      </div >
+      </div>
 
       <AttendanceFormModal
         isOpen={isModalOpen}

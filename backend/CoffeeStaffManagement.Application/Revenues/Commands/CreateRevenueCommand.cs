@@ -50,6 +50,11 @@ public class CreateRevenueCommandHandler : IRequestHandler<CreateRevenueCommand,
             existingRevenue.OpeningBalance = request.Request.OpeningBalance;
             existingRevenue.Cash = request.Request.Cash;
             existingRevenue.Bank = request.Request.Bank;
+            existingRevenue.Income = request.Request.Income;
+            existingRevenue.InNote = request.Request.InNote;
+            existingRevenue.Expenses = request.Request.Expenses;
+            existingRevenue.ExNote = request.Request.ExNote;
+
             existingRevenue.TotalRevenue = totalRevenue;
             existingRevenue.Net = net;
             existingRevenue.Deviation = deviation;
@@ -68,6 +73,11 @@ public class CreateRevenueCommandHandler : IRequestHandler<CreateRevenueCommand,
             OpeningBalance = request.Request.OpeningBalance,
             Cash = request.Request.Cash,
             Bank = request.Request.Bank,
+            Income = request.Request.Income,
+            InNote = request.Request.InNote,
+            Expenses = request.Request.Expenses,
+            ExNote = request.Request.ExNote,
+
             TotalRevenue = totalRevenue,
             Net = net,
             Deviation = deviation,
@@ -83,9 +93,6 @@ public class CreateRevenueCommandHandler : IRequestHandler<CreateRevenueCommand,
 
     private static RevenueDto MapRevenueDto(Revenue revenue, string employeeName)
     {
-        var income = revenue.Transactions?.Where(t => t.Type == TransactionType.Income).Sum(t => t.Amount) ?? 0;
-        var expenses = revenue.Transactions?.Where(t => t.Type == TransactionType.Expense).Sum(t => t.Amount) ?? 0;
-
         return new RevenueDto
         {
             Id = revenue.Id,
@@ -95,8 +102,12 @@ public class CreateRevenueCommandHandler : IRequestHandler<CreateRevenueCommand,
             OpeningBalance = revenue.OpeningBalance,
             Cash = revenue.Cash,
             Bank = revenue.Bank,
-            Income = income,
-            Expenses = expenses,
+            Income = revenue.Income,
+            InNote = revenue.InNote,
+            Expenses = revenue.Expenses,
+            ExNote = revenue.ExNote,
+
+
             TotalRevenue = revenue.TotalRevenue,
             Net = revenue.Net,
             Deviation = revenue.Deviation,

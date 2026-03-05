@@ -21,9 +21,6 @@ public class GetRevenueByScheduleQueryHandler : IRequestHandler<GetRevenueBySche
         var revenue = await _repo.GetByScheduleIdAsync(request.ScheduleId, ct);
         if (revenue == null) return null;
 
-        var income = revenue.Transactions?.Where(t => t.Type == TransactionType.Income).Sum(t => t.Amount) ?? 0;
-        var expenses = revenue.Transactions?.Where(t => t.Type == TransactionType.Expense).Sum(t => t.Amount) ?? 0;
-
         return new RevenueDto
         {
             Id = revenue.Id,
@@ -33,13 +30,16 @@ public class GetRevenueByScheduleQueryHandler : IRequestHandler<GetRevenueBySche
             OpeningBalance = revenue.OpeningBalance,
             Cash = revenue.Cash,
             Bank = revenue.Bank,
-            Income = income,
-            Expenses = expenses,
+            Income = revenue.Income,
+            InNote = revenue.InNote,
+            Expenses = revenue.Expenses,
+            ExNote = revenue.ExNote,
             TotalRevenue = revenue.TotalRevenue,
             Net = revenue.Net,
             Deviation = revenue.Deviation,
             Note = revenue.Note,
             CreatedAt = revenue.CreatedAt,
+
             Transactions = revenue.Transactions?.Select(t => new CoffeeStaffManagement.Application.Transactions.DTOs.TransactionDto
             {
                 Id = t.Id,

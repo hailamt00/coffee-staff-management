@@ -27,14 +27,14 @@ public class RevenueRepository : GenericRepository<Revenue>, IRevenueRepository
 
     public async Task<List<Revenue>> GetByDateRangeAsync(DateTime startDate, DateTime endDate, CancellationToken ct)
     {
-        // Assuming we query by CreatedAt or linked Schedule work date?
-        // Revenue is usually daily/shift based.
-        // Let's use CreatedAt for now, or join with Schedule for WorkDate if needed.
-        // But Revenue has CreatedAt.
         return await _context.Revenues
             .Include(r => r.Transactions)
+            .Include(r => r.Employee)
             .Include(r => r.Schedule)
+                .ThenInclude(s => s!.Shift)
+                    .ThenInclude(sh => sh!.Position)
             .Where(r => r.CreatedAt >= startDate && r.CreatedAt <= endDate)
+            .OrderByDescending(r => r.CreatedAt)
             .ToListAsync(ct);
     }
 

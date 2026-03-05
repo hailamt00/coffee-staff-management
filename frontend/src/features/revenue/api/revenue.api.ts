@@ -27,6 +27,11 @@ export const revenueApi = {
         return data
     },
 
+    getByRange: async (from: string, to: string): Promise<Revenue[]> => {
+        const { data } = await axios.get(`/revenues?from=${from}&to=${to}`)
+        return data
+    },
+
     createTransaction: async (
         payload: CreateTransactionRequest
     ): Promise<Transaction> => {

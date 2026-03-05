@@ -4,12 +4,17 @@ namespace CoffeeStaffManagement.Domain.Entities;
 
 public class Revenue : AuditableEntity
 {
-    public int ScheduleId { get; set; }
+    public int? ScheduleId { get; set; }
     public int EmployeeId { get; set; }
 
     public decimal OpeningBalance { get; set; }
     public decimal Cash { get; set; }
     public decimal Bank { get; set; }
+
+    public decimal Income { get; set; }
+    public string? InNote { get; set; }
+    public decimal Expenses { get; set; }
+    public string? ExNote { get; set; }
 
     public decimal Net { get; set; }
 

@@ -26,8 +26,6 @@ export function useAdjustment() {
             return response.data
         },
         enabled: !!month && !!year,
-        staleTime: 5 * 60 * 1000,
-        refetchOnWindowFocus: false,
     })
 
     const useRewardPenaltyTypes = () => useQuery({

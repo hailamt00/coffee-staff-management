@@ -50,13 +50,13 @@ export default function PositionPage() {
             <h1 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
               Positions
             </h1>
-            <p className="mt-1 text-[11px] font-medium text-slate-500 hidden sm:block">
+            <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest hidden sm:block">
               Role & Shift Blueprint
             </p>
           </div>
 
           <Button
-            className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 border-none h-10 w-10 sm:w-auto sm:px-6 rounded-xl font-semibold text-[11px]"
+            className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 border-none h-10 w-10 sm:w-auto sm:px-6 rounded-xl font-bold uppercase tracking-widest text-[10px]"
             onClick={() => {
               setEditingId(null)
               setDialogOpen(true)
@@ -95,27 +95,23 @@ export default function PositionPage() {
       </div>
 
       <div className="px-1">
-        <div className="mb-4">
-          <h2 className="text-[11px] font-semibold text-slate-400 px-1">
-            Position Architecture
-          </h2>
+        <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-slate-100 dark:border-neutral-800 shadow-sm overflow-hidden">
+          {loading ? (
+            <div className="p-12 text-center">
+              <div className="inline-block h-8 w-8 border-4 border-slate-200 border-t-black rounded-full animate-spin mb-4" />
+              <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Hydrating Positions...</p>
+            </div>
+          ) : (
+            <PositionTable
+              data={positions}
+              onEdit={id => {
+                setEditingId(id)
+                setDialogOpen(true)
+              }}
+              onDelete={(id, name) => setDeleteTarget({ id, name })}
+            />
+          )}
         </div>
-
-        {loading ? (
-          <div className="p-12 text-center rounded-3xl border border-dashed border-slate-200">
-            <div className="inline-block h-8 w-8 border-4 border-slate-200 border-t-black rounded-full animate-spin mb-4" />
-            <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Hydrating Positions...</p>
-          </div>
-        ) : (
-          <PositionTable
-            data={positions}
-            onEdit={id => {
-              setEditingId(id)
-              setDialogOpen(true)
-            }}
-            onDelete={(id, name) => setDeleteTarget({ id, name })}
-          />
-        )}
       </div>
 
       <PositionDialog

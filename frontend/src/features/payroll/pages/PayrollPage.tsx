@@ -1,6 +1,5 @@
 import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
 import { usePayroll } from '../hooks/usePayroll'
 import { useEmployee } from '@/features/employees/hooks/useEmployee'
 import { useAdjustment } from '@/features/adjustments/hooks/useAdjustment'
@@ -17,7 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select'
-import { FileUp, Calculator } from 'lucide-react'
+import { FileUp, Calculator, Users, TrendingUp, TrendingDown, DollarSign, Filter } from 'lucide-react'
+import { SummaryCard } from '@/shared/components/ui/summary-card'
 import { formatDate, formatMoney } from '@/shared/utils/format'
 import { DataTable } from '@/shared/components/ui/data-table'
 import type { ColumnDef } from '@tanstack/react-table'
@@ -38,7 +38,6 @@ const formatTimeStr = (t: string) => {
 }
 
 export default function PayrollPage() {
-  const navigate = useNavigate()
   const [startDate, setStartDate] = useState(() => {
     const today = new Date()
     const firstDay = new Date(today.getFullYear(), today.getMonth(), 1)
@@ -336,28 +335,32 @@ export default function PayrollPage() {
           <Button
             onClick={handleGenerate}
             disabled={loading}
-            className="h-10 border-none bg-black text-[10px] font-bold uppercase tracking-widest text-white hover:bg-slate-800 px-6 rounded-xl dark:bg-white dark:text-black dark:hover:bg-neutral-200"
+            className="h-10 border-none bg-black text-[10px] font-bold uppercase tracking-widest text-white hover:bg-slate-800 w-10 sm:w-auto sm:px-6 rounded-xl dark:bg-white dark:text-black dark:hover:bg-neutral-200 shadow-sm"
           >
-            <Calculator className="h-4 w-4 mr-2" />
-            Recalculate
+            <Calculator className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">Recalculate</span>
           </Button>
         </div>
 
-        {/* Filter Bar - Attendance Style */}
-        <div className="hidden md:flex flex-col gap-4 bg-slate-100 dark:bg-neutral-800 p-4 rounded-[1.5rem]">
-          <div className="grid grid-cols-6 gap-3 items-end">
+        {/* Filter Bar */}
+        <div className="flex flex-col gap-3 bg-slate-50 dark:bg-neutral-900 border border-slate-100 dark:border-neutral-800 p-4 rounded-[1.5rem]">
+          <div className="flex items-center gap-2 mb-1">
+            <Filter className="h-3.5 w-3.5 text-slate-400" />
+            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Filters</span>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
             <div className="space-y-1">
               <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">Start Date</Label>
-              <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="h-10 rounded-xl bg-white border-none text-xs text-center" />
+              <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="h-10 rounded-xl bg-white border-none text-xs text-center shadow-sm" />
             </div>
             <div className="space-y-1">
               <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">End Date</Label>
-              <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="h-10 rounded-xl bg-white border-none text-xs text-center" />
+              <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="h-10 rounded-xl bg-white border-none text-xs text-center shadow-sm" />
             </div>
             <div className="space-y-1">
               <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">Position</Label>
               <Select value={positionFilter} onValueChange={setPositionFilter}>
-                <SelectTrigger className="h-10 rounded-xl bg-white border-none text-xs">
+                <SelectTrigger className="h-10 rounded-xl bg-white border-none text-xs shadow-sm">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -367,7 +370,7 @@ export default function PayrollPage() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="col-span-1 space-y-1">
+            <div className="col-span-2 sm:col-span-1 space-y-1">
               <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">Employees</Label>
               <MultiSelect
                 options={employees.map(e => ({ label: e.name, value: String(e.id) }))}
@@ -389,31 +392,60 @@ export default function PayrollPage() {
               </Label>
             </div>
             <Button
-              className="h-10 bg-black text-white hover:bg-slate-800 rounded-xl font-black uppercase tracking-widest text-[10px]"
+              className="h-10 bg-black text-white hover:bg-slate-800 rounded-xl font-black uppercase tracking-widest text-[10px] shadow-sm"
               onClick={handleFilter}
             >
-              Filter
+              Apply
             </Button>
           </div>
         </div>
       </div>
 
+      {/* STATS SECTION */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <SummaryCard
+          title="Base Payroll"
+          value={formatMoney(globalStats.base)}
+          description={`${globalStats.count} employees`}
+          icon={Users}
+          color="cyan"
+        />
+        <SummaryCard
+          title="Total Rewards"
+          value={formatMoney(globalStats.rewards)}
+          description="Incentives"
+          icon={TrendingUp}
+          color="green"
+        />
+        <SummaryCard
+          title="Total Penalties"
+          value={formatMoney(globalStats.penalties)}
+          description="Deductions"
+          icon={TrendingDown}
+          color="red"
+        />
+        <SummaryCard
+          title="Net Settlement"
+          value={formatMoney(globalStats.total)}
+          description="Total payout"
+          icon={DollarSign}
+          color="cyan"
+        />
+      </div>
+
       {/* PAYROLL SUMMARY */}
       <div className="px-1">
-        <div className="mb-4">
-          <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-1">
-            Payroll Settlement
-          </h2>
+        <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-slate-100 dark:border-neutral-800 shadow-sm overflow-hidden">
+          <DataTable
+            columns={summaryColumns}
+            data={summaryData}
+            loading={loading}
+            searchKey="employeeName"
+            defaultPageSize={50}
+            showFooter={true}
+            hideToolbar={true}
+          />
         </div>
-        <DataTable
-          columns={summaryColumns}
-          data={summaryData}
-          loading={loading}
-          searchKey="employeeName"
-          defaultPageSize={50}
-          showFooter={true}
-          hideToolbar={true}
-        />
       </div>
 
       {/* WORK LOGS */}
@@ -425,26 +457,30 @@ export default function PayrollPage() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate('/payroll/export', {
-              state: {
+            onClick={() => {
+              const exportPayload = {
                 data: allDetails,
                 summaryData,
                 startDate,
                 endDate
               }
-            })}
+              localStorage.setItem('payrollExportData', JSON.stringify(exportPayload))
+              window.open('/payroll/export', '_blank')
+            }}
             className="h-9 rounded-xl border-none bg-[#28a745] text-white hover:bg-[#218838] text-[10px] font-bold uppercase tracking-widest px-4 transition-all shadow-sm"
           >
-            <FileUp className="h-4 w-4 mr-2" /> Xuất Báo Cáo
+            <FileUp className="h-4 w-4 mr-2" /> Generate Payslip
           </Button>
         </div>
-        <DataTable
-          columns={detailColumns}
-          data={allDetails}
-          loading={loading}
-          initialSorting={[{ id: 'workDate', desc: true }, { id: 'checkIn', desc: true }]}
-          defaultPageSize={100}
-        />
+        <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-slate-100 dark:border-neutral-800 shadow-sm overflow-hidden">
+          <DataTable
+            columns={detailColumns}
+            data={allDetails}
+            loading={loading}
+            initialSorting={[{ id: 'workDate', desc: true }, { id: 'checkIn', desc: true }]}
+            defaultPageSize={100}
+          />
+        </div>
       </div>
     </motion.div>
   )

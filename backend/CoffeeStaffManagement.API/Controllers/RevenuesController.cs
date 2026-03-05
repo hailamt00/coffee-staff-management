@@ -25,10 +25,21 @@ public class RevenuesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<RevenueDto>>> GetByMonth([FromQuery] int month, [FromQuery] int year)
+    public async Task<ActionResult<List<RevenueDto>>> GetByMonth([FromQuery] int? month, [FromQuery] int? year, [FromQuery] DateTime? from, [FromQuery] DateTime? to)
     {
-        var result = await _mediator.Send(new GetRevenuesByMonthQuery(month, year));
-        return Ok(result);
+        if (from.HasValue && to.HasValue)
+        {
+            var rangeResult = await _mediator.Send(new GetRevenuesByRangeQuery(from.Value, to.Value));
+            return Ok(rangeResult);
+        }
+
+        if (month.HasValue && year.HasValue)
+        {
+            var monthResult = await _mediator.Send(new GetRevenuesByMonthQuery(month.Value, year.Value));
+            return Ok(monthResult);
+        }
+
+        return BadRequest("Please provide either month/year or from/to date range.");
     }
 
     [HttpGet("schedule/{scheduleId}")]

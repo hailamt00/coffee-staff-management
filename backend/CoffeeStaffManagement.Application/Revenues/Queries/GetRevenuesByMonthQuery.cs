@@ -22,9 +22,6 @@ public class GetRevenuesByMonthQueryHandler : IRequestHandler<GetRevenuesByMonth
 
         return revenues.Select(r =>
         {
-            var income = r.Transactions?.Where(t => t.Type == TransactionType.Income).Sum(t => t.Amount) ?? 0;
-            var expenses = r.Transactions?.Where(t => t.Type == TransactionType.Expense).Sum(t => t.Amount) ?? 0;
-
             return new RevenueDto
             {
                 Id = r.Id,
@@ -37,8 +34,12 @@ public class GetRevenuesByMonthQueryHandler : IRequestHandler<GetRevenuesByMonth
                 OpeningBalance = r.OpeningBalance,
                 Cash = r.Cash,
                 Bank = r.Bank,
-                Income = income,
-                Expenses = expenses,
+                Income = r.Income,
+                InNote = r.InNote,
+                Expenses = r.Expenses,
+                ExNote = r.ExNote,
+
+
                 TotalRevenue = r.TotalRevenue,
                 Net = r.Net,
                 Deviation = r.Deviation,

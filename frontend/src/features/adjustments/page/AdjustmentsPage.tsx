@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from '@/shared/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
+import { motion } from 'framer-motion'
 import ViolationForm from '../components/ViolationForm'
 
 export default function AdjustmentsPage() {
@@ -47,56 +48,69 @@ export default function AdjustmentsPage() {
 
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="flex flex-wrap items-end justify-between gap-4 px-2">
-        <div>
-          <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
-            Adjustments
-          </h1>
-          <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-            Rewards & Penalties
-          </p>
-        </div>
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25 }}
+      className="space-y-6 pb-20"
+    >
+      {/* HEADER */}
+      <div className="flex flex-col gap-6 px-1">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
+              Adjustments
+            </h1>
+            <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest hidden sm:block">
+              Rewards & Penalties
+            </p>
+          </div>
 
-        <div className="flex gap-2 items-center">
-          <Select value={month} onValueChange={setMonth}>
-            <SelectTrigger className="w-20 h-10 rounded-lg border-slate-200 dark:border-neutral-800">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {Array.from({ length: 12 }).map((_, i) => {
-                const m = String(i + 1).padStart(2, '0')
-                return (
-                  <SelectItem key={m} value={m}>
-                    {m}
+          <div className="flex gap-2 items-center bg-slate-100 dark:bg-neutral-800 p-1.5 rounded-2xl">
+            <Select value={month} onValueChange={setMonth}>
+              <SelectTrigger className="w-20 h-10 bg-white dark:bg-black border-none text-sm font-bold px-4 rounded-xl shadow-sm tabular-nums">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {Array.from({ length: 12 }).map((_, i) => {
+                  const m = String(i + 1).padStart(2, '0')
+                  return (
+                    <SelectItem key={m} value={m}>
+                      {m}
+                    </SelectItem>
+                  )
+                })}
+              </SelectContent>
+            </Select>
+
+            <Select value={year} onValueChange={setYear}>
+              <SelectTrigger className="w-24 h-10 bg-white dark:bg-black border-none text-sm font-bold px-4 rounded-xl shadow-sm tabular-nums">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {['2024', '2025', '2026', '2027'].map((y) => (
+                  <SelectItem key={y} value={y}>
+                    {y}
                   </SelectItem>
-                )
-              })}
-            </SelectContent>
-          </Select>
-
-          <Select value={year} onValueChange={setYear}>
-            <SelectTrigger className="w-24 h-10 rounded-lg border-slate-200 dark:border-neutral-800">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {['2024', '2025', '2026', '2027'].map((y) => (
-                <SelectItem key={y} value={y}>
-                  {y}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
 
       {/* Tabs Layout */}
-      <Tabs defaultValue="form" className="w-full space-y-6">
-        <TabsList className="bg-slate-100 dark:bg-neutral-900 p-1">
-          <TabsTrigger value="form" className="px-6 font-semibold">Record Action</TabsTrigger>
-          <TabsTrigger value="report" className="px-6 font-semibold">Summary Report</TabsTrigger>
-        </TabsList>
+      <Tabs defaultValue="form" className="w-full space-y-6 overflow-visible">
+        <div className="px-1">
+          <TabsList className="bg-slate-100 dark:bg-neutral-800 p-1 rounded-2xl">
+            <TabsTrigger value="form" className="px-6 font-bold uppercase tracking-widest text-[10px] rounded-xl h-9">
+              Record Action
+            </TabsTrigger>
+            <TabsTrigger value="report" className="px-6 font-bold uppercase tracking-widest text-[10px] rounded-xl h-9">
+              Summary Report
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="form">
           <ViolationForm />
@@ -104,7 +118,7 @@ export default function AdjustmentsPage() {
 
         <TabsContent value="report" className="space-y-6">
           {/* KPI */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             <SummaryCard
               title="Total Actions"
               value={stats.totalCount.toLocaleString()}
@@ -135,14 +149,18 @@ export default function AdjustmentsPage() {
             />
           </div>
 
-          <AdjustmentTable
-            data={adjustments}
-            loading={loading}
-            onEdit={(id, payload) => updateAdjustment({ id, payload })}
-            onDelete={deleteAdjustment}
-          />
+          <div className="px-1">
+            <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-slate-100 dark:border-neutral-800 shadow-sm overflow-hidden">
+              <AdjustmentTable
+                data={adjustments}
+                loading={loading}
+                onEdit={(id, payload) => updateAdjustment({ id, payload })}
+                onDelete={deleteAdjustment}
+              />
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
-    </div>
+    </motion.div>
   )
 }

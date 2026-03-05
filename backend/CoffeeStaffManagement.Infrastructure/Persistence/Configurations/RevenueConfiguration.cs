@@ -19,9 +19,15 @@ public class RevenueConfiguration : IEntityTypeConfiguration<Revenue>
         builder.Property(x => x.OpeningBalance).HasColumnName("opening_balance").HasPrecision(12, 2);
         builder.Property(x => x.Cash).HasColumnName("cash").HasPrecision(12, 2);
         builder.Property(x => x.Bank).HasColumnName("bank").HasPrecision(12, 2);
+        builder.Property(x => x.Income).HasColumnName("income").HasPrecision(12, 2);
+        builder.Property(x => x.InNote).HasColumnName("innote");
+        builder.Property(x => x.Expenses).HasColumnName("expenses").HasPrecision(12, 2);
+        builder.Property(x => x.ExNote).HasColumnName("exnote");
+
         builder.Property(x => x.Net).HasColumnName("net").HasPrecision(12, 2);
         builder.Property(x => x.TotalRevenue).HasColumnName("revenue").HasPrecision(12, 2);
         builder.Property(x => x.Deviation).HasColumnName("deviation").HasPrecision(12, 2);
+
 
         builder.Property(x => x.Note).HasColumnName("note");
         builder.Property(x => x.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("CURRENT_TIMESTAMP");

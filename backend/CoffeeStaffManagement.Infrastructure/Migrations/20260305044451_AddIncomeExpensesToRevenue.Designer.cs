@@ -3,6 +3,7 @@ using System;
 using CoffeeStaffManagement.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CoffeeStaffManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260305044451_AddIncomeExpensesToRevenue")]
+    partial class AddIncomeExpensesToRevenue
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -335,18 +338,10 @@ namespace CoffeeStaffManagement.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("employee_id");
 
-                    b.Property<string>("ExNote")
-                        .HasColumnType("text")
-                        .HasColumnName("exnote");
-
                     b.Property<decimal>("Expenses")
                         .HasPrecision(12, 2)
                         .HasColumnType("numeric(12,2)")
                         .HasColumnName("expenses");
-
-                    b.Property<string>("InNote")
-                        .HasColumnType("text")
-                        .HasColumnName("innote");
 
                     b.Property<decimal>("Income")
                         .HasPrecision(12, 2)

@@ -20,40 +20,30 @@ export function useSchedule() {
         queryKey: ['schedules', date],
         queryFn: () => scheduleApi.getSchedule(date),
         enabled: !!date,
-        staleTime: 5 * 60 * 1000,
-        refetchOnWindowFocus: false,
     })
 
     const useRequestsQuery = (date: string) => useQuery({
         queryKey: ['schedule-requests', date],
         queryFn: () => scheduleApi.getRequests(date),
         enabled: !!date,
-        staleTime: 5 * 60 * 1000,
-        refetchOnWindowFocus: false,
     })
 
     const useWeeklySchedulesQuery = (fromDate: string, toDate: string) => useQuery({
         queryKey: ['schedules-weekly', fromDate, toDate],
         queryFn: () => scheduleApi.getWeeklySchedule(fromDate, toDate),
         enabled: !!fromDate && !!toDate,
-        staleTime: 5 * 60 * 1000,
-        refetchOnWindowFocus: false,
     })
 
     const useMyRequestsQuery = (employeeId: number) => useQuery({
         queryKey: ['schedule-requests', 'my', employeeId],
         queryFn: () => scheduleApi.getMyRequests(employeeId),
         enabled: !!employeeId,
-        staleTime: 5 * 60 * 1000,
-        refetchOnWindowFocus: false,
     })
 
     const useWeeklyRequestsQuery = (fromDate: string, toDate: string) => useQuery({
         queryKey: ['schedule-requests', 'weekly', fromDate, toDate],
         queryFn: () => scheduleApi.getWeeklyRequests(fromDate, toDate),
         enabled: !!fromDate && !!toDate,
-        staleTime: 5 * 60 * 1000,
-        refetchOnWindowFocus: false,
     })
 
     /* ================= COMMANDS ================= */
@@ -177,9 +167,6 @@ export function useSchedule() {
     })
 
     return {
-        // We'll provide methods to get query results to maintain hook-like usage
-        // but it's cleaner to just return the results if we pass parameters to useSchedule
-        // For now, to keep it compatible with existing pages:
         loadSchedule: (date: string) => queryClient.prefetchQuery({
             queryKey: ['schedules', date],
             queryFn: () => scheduleApi.getSchedule(date)
@@ -205,7 +192,6 @@ export function useSchedule() {
         updateSchedule: updateMutation.mutateAsync,
         deleteSchedule: deleteMutation.mutateAsync,
 
-        // Legacy compatibility properties (will be empty/false unless using the new useSchedules/useRequests inside component)
         schedules: [],
         requests: [],
         loading:

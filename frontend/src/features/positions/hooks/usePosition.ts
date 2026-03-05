@@ -16,8 +16,6 @@ export function usePosition() {
   const positionsQuery = useQuery({
     queryKey: ['positions'],
     queryFn: () => positionApi.getAll(),
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
   })
 
   /* ================= COMMANDS ================= */
