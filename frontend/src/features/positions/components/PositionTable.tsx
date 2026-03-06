@@ -10,6 +10,7 @@ import { StatusBadge } from '@/shared/components/ui/status-badge'
 import { DataTable } from '@/shared/components/ui/data-table'
 import { Button } from '@/shared/components/ui/button'
 import { ColumnDef } from '@tanstack/react-table'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
     data: Position[]
@@ -24,6 +25,7 @@ export function PositionTable({
     onEdit,
     onDelete,
 }: Props) {
+    const { t } = useTranslation()
     const columns = useMemo<ColumnDef<Position>[]>(() => [
         {
             id: "expander",
@@ -44,13 +46,13 @@ export function PositionTable({
         },
         {
             accessorKey: "name",
-            header: "Role / Position",
+            header: t('positions.table.role') || "Role / Position",
             meta: { align: 'left', hideSortIcon: true },
             cell: ({ row }) => <div className="font-semibold text-slate-900 dark:text-white text-sm">{row.getValue("name")}</div>
         },
         {
             id: "shifts_count",
-            header: "Slots",
+            header: t('positions.table.slots') || "Slots",
             meta: { align: 'center', hideSortIcon: true, width: '150px' },
             cell: ({ row }) => {
                 const shifts = row.original.shifts ?? []
@@ -64,7 +66,7 @@ export function PositionTable({
         },
         {
             accessorKey: "status",
-            header: "State",
+            header: t('positions.table.state') || "State",
             meta: { align: 'center', hideSortIcon: true, width: '150px' },
             cell: ({ row }) => (
                 <div className="flex justify-center">
@@ -74,7 +76,7 @@ export function PositionTable({
         },
         {
             id: "actions",
-            header: "Actions",
+            header: t('common.actions') || "Actions",
             meta: { align: 'center', hideSortIcon: true, width: '150px' },
             cell: ({ row }) => (
                 <div className="flex justify-center gap-2">
@@ -97,7 +99,7 @@ export function PositionTable({
                 </div>
             )
         }
-    ], [onEdit, onDelete])
+    ], [t, onEdit, onDelete])
 
     const renderShifts = ({ row }: { row: any }) => {
         const shifts = row.original.shifts ?? []
@@ -143,7 +145,7 @@ export function PositionTable({
                     ))
                 ) : (
                     <div className="p-8 text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest italic">
-                        No operational shifts configured
+                        {t('positions.noShifts') || "No operational shifts configured"}
                     </div>
                 )}
             </div>

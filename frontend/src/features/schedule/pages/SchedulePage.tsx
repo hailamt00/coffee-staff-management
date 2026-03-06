@@ -28,8 +28,10 @@ import { WeeklyRequestTable } from '../components/WeeklyRequestTable'
 import type { Shift } from '@/shared/types/api'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/shared/components/ui/sheet'
 import { Badge } from '@/shared/components/ui/badge'
+import { useTranslation } from 'react-i18next'
 
 export default function SchedulePage() {
+    const { t } = useTranslation()
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10))
     const [activeTab, setActiveTab] = useState('weekly')
     const [filterPosition, setFilterPosition] = useState('all')
@@ -91,10 +93,10 @@ export default function SchedulePage() {
                 <div className="flex items-center justify-between">
                     <div>
                         <h1 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
-                            Schedule
+                            {t('schedule.title')}
                         </h1>
                         <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                            Shift Operations
+                            {t('schedule.subtitle')}
                         </p>
                     </div>
 
@@ -112,18 +114,18 @@ export default function SchedulePage() {
                                 </SheetTrigger>
                                 <SheetContent side="bottom" className="h-[300px] rounded-t-[2.5rem] border-none shadow-2xl">
                                     <SheetHeader className="mb-6">
-                                        <SheetTitle className="text-left font-black tracking-tighter text-2xl px-2">Filters</SheetTitle>
+                                        <SheetTitle className="text-left font-black tracking-tighter text-2xl px-2">{t('schedule.filters.title')}</SheetTitle>
                                     </SheetHeader>
                                     <div className="space-y-6 px-2">
                                         <div className="space-y-3">
-                                            <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Position</Label>
+                                            <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t('schedule.filters.position')}</Label>
                                             <div className="flex flex-wrap gap-2">
                                                 <Badge
                                                     variant={filterPosition === 'all' ? 'default' : 'outline'}
                                                     className="px-5 py-2 cursor-pointer text-xs font-bold rounded-xl border-slate-200"
                                                     onClick={() => setFilterPosition('all')}
                                                 >
-                                                    All Positions
+                                                    {t('schedule.filters.all')}
                                                 </Badge>
                                                 {positions.map(p => (
                                                     <Badge
@@ -144,13 +146,13 @@ export default function SchedulePage() {
 
                         {/* Desktop Filter */}
                         <div className="hidden md:flex items-center gap-3">
-                            <Label htmlFor="positionFilter" className="text-[10px] font-black uppercase tracking-widest text-slate-400">Filter_By:</Label>
+                            <Label htmlFor="positionFilter" className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t('schedule.filters.label')}</Label>
                             <Select value={filterPosition} onValueChange={setFilterPosition}>
                                 <SelectTrigger id="positionFilter" className="w-[160px] h-10 bg-slate-50 border-slate-200 dark:bg-neutral-900 dark:border-neutral-800 text-xs font-bold rounded-xl">
-                                    <SelectValue placeholder="All Positions" />
+                                    <SelectValue placeholder={t('schedule.filters.all')} />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="all">All Positions</SelectItem>
+                                    <SelectItem value="all">{t('schedule.filters.all')}</SelectItem>
                                     {positions.map(p => (
                                         <SelectItem key={p.id} value={p.name}>{p.name}</SelectItem>
                                     ))}
@@ -162,19 +164,19 @@ export default function SchedulePage() {
                             <DialogTrigger asChild>
                                 <Button className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 border-none h-10 w-10 sm:w-auto sm:px-6 rounded-xl font-bold uppercase tracking-widest text-[10px]">
                                     <Plus className="sm:mr-2 h-4 w-4" />
-                                    <span className="hidden sm:inline">Add</span>
+                                    <span className="hidden sm:inline">{t('schedule.add')}</span>
                                 </Button>
                             </DialogTrigger>
                             <DialogContent className="max-w-md w-[95vw] rounded-[2rem] border-none shadow-2xl p-6">
                                 <DialogHeader>
-                                    <DialogTitle className="text-2xl font-black tracking-tighter">Add to Schedule</DialogTitle>
+                                    <DialogTitle className="text-2xl font-black tracking-tighter">{t('schedule.dialog.title')}</DialogTitle>
                                     <DialogDescription className="text-slate-500 font-medium">
-                                        Select employee, position, and shifts for the roster.
+                                        {t('schedule.dialog.description')}
                                     </DialogDescription>
                                 </DialogHeader>
                                 <div className="space-y-4 py-4">
                                     <div className="space-y-2">
-                                        <Label htmlFor="addDate" className="text-[10px] font-black uppercase tracking-widest text-slate-400">Date</Label>
+                                        <Label htmlFor="addDate" className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t('schedule.fields.date')}</Label>
                                         <Input
                                             id="addDate"
                                             type="date"
@@ -184,10 +186,10 @@ export default function SchedulePage() {
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="addEmployee" className="text-[10px] font-black uppercase tracking-widest text-slate-400">Employee</Label>
+                                        <Label htmlFor="addEmployee" className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t('schedule.fields.employee')}</Label>
                                         <Select value={addEmployeeId} onValueChange={setAddEmployeeId}>
                                             <SelectTrigger id="addEmployee" className="h-12 rounded-xl border-slate-200 font-bold">
-                                                <SelectValue placeholder="Select Employee" />
+                                                <SelectValue placeholder={t('schedule.fields.employee')} />
                                             </SelectTrigger>
                                             <SelectContent className="rounded-xl">
                                                 {employees.map(e => (
@@ -199,10 +201,10 @@ export default function SchedulePage() {
                                         </Select>
                                     </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="addPosition" className="text-[10px] font-black uppercase tracking-widest text-slate-400">Position</Label>
+                                        <Label htmlFor="addPosition" className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t('schedule.fields.position')}</Label>
                                         <Select value={addPositionId} onValueChange={setAddPositionId}>
                                             <SelectTrigger id="addPosition" className="h-12 rounded-xl border-slate-200 font-bold">
-                                                <SelectValue placeholder="Select Position" />
+                                                <SelectValue placeholder={t('schedule.fields.position')} />
                                             </SelectTrigger>
                                             <SelectContent className="rounded-xl">
                                                 {positions.map(p => (
@@ -216,7 +218,7 @@ export default function SchedulePage() {
 
                                     {availableShifts.length > 0 && (
                                         <div className="space-y-2">
-                                            <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Shifts</Label>
+                                            <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t('schedule.fields.shifts')}</Label>
                                             <div className="grid grid-cols-1 gap-2 border border-slate-100 rounded-2xl p-4 bg-slate-50/50">
                                                 {availableShifts.map(s => (
                                                     <div key={s.id} className="flex items-center gap-3">
@@ -243,18 +245,18 @@ export default function SchedulePage() {
                                     )}
 
                                     <div className="space-y-2">
-                                        <Label htmlFor="addNote" className="text-[10px] font-black uppercase tracking-widest text-slate-400">Note (Optional)</Label>
+                                        <Label htmlFor="addNote" className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t('schedule.fields.note')}</Label>
                                         <Input
                                             id="addNote"
                                             value={addNote}
                                             onChange={e => setAddNote(e.target.value)}
-                                            placeholder="Add a note..."
+                                            placeholder={t('schedule.fields.notePlaceholder')}
                                             className="h-12 rounded-xl border-slate-200 font-bold"
                                         />
                                     </div>
 
                                     <Button onClick={handleAdd} className="w-full bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-slate-200 uppercase font-black text-[10px] tracking-[0.2em] h-14 rounded-2xl mt-4">
-                                        Confirm Schedule
+                                        {t('schedule.dialog.confirm')}
                                     </Button>
                                 </div>
                             </DialogContent>
@@ -303,8 +305,8 @@ export default function SchedulePage() {
                     <div className="hidden sm:block">
                         <Tabs value={activeTab} onValueChange={setActiveTab} className="bg-slate-100 dark:bg-neutral-800 p-1 rounded-2xl">
                             <TabsList className="bg-transparent border-none">
-                                <TabsTrigger value="weekly" className="h-10 px-6 data-[state=active]:bg-white data-[state=active]:text-black dark:data-[state=active]:bg-black dark:data-[state=active]:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">Roster</TabsTrigger>
-                                <TabsTrigger value="requests" className="h-10 px-6 data-[state=active]:bg-white data-[state=active]:text-black dark:data-[state=active]:bg-black dark:data-[state=active]:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">Requests</TabsTrigger>
+                                <TabsTrigger value="weekly" className="h-10 px-6 data-[state=active]:bg-white data-[state=active]:text-black dark:data-[state=active]:bg-black dark:data-[state=active]:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">{t('schedule.tabs.roster') || "Roster"}</TabsTrigger>
+                                <TabsTrigger value="requests" className="h-10 px-6 data-[state=active]:bg-white data-[state=active]:text-black dark:data-[state=active]:bg-black dark:data-[state=active]:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">{t('schedule.tabs.requests') || "Requests"}</TabsTrigger>
                             </TabsList>
                         </Tabs>
                     </div>
@@ -313,8 +315,8 @@ export default function SchedulePage() {
                 <div className="sm:hidden">
                     <Tabs value={activeTab} onValueChange={setActiveTab} className="bg-slate-100/50 dark:bg-neutral-800/50 border border-slate-100 dark:border-neutral-800 p-1 rounded-[1.5rem] w-full">
                         <TabsList className="bg-transparent border-none w-full grid grid-cols-2 gap-1 h-12">
-                            <TabsTrigger value="weekly" className="h-10 data-[state=active]:bg-white data-[state=active]:text-black dark:data-[state=active]:bg-black dark:data-[state=active]:text-white rounded-[1.25rem] text-[10px] font-black uppercase tracking-widest shadow-none">Roster</TabsTrigger>
-                            <TabsTrigger value="requests" className="h-10 data-[state=active]:bg-white data-[state=active]:text-black dark:data-[state=active]:bg-black dark:data-[state=active]:text-white rounded-[1.25rem] text-[10px] font-black uppercase tracking-widest shadow-none">Requests</TabsTrigger>
+                            <TabsTrigger value="weekly" className="h-10 data-[state=active]:bg-white data-[state=active]:text-black dark:data-[state=active]:bg-black dark:data-[state=active]:text-white rounded-[1.25rem] text-[10px] font-black uppercase tracking-widest shadow-none">{t('schedule.tabs.roster')}</TabsTrigger>
+                            <TabsTrigger value="requests" className="h-10 data-[state=active]:bg-white data-[state=active]:text-black dark:data-[state=active]:bg-black dark:data-[state=active]:text-white rounded-[1.25rem] text-[10px] font-black uppercase tracking-widest shadow-none">{t('schedule.tabs.requests')}</TabsTrigger>
                         </TabsList>
                     </Tabs>
                 </div>

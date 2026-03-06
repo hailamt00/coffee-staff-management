@@ -22,6 +22,7 @@ import type { Employee } from '@/shared/types/api'
 import { useEmployee } from '../hooks/useEmployee'
 
 import { formatMoney, formatDate } from '@/shared/utils/format'
+import { useTranslation } from 'react-i18next'
 
 /* ================= PAGE ================= */
 
@@ -29,6 +30,7 @@ export default function EmployeesPage() {
   const navigate = useNavigate()
   const { employees, deleteEmployee, loading } = useEmployee()
   const [deleteTarget, setDeleteTarget] = useState<Employee | null>(null)
+  const { t } = useTranslation()
 
   // Calculate statistics
   const stats = useMemo(() => {
@@ -62,55 +64,55 @@ export default function EmployeesPage() {
     },
     {
       accessorKey: "code",
-      header: "Code",
+      header: t('employees.table.code'),
       meta: { align: 'center', hideSortIcon: true },
       cell: ({ row }) => <span>{row.getValue("code") || '—'}</span>
     },
     {
       accessorKey: "name",
-      header: "Name",
+      header: t('employees.table.name'),
       meta: { align: 'left', hideSortIcon: true },
       cell: ({ row }) => <span className="font-semibold text-slate-900 dark:text-slate-100">{row.getValue("name") || '—'}</span>
     },
     {
       accessorKey: "cid",
-      header: "CID",
+      header: t('employees.table.cid'),
       meta: { align: 'center', hideSortIcon: true },
       cell: ({ row }) => <span>{row.getValue("cid") || '—'}</span>
     },
     {
       accessorKey: "dob",
-      header: "DOB",
+      header: t('employees.table.dob'),
       meta: { align: 'center', hideSortIcon: true },
       cell: ({ row }) => <span>{row.getValue("dob") ? formatDate(row.getValue("dob")) : '—'}</span>
     },
     {
       accessorKey: "phone",
-      header: "Phone",
+      header: t('employees.table.phone'),
       meta: { align: 'center', hideSortIcon: true },
       cell: ({ row }) => <span>{row.getValue("phone") || '—'}</span>
     },
     {
       accessorKey: "serviceSalary",
-      header: "Service",
+      header: t('employees.table.service'),
       meta: { align: 'right', hideSortIcon: true },
       cell: ({ row }) => <span>{formatMoney(row.getValue("serviceSalary"))}</span>
     },
     {
       accessorKey: "baristaSalary",
-      header: "Barista",
+      header: t('employees.table.barista'),
       meta: { align: 'right', hideSortIcon: true },
       cell: ({ row }) => <span>{formatMoney(row.getValue("baristaSalary"))}</span>
     },
     {
       accessorKey: "hireDate",
-      header: "Hired",
+      header: t('employees.table.hired'),
       meta: { align: 'center', hideSortIcon: true },
       cell: ({ row }) => <span>{formatDate(row.getValue("hireDate"))}</span>
     },
     {
       id: "actions",
-      header: "Actions",
+      header: t('employees.table.actions'),
       meta: { align: 'center', hideSortIcon: true },
       cell: ({ row }) => {
         return (
@@ -157,16 +159,16 @@ export default function EmployeesPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
-                Employees
+                {t('employees.title')}
               </h1>
               <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest hidden sm:block">
-                Staff Directory
+                {t('employees.subtitle')}
               </p>
             </div>
 
             <Button onClick={() => navigate('/employees/add')} className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 border-none h-10 w-10 sm:w-auto sm:px-6 rounded-xl font-bold uppercase tracking-widest text-[10px]">
               <Plus className="sm:mr-2 h-4 w-4" />
-              <span className="hidden sm:inline">Add Employee</span>
+              <span className="hidden sm:inline">{t('employees.add')}</span>
             </Button>
           </div>
         </div>
@@ -174,30 +176,30 @@ export default function EmployeesPage() {
         {/* STATS SECTION */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           <SummaryCard
-            title="Total"
+            title={t('employees.stats.total')}
             value={stats.total.toLocaleString()}
-            description="Staff members"
+            description={t('employees.stats.staffMembers')}
             icon={Users}
             color="cyan"
           />
           <SummaryCard
-            title="Active"
+            title={t('employees.stats.active')}
             value={stats.activeCount.toLocaleString()}
-            description="Currently employed"
+            description={t('employees.stats.currentlyEmployed')}
             icon={UserCheck}
             color="green"
           />
           <SummaryCard
-            title="Avg Service"
+            title={t('employees.stats.avgService')}
             value={stats.avgServiceSalary}
-            description="Base rate"
+            description={t('employees.stats.baseRate')}
             icon={TrendingUp}
             color="blue"
           />
           <SummaryCard
-            title="Avg Barista"
+            title={t('employees.stats.avgBarista')}
             value={stats.avgBaristaSalary}
-            description="Specialist rate"
+            description={t('employees.stats.specialistRate')}
             icon={Briefcase}
             color="orange"
           />
@@ -217,8 +219,8 @@ export default function EmployeesPage() {
       <DeleteConfirmDialog
         open={!!deleteTarget}
         onOpenChange={(open) => !open && setDeleteTarget(null)}
-        title="Delete employee"
-        description={deleteTarget ? `Are you sure you want to delete ${deleteTarget.name}? This action is irreversible and will remove all related records.` : undefined}
+        title={t('employees.delete.title')}
+        description={deleteTarget ? t('employees.delete.description', { name: deleteTarget.name }) : undefined}
         onConfirm={confirmDelete}
       />
     </>

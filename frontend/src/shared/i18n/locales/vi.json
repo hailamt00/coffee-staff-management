@@ -1,0 +1,589 @@
+{
+    "common": {
+        "dashboard": "Bảng điều khiển",
+        "search": "Tìm kiếm lệnh hoặc nhân viên...",
+        "notifications": "Thông báo",
+        "clearAll": "Xóa tất cả",
+        "noNotifications": "Không có thông báo mới",
+        "allCaughtUp": "Tạm thời không có gì mới.",
+        "viewAllActivity": "Xem tất cả hoạt động",
+        "myProfile": "Hồ sơ của tôi",
+        "signOut": "Đăng xuất",
+        "justNow": "Vừa xong",
+        "ago": "trước",
+        "all": "Tất cả",
+        "actions": "Hành động",
+        "show": "Hiển thị",
+        "searchPlaceholder": "Nhập để lọc dữ liệu...",
+        "syncing": "Đang đồng bộ...",
+        "loading": "Đang tải...",
+        "noResults": "Không có kết quả",
+        "adjustFilters": "Điều chỉnh bộ lọc",
+        "noEntries": "Không có dữ liệu",
+        "paginationInfo": "Bản ghi {{start}} - {{end}} / TR {{total}}",
+        "home": "DASH",
+        "markAllRead": "Đánh dấu tất cả đã đọc",
+        "unread": "chưa đọc",
+        "cancel": "Hủy",
+        "confirm": "Xác nhận",
+        "update": "Cập nhật",
+        "create": "Tạo mới",
+        "delete": "Xóa",
+        "edit": "Chỉnh sửa",
+        "close": "Đóng",
+        "add": "Thêm",
+        "submit": "Gửi",
+        "save": "Lưu"
+    },
+    "sidebar": {
+        "main": "Chính",
+        "hR": "Nhân sự",
+        "time": "Thời gian",
+        "financials": "Tài chính",
+        "systemLogs": "Hệ thống",
+        "dashboard": "Bảng điều khiển",
+        "employees": "Nhân viên",
+        "positions": "Vị trí",
+        "schedules": "Lịch làm việc",
+        "attendance": "Điểm danh",
+        "payroll": "Bảng lương",
+        "payrollExport": "Xuất bảng lương",
+        "revenue": "Doanh thu",
+        "adjustments": "Điều chỉnh",
+        "activityLogs": "Nhật ký hoạt động",
+        "administrator": "Quản trị viên",
+        "systemRoot": "Hệ thống"
+    },
+    "dashboard": {
+        "title": "Bảng điều khiển",
+        "subtitle": "Tổng quan vận hành",
+        "liveStatus": "Trạng thái trực tiếp",
+        "active": "Đang làm",
+        "barista": "Pha chế",
+        "service": "Phục vụ",
+        "pulseTitle": "Nhịp độ vận hành trực tiếp",
+        "revenue": "Tổng doanh thu",
+        "netProfit": "Lợi nhuận ròng",
+        "activeStaff": "Nhân viên đang làm",
+        "attendance": "Điểm danh",
+        "totalReports": "Tổng báo cáo",
+        "revenueSubmissions": "Báo cáo doanh thu",
+        "shiftCompliance": "Tuân thủ ca làm",
+        "noShifts": "Chưa có ca làm việc nào được cấu hình",
+        "liveShifts": "Ca đang làm",
+        "currentOperations": "Hoạt động hiện tại",
+        "clockedIn": "Đã điểm danh",
+        "netProfitPerformance": "Hiệu suất lợi nhuận",
+        "peakActivity": "Hoạt động cao điểm",
+        "weeklyRevenue": "Doanh thu hàng tuần",
+        "recentActivity": "Hoạt động gần đây",
+        "noActivity": "Không có hoạt động nào.",
+        "pulse": {
+            "revenueDelta": "Biến động doanh thu",
+            "compliance": "Độ tuân thủ",
+            "efficiency": "Hiệu suất",
+            "staffLoad": "Tải lượng nhân sự",
+            "aboveTarget": "Vượt mục tiêu",
+            "topTier": "Xuất sắc",
+            "operational": "Ổn định",
+            "activeCount": "{{count}} Đang làm"
+        }
+    },
+    "activity": {
+        "title": "Nhật ký hoạt động",
+        "subtitle": "Lịch sử hệ thống",
+        "totalLogs": "Tổng số nhật ký",
+        "recordedEvents": "Sự kiện được ghi lại",
+        "table": {
+            "time": "Thời gian",
+            "type": "Loại",
+            "details": "Chi tiết",
+            "userSource": "Người dùng / Nguồn"
+        },
+        "types": {
+            "system": "Hệ thống",
+            "employee": "Nhân viên",
+            "shift": "Ca làm",
+            "schedule": "Lịch làm",
+            "adjustment": "Điều chỉnh",
+            "revenue": "Doanh thu",
+            "auth": "Xác thực"
+        },
+        "actions": {
+            "process": "Xử lý",
+            "create": "Tạo mới",
+            "update": "Cập nhật",
+            "delete": "Xóa",
+            "login": "Đăng nhập",
+            "logout": "Đăng xuất",
+            "approve": "Phê duyệt",
+            "reject": "Từ chối"
+        },
+        "source": {
+            "system": "Hệ thống tự động",
+            "admin": "Quản trị viên ID: {{id}}"
+        }
+    },
+    "staff": {
+        "menu": {
+            "greeting": "Nhân viên CSM Elite",
+            "attendance": {
+                "title": "Điểm danh",
+                "desc": "Vào ca hoặc Ra ca"
+            },
+            "schedule": {
+                "title": "Lịch của tôi",
+                "desc": "Xem & đăng ký ca"
+            },
+            "revenue": {
+                "title": "Báo cáo cuối ca",
+                "desc": "Báo cáo doanh thu ca"
+            }
+        },
+        "attendance": {
+            "shopName": "Cửa hàng chính",
+            "policyNote": "Vui lòng điểm danh trong vòng 15 phút sau giờ bắt đầu ca. Trường hợp đến trễ sẽ được hệ thống tự động ghi chú.",
+            "substituteDesc": "Check-in cho ca mà bạn đang thay thế. Hệ thống sẽ tự động tạo bản ghi lịch làm việc cho ca này."
+        },
+        "scheduleRequest": {
+            "requestShift": "Yêu cầu ca làm",
+            "editRequest": "Sửa yêu cầu",
+            "selectShifts": "Chọn ca làm",
+            "editLimitsOnce": "Chế độ sửa chỉ cho phép 1 lựa chọn",
+            "updateRequest": "Cập nhật yêu cầu",
+            "submitRequest": "Gửi yêu cầu",
+            "addShiftRequest": "Thêm yêu cầu ca",
+            "assigned": "Đã phân công",
+            "pending": "Chờ duyệt",
+            "confirmed": "Đã xác nhận",
+            "pendingRequest": "Yêu cầu chờ",
+            "offDay": "Nghỉ",
+            "hasNote": "Có ghi chú",
+            "policy": "Chính sách lịch",
+            "policyDesc": "Bảng này hiển thị các ca làm việc đã được xác nhận trong tuần này. Chấm trên thẻ ca cho thấy có ghi chú từ quản lý."
+        },
+        "revenue": {
+            "title": "Báo cáo cuối ca",
+            "subtitle": "Báo cáo doanh thu ca làm việc",
+            "preview": "Xem trước",
+            "previewDesc": "Kiểm tra kỹ trước khi gửi báo cáo",
+            "noSchedule": "Không tìm thấy lịch làm hôm nay. Cần có lịch để gửi báo cáo doanh thu.",
+            "fields": {
+                "staff": "Nhân viên",
+                "opening": "Tiền đầu ca",
+                "cash": "Tiền mặt (TM)",
+                "bank": "Chuyển khoản (CK)",
+                "net": "Doanh thu Net",
+                "actual": "Thực tế",
+                "deviation": "Sai lệch",
+                "notes": "Ghi chú",
+                "closingStaff": "Nhân viên chốt ca",
+                "dateTime": "Ngày & Giờ"
+            },
+            "placeholders": {
+                "net": "Nhập NET...",
+                "notes": "Ghi chú thêm...",
+                "amount": "Số tiền",
+                "reasonExpense": "Lý do (vật tư, đá...)",
+                "reasonIncome": "Lý do (thưởng, hoàn tiền...)"
+            },
+            "actions": {
+                "edit": "Chỉnh sửa",
+                "confirmSubmit": "Xác nhận & Gửi",
+                "previewButton": "Xem trước",
+                "add": "Thêm",
+                "backMenu": "Về menu",
+                "newReport": "Báo cáo mới",
+                "backToReport": "Về trang báo cáo"
+            },
+            "sections": {
+                "expenses": "Chi phí",
+                "incomes": "Thu nhập thêm",
+                "totalExpenses": "Tổng chi phí",
+                "totalIncomes": "Tổng thu nhập",
+                "noExpenses": "Không có chi phí",
+                "noIncomes": "Không có thu nhập thêm"
+            },
+            "results": {
+                "noData": "Không có dữ liệu kết quả",
+                "noDataPort": "Vui lòng hoàn thành bước xác nhận trên trang Báo cáo kết thúc ca trước.",
+                "success": "Kết quả ca làm đã được lưu và đồng bộ với mô-đun Doanh thu Admin."
+            }
+        }
+    },
+    "adjustments": {
+        "title": "Điều chỉnh",
+        "subtitle": "Thưởng & Phạt",
+        "tabs": {
+            "record": "Ghi nhận",
+            "report": "Báo cáo tổng hợp"
+        },
+        "kpi": {
+            "total": "Tổng thao tác",
+            "totalDesc": "Đã xử lý tháng này",
+            "rewards": "Thưởng",
+            "penalties": "Phạt",
+            "netValue": "Giá trị ròng",
+            "afterAdj": "VND (Sau điều chỉnh)"
+        },
+        "table": {
+            "history": "Lịch sử điều chỉnh",
+            "date": "Ngày",
+            "employee": "Nhân viên",
+            "type": "Loại",
+            "amount": "Số tiền (VND)",
+            "reason": "Lý do / Ghi chú",
+            "actions": "Thao tác",
+            "warning": "Cảnh cáo",
+            "editTitle": "Sửa điều chỉnh",
+            "deleteTitle": "Xóa điều chỉnh",
+            "deleteConfirm": "Bạn có chắc chắn muốn xóa \"{{name}}\"?"
+        },
+        "form": {
+            "employeeName": "Tên nhân viên",
+            "selectEmployee": "Chọn nhân viên",
+            "reasonOptional": "Lý do / Ghi chú (Không bắt buộc)",
+            "specificReason": "Lý do cụ thể...",
+            "rewards": "Thưởng",
+            "penalties": "Phạt",
+            "addReward": "Thêm loại thưởng",
+            "addPenalty": "Thêm loại phạt",
+            "rewardType": "Loại thưởng",
+            "penaltyType": "Loại phạt",
+            "rewardAction": "Thưởng",
+            "penalizeAction": "Phạt",
+            "warnAction": "Nhắc nhở",
+            "noTypes": "Chưa có loại điều chỉnh nào.",
+            "editType": "Sửa loại điều chỉnh",
+            "addType": "Thêm loại điều chỉnh",
+            "kind": "Loại",
+            "name": "Tên",
+            "deleteConfig": "Xóa cấu hình",
+            "enterName": "Nhập tên...",
+            "enterNote": "Nhập ghi chú...",
+            "alertSelect": "Vui lòng chọn nhân viên trước",
+            "alertName": "Vui lòng nhập tên cho loại điều chỉnh",
+            "alertAmount": "Số tiền không hợp lệ"
+        }
+    },
+    "employees": {
+        "title": "Nhân viên",
+        "subtitle": "Danh sách nhân viên",
+        "add": "Thêm nhân viên",
+        "edit": "Sửa hồ sơ",
+        "addProfile": "Thêm hồ sơ",
+        "updateInfo": "Cập nhật thông tin",
+        "entryInfo": "Thông tin đầu vào",
+        "back": "Quay lại",
+        "stats": {
+            "total": "Tổng",
+            "active": "Đang làm",
+            "avgService": "TB Phục vụ",
+            "avgBarista": "TB Pha chế",
+            "staffMembers": "Thành viên",
+            "currentlyEmployed": "Nhân viên hiện tại",
+            "baseRate": "Mức cơ bản",
+            "specialistRate": "Mức chuyên gia"
+        },
+        "table": {
+            "code": "Mã",
+            "name": "Họ và tên",
+            "cid": "CCCD",
+            "dob": "Ngày sinh",
+            "phone": "Số điện thoại",
+            "service": "Phục vụ",
+            "barista": "Pha chế",
+            "hired": "Ngày vào",
+            "actions": "Thao tác"
+        },
+        "form": {
+            "personalInfo": "Thông tin cá nhân",
+            "basicInfo": "Thông tin cơ bản",
+            "jobInfo": "Thông tin công việc",
+            "salaryInfo": "Thông tin lương",
+            "dateInfo": "Thông tin ngày tháng",
+            "fullName": "Họ và tên",
+            "phone": "Số điện thoại",
+            "idCard": "Số CCCD",
+            "dob": "Ngày sinh",
+            "gender": "Giới tính",
+            "hireDate": "Ngày vào làm",
+            "serviceSalary": "Lương phục vụ",
+            "baristaSalary": "Lương pha chế",
+            "save": "Lưu nhân viên",
+            "update": "Cập nhật nhân viên",
+            "cancel": "Hủy",
+            "saving": "Đang lưu...",
+            "placeholder": {
+                "name": "Họ tên",
+                "phone": "Số điện thoại",
+                "cid": "Không bắt buộc",
+                "select": "Chọn",
+                "salary": "0"
+            },
+            "validation": {
+                "nameRequired": "Vui lòng nhập họ tên nhân viên",
+                "phoneRequired": "Vui lòng nhập số điện thoại"
+            }
+        },
+        "delete": {
+            "title": "Xóa nhân viên",
+            "description": "Bạn có chắc chắn muốn xóa {{name}}? Hành động này không thể hoàn tác và sẽ xóa tất cả hồ sơ liên quan.",
+            "confirm": "Xóa",
+            "cancel": "Hủy"
+        },
+        "genders": {
+            "male": "Nam",
+            "female": "Nữ",
+            "other": "Khác"
+        }
+    },
+    "payroll": {
+        "title": "Bảng lương",
+        "subtitle": "Quản lý bảng lương",
+        "month": "Tháng",
+        "year": "Năm",
+        "export": "Xuất Excel",
+        "databaseVerified": "Đã xác thực từ cơ sở dữ liệu",
+        "manualEstimation": "Ước tính thủ công",
+        "table": {
+            "staff": "Nhân viên",
+            "hours": "Tổng giờ",
+            "base": "Lương cơ bản",
+            "reward": "Thưởng",
+            "penalty": "Phạt",
+            "netTotal": "Tổng nhận",
+            "total": "Tổng cộng",
+            "actions": "Thao tác",
+            "timeline": "Thời gian",
+            "position": "Vị trí",
+            "times": "Vào/Ra",
+            "earnings": "Tiền công",
+            "workLogs": "Nhật ký công chi tiết"
+        },
+        "stats": {
+            "base": "Tổng lương cứng",
+            "employees": "{{count}} nhân viên",
+            "rewards": "Tổng tiền thưởng",
+            "incentives": "Thưởng/Phụ cấp",
+            "penalties": "Tổng tiền phạt",
+            "deductions": "Khấu trừ/Phạt",
+            "net": "Thực lĩnh",
+            "payout": "Tổng chi lương"
+        },
+        "filters": {
+            "title": "Bộ lọc",
+            "start": "Ngày bắt đầu",
+            "end": "Ngày kết thúc",
+            "position": "Vị trí",
+            "employees": "Chọn nhân viên",
+            "allStaff": "Tất cả nhân sự",
+            "exceptions": "Chỉ xem ngoại lệ"
+        },
+        "actions": {
+            "recalculate": "Tính lại lương",
+            "apply": "Áp dụng bộ lọc",
+            "generatePayslip": "Xuất phiếu lương"
+        }
+    },
+    "auth": {
+        "welcome": "Chào mừng trở lại",
+        "adminPortal": "Cổng quản trị viên",
+        "username": "Tên đăng nhập",
+        "password": "Mật khẩu",
+        "enterUsername": "Nhập tên đăng nhập",
+        "enterPassword": "Nhập mật khẩu",
+        "signIn": "Đăng nhập",
+        "authenticating": "Đang xác thực...",
+        "restricted": "Quyền truy cập hạn chế — Chỉ dành cho Quản trị viên",
+        "validation": {
+            "required": "Tên đăng nhập và Mật khẩu là bắt buộc!",
+            "invalid": "Tên đăng nhập hoặc Mật khẩu không hợp lệ!"
+        },
+        "staffPortal": "Cổng nhân viên",
+        "employeeAccess": "Quyền truy cập nhân viên",
+        "staffInstruction": "Nhập số điện thoại đã đăng ký để truy cập cổng nhân viên của bạn",
+        "phoneNumber": "Số điện thoại",
+        "phonePlaceholder": "0xxx xxx xxx",
+        "verify": "Xác nhận & Tiếp tục",
+        "verifying": "Đang xác thực...",
+        "notStaff": "Không phải nhân viên?",
+        "adminLogin": "Quản trị viên",
+        "errors": {
+            "phoneNotFound": "Số điện thoại không tìm thấy trong hệ thống.",
+            "generic": "Đã xảy ra lỗi. Vui lòng thử lại."
+        }
+    },
+    "revenue": {
+        "title": "Quản lý doanh thu",
+        "subtitle": "Tổng hợp tài chính & Chi tiết doanh thu",
+        "totalRevenue": "Tổng doanh thu",
+        "totalExpenses": "Tổng chi phí",
+        "totalNet": "Tổng Net",
+        "totalActual": "Tiền thực thu",
+        "totalDiff": "Chênh lệch",
+        "summary": {
+            "title": "Tổng hợp tài chính",
+            "actual": "Doanh thu thực tế (sau đ/c)",
+            "expenses": "Tổng chi phí (vật tư, điện nước...)",
+            "remaining": "Số tiền còn lại",
+            "categories": "Phân loại chi phí",
+            "totalExpenses": "Tổng tiền chi",
+            "totalIncome": "Tổng tiền thu thêm"
+        },
+        "table": {
+            "breakdown": "Chi tiết doanh thu hàng ngày",
+            "expenseLog": "Bảng kê chi phí chi tiết",
+            "date": "Ngày",
+            "opening": "Đầu ca",
+            "tm_ck": "Tiền mặt / Chuyển khoản",
+            "chi_thu": "Chi phí / Thu thêm",
+            "revenue": "Doanh thu",
+            "net": "NET",
+            "diff": "Sai lệch",
+            "staff": "Nhân viên",
+            "desc": "Mô tả",
+            "amount": "Số tiền"
+        },
+        "actions": {
+            "view": "Xem",
+            "print": "In báo cáo",
+            "from": "Từ ngày",
+            "to": "Đến ngày"
+        }
+    },
+    "attendance": {
+        "title": "Điểm danh",
+        "subtitle": "Theo dõi ca làm",
+        "today": "Hôm nay",
+        "stats": {
+            "total": "Tổng cộng",
+            "shiftEntries": "Lượt trực",
+            "present": "Có mặt",
+            "late": "Vào muộn",
+            "absent": "Vắng mặt",
+            "delayedStart": "Bắt đầu muộn",
+            "unexcused": "Không phép"
+        },
+        "status": {
+            "present": "Có mặt",
+            "late": "Muộn",
+            "absent": "Vắng",
+            "forgot": "Quên In/Out"
+        },
+        "shifts": {
+            "morning": "Ca sáng",
+            "afternoon": "Ca chiều",
+            "evening": "Ca tối"
+        },
+        "table": {
+            "employee": "Nhân viên",
+            "checkIn": "Giờ vào",
+            "checkOut": "Giờ ra",
+            "status": "Trạng thái",
+            "timeline": "Thời gian",
+            "position": "Vị trí",
+            "diff": "Lệch",
+            "note": "Ghi chú",
+            "actions": "Thao tác"
+        },
+        "filters": {
+            "title": "Bộ lọc",
+            "start": "Ngày bắt đầu",
+            "end": "Ngày kết thúc",
+            "position": "Vị trí",
+            "employees": "Nhân viên",
+            "forgot": "Quên In/Out",
+            "apply": "Áp dụng lọc"
+        },
+        "actions": {
+            "add": "Thêm bản ghi",
+            "apply": "Áp dụng"
+        },
+        "form": {
+            "editTitle": "Chỉnh sửa bản ghi điểm danh",
+            "addTitle": "Thêm điểm danh mới",
+            "selectEmployee": "Chọn nhân viên"
+        }
+    },
+    "schedule": {
+        "title": "Lịch làm việc",
+        "subtitle": "Phân ca nhân viên",
+        "add": "Thêm lịch làm",
+        "tabs": {
+            "roster": "Bảng phân ca",
+            "requests": "Yêu cầu nghỉ"
+        },
+        "filters": {
+            "title": "Bộ lọc",
+            "position": "Vị trí",
+            "all": "Tất cả vị trí",
+            "label": "Lọc theo:"
+        },
+        "dialog": {
+            "title": "Thêm vào lịch làm",
+            "description": "Chọn nhân viên, vị trí và ca làm việc cho bảng phân ca.",
+            "confirm": "Xác nhận lịch làm",
+            "editTitle": "Chỉnh sửa lịch làm",
+            "editDesc": "Thay đổi phân ca hoặc cập nhật ghi chú cho mục lịch này.",
+            "selectPosition": "Chọn vị trí",
+            "selectShift": "Chọn ca làm",
+            "selectPositionFirst": "Chọn vị trí trước",
+            "saveChanges": "Lưu thay đổi",
+            "deleteTitle": "Xóa ca làm",
+            "deleteDesc": "Bạn có chắc chắn muốn xóa ca làm này không? Thao tác này không thể hoàn tác."
+        },
+        "fields": {
+            "date": "Ngày",
+            "employee": "Nhân viên",
+            "position": "Vị trí",
+            "shifts": "Ca làm việc",
+            "note": "Ghi chú (Tùy chọn)",
+            "notePlaceholder": "Thêm ghi chú..."
+        },
+        "table": {
+            "name": "Tên ca",
+            "startTime": "Bắt đầu",
+            "endTime": "Kết thúc",
+            "notes": "Ghi chú",
+            "info": "Thông tin ca",
+            "timeline": "Thời gian biểu",
+            "showHandled": "Hiện đã xử lý",
+            "accept": "Đồng ý",
+            "approve": "Phê duyệt",
+            "noRequests": "Không có yêu cầu",
+            "requestGroup": "Nhóm yêu cầu"
+        }
+    },
+    "positions": {
+        "title": "Vị trí",
+        "subtitle": "Quản lý vai trò",
+        "add": "Thêm vị trí",
+        "edit": "Sửa vị trí",
+        "noShifts": "Chưa có ca làm nào được cấu hình",
+        "deleteConfirm": "Xóa vai trò {{name}}? Thao tác này sử ảnh hưởng tới nhân viên được phân công và lịch sử dữ liệu.",
+        "dialog": {
+            "configure": "Cấu hình vị trí và các ca làm việc"
+        },
+        "stats": {
+            "title": "Vị trí",
+            "roles": "Vai trò công việc",
+            "shifts": "Tổng số ca",
+            "activeSlots": "Lượt trực hoạt động",
+            "status": "Trạng thái",
+            "setup": "Thiết lập",
+            "config": "Cấu hình hệ thống"
+        },
+        "messages": {
+            "loading": "Đang tải dữ liệu vị trí..."
+        },
+        "table": {
+            "role": "Vai trò / Vị trí",
+            "slots": "Lượt trực",
+            "state": "Trạng thái",
+            "name": "Tên vị trí",
+            "baseSalary": "Lương cơ bản",
+            "staffCount": "Số nhân viên"
+        }
+    }
+}

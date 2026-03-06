@@ -10,6 +10,7 @@ import {
   STAFF_REVENUE_RESULT_KEY,
   type StaffRevenueResultData,
 } from '@/features/staff/types/revenueResult'
+import { useTranslation } from 'react-i18next'
 
 function parseStoredResult(): StaffRevenueResultData | null {
   const raw = localStorage.getItem(STAFF_REVENUE_RESULT_KEY)
@@ -23,6 +24,7 @@ function parseStoredResult(): StaffRevenueResultData | null {
 }
 
 export default function StaffRevenueResultPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const location = useLocation()
   const stateResult = (location.state as StaffRevenueResultData | null) ?? null
@@ -46,10 +48,10 @@ export default function StaffRevenueResultPage() {
       <div className="space-y-4 pb-10">
         <Card className="border border-slate-200/60 dark:border-neutral-800/60 bg-white dark:bg-neutral-900 rounded-2xl overflow-hidden shadow-sm">
           <CardContent className="p-6 space-y-3">
-            <h2 className="text-xl font-black text-slate-900 dark:text-white">No result data</h2>
-            <p className="text-sm text-slate-500">Please complete the confirmation step on the End Shift Report page first.</p>
+            <h2 className="text-xl font-black text-slate-900 dark:text-white">{t('staff.revenue.results.noData')}</h2>
+            <p className="text-sm text-slate-500">{t('staff.revenue.results.noDataPort')}</p>
             <Button onClick={() => navigate('/staff/revenue')} className="bg-black text-white hover:bg-slate-800">
-              Back to End Shift Report
+              {t('staff.revenue.actions.backToReport')}
             </Button>
           </CardContent>
         </Card>
@@ -72,7 +74,7 @@ export default function StaffRevenueResultPage() {
     <div className="space-y-5 pb-10">
       <div className="px-2">
         <h1 className="text-2xl font-black tracking-tight text-blue-600">
-          Shift Results [{titleTime}]
+          {t('staff.revenue.fields.actual')} [{titleTime}]
         </h1>
       </div>
 
@@ -81,12 +83,12 @@ export default function StaffRevenueResultPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <tbody>
-                <ResultRow label="Date & Time" value={fullTime} />
-                <ResultRow label="Opening" value={result.openingBalance.toLocaleString()} />
-                <ResultRow label="Cash" value={result.cash.toLocaleString()} />
-                <ResultRow label="Bank" value={result.bank.toLocaleString()} />
+                <ResultRow label={t('staff.revenue.fields.dateTime')} value={fullTime} />
+                <ResultRow label={t('staff.revenue.fields.opening')} value={result.openingBalance.toLocaleString()} />
+                <ResultRow label={t('staff.revenue.fields.cash')} value={result.cash.toLocaleString()} />
+                <ResultRow label={t('staff.revenue.fields.bank')} value={result.bank.toLocaleString()} />
                 <ResultRow
-                  label="Expenses"
+                  label={t('staff.revenue.sections.expenses')}
                   value={(
                     <div className="space-y-1">
                       <div className="font-semibold">{result.totalExpenses.toLocaleString()}</div>
@@ -95,7 +97,7 @@ export default function StaffRevenueResultPage() {
                   )}
                 />
                 <ResultRow
-                  label="Incomes"
+                  label={t('staff.revenue.sections.incomes')}
                   value={(
                     <div className="space-y-1">
                       <div className="font-semibold">{result.totalIncomes.toLocaleString()}</div>
@@ -103,11 +105,11 @@ export default function StaffRevenueResultPage() {
                     </div>
                   )}
                 />
-                <ResultRow label="Net Revenue" value={result.netRevenue.toLocaleString()} />
-                <ResultRow label="Actual Revenue" value={result.actualRevenue.toLocaleString()} />
-                <ResultRow label="Deviation" value={result.deviation.toLocaleString()} valueClassName={`font-black ${deviationClass}`} />
-                <ResultRow label="Notes" value={result.note || '—'} />
-                <ResultRow label="Closing Staff" value={result.employeeName} />
+                <ResultRow label={t('staff.revenue.fields.net')} value={result.netRevenue.toLocaleString()} />
+                <ResultRow label={t('staff.revenue.fields.actual')} value={result.actualRevenue.toLocaleString()} />
+                <ResultRow label={t('staff.revenue.fields.deviation')} value={result.deviation.toLocaleString()} valueClassName={`font-black ${deviationClass}`} />
+                <ResultRow label={t('staff.revenue.fields.notes')} value={result.note || '—'} />
+                <ResultRow label={t('staff.revenue.fields.closingStaff')} value={result.employeeName} />
               </tbody>
             </table>
           </div>
@@ -115,7 +117,7 @@ export default function StaffRevenueResultPage() {
       </Card>
 
       <div className="rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 p-4 text-sm font-semibold">
-        Shift results have been saved and synced to the Admin Revenue module.
+        {t('staff.revenue.results.success')}
       </div>
 
       <div className="flex gap-3">
@@ -124,13 +126,13 @@ export default function StaffRevenueResultPage() {
           className="flex-1 h-12 rounded-xl font-bold border-slate-200 dark:border-neutral-800"
           onClick={() => navigate('/staff/revenue')}
         >
-          New Report
+          {t('staff.revenue.actions.newReport')}
         </Button>
         <Button
           className="flex-1 h-12 bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-slate-200 rounded-xl font-bold"
           onClick={() => navigate('/staff/menu')}
         >
-          Back to Menu
+          {t('staff.revenue.actions.backMenu')}
         </Button>
       </div>
     </div>

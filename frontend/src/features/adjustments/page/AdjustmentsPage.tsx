@@ -19,8 +19,10 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { motion } from 'framer-motion'
 import ViolationForm from '../components/ViolationForm'
+import { useTranslation } from 'react-i18next'
 
 export default function AdjustmentsPage() {
+  const { t } = useTranslation()
   const [month, setMonth] = useState('02') // Default Feb
   const [year, setYear] = useState('2026')
 
@@ -59,10 +61,10 @@ export default function AdjustmentsPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
-              Adjustments
+              {t('adjustments.title')}
             </h1>
             <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest hidden sm:block">
-              Rewards & Penalties
+              {t('adjustments.subtitle')}
             </p>
           </div>
 
@@ -104,10 +106,10 @@ export default function AdjustmentsPage() {
         <div className="px-1">
           <TabsList className="bg-slate-100 dark:bg-neutral-800 p-1 rounded-2xl">
             <TabsTrigger value="form" className="px-6 font-bold uppercase tracking-widest text-[10px] rounded-xl h-9">
-              Record Action
+              {t('adjustments.tabs.record')}
             </TabsTrigger>
             <TabsTrigger value="report" className="px-6 font-bold uppercase tracking-widest text-[10px] rounded-xl h-9">
-              Summary Report
+              {t('adjustments.tabs.report')}
             </TabsTrigger>
           </TabsList>
         </div>
@@ -120,30 +122,30 @@ export default function AdjustmentsPage() {
           {/* KPI */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             <SummaryCard
-              title="Total Actions"
+              title={t('adjustments.kpi.total')}
               value={stats.totalCount.toLocaleString()}
-              description="Processed this month"
+              description={t('adjustments.kpi.totalDesc')}
               icon={ClipboardList}
               color="cyan"
             />
             <SummaryCard
-              title="Rewards"
+              title={t('adjustments.kpi.rewards')}
               value={stats.bonusCount.toLocaleString()}
               description={`${formatMoney(stats.bonusAmount)} VND`}
               icon={TrendingUp}
               color="green"
             />
             <SummaryCard
-              title="Penalties"
+              title={t('adjustments.kpi.penalties')}
               value={stats.penaltyCount.toLocaleString()}
               description={`${formatMoney(stats.penaltyAmount)} VND`}
               icon={TrendingDown}
               color="red"
             />
             <SummaryCard
-              title="Net Value"
+              title={t('adjustments.kpi.netValue')}
               value={formatMoney(stats.netAmount)}
-              description="VND (After adjustments)"
+              description={t('adjustments.kpi.afterAdj')}
               icon={DollarSign}
               color="cyan"
             />

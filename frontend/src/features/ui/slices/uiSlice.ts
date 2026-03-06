@@ -9,6 +9,7 @@ export interface Notification {
   type: 'success' | 'error' | 'warning' | 'info'
   title: string
   message: string
+  read: boolean
   duration?: number
 }
 
@@ -60,12 +61,22 @@ const uiSlice = createSlice({
     /* ---------- NOTIFICATIONS ---------- */
     addNotification(
       state,
-      action: PayloadAction<Omit<Notification, 'id'>>
+      action: PayloadAction<Omit<Notification, 'id' | 'read'>>
     ) {
       state.notifications.push({
         ...action.payload,
         id: Date.now().toString(),
+        read: false,
       })
+    },
+
+    markNotificationRead(state, action: PayloadAction<string>) {
+      const n = state.notifications.find(n => n.id === action.payload)
+      if (n) n.read = true
+    },
+
+    markAllNotificationsRead(state) {
+      state.notifications.forEach(n => { n.read = true })
     },
 
     removeNotification(state, action: PayloadAction<string>) {
@@ -87,6 +98,8 @@ export const {
   setTheme,
   setLanguage,
   addNotification,
+  markNotificationRead,
+  markAllNotificationsRead,
   removeNotification,
   clearNotifications,
 } = uiSlice.actions

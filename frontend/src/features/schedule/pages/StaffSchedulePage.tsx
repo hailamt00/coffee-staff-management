@@ -32,8 +32,10 @@ import { Clock, Plus, Info } from 'lucide-react'
 import { formatDate } from '@/shared/utils/format'
 import { useMemo } from 'react'
 import { DeleteConfirmDialog } from '@/shared/components/ui/delete-confirm-dialog'
+import { useTranslation } from 'react-i18next'
 
 export default function StaffSchedulePage() {
+    const { t } = useTranslation()
     const navigate = useNavigate()
     const staffJson = localStorage.getItem('staffInfo')
     const staff = staffJson ? JSON.parse(staffJson) : null
@@ -206,7 +208,7 @@ export default function StaffSchedulePage() {
         <div className="space-y-6 pb-20">
             <div className="flex items-center gap-2 px-2">
                 <Button variant="ghost" size="sm" onClick={() => navigate('/staff/menu')} className="hover:bg-slate-100 dark:hover:bg-neutral-800 rounded-lg h-10 px-4 font-bold uppercase tracking-widest text-[10px]">
-                    &larr; Back
+                    &larr; {t('employees.back')}
                 </Button>
             </div>
 
@@ -214,21 +216,21 @@ export default function StaffSchedulePage() {
                 <div className="flex flex-col sm:flex-row sm:items-end gap-4 sm:gap-12">
                     <div>
                         <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
-                            My Schedule
+                            {t('staff.menu.schedule.title')}
                         </h1>
                         <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                            Roster Management
+                            {t('schedule.subtitle')}
                         </p>
                     </div>
                     {/* Filter UI */}
                     <div className="flex items-center gap-3">
-                        <Label htmlFor="positionFilter" className="text-[11px] font-bold tracking-wide text-slate-400">Filter:</Label>
+                        <Label htmlFor="positionFilter" className="text-[11px] font-bold tracking-wide text-slate-400">{t('schedule.filters.label')}</Label>
                         <Select value={filterPosition} onValueChange={setFilterPosition}>
                             <SelectTrigger id="positionFilter" className="w-[140px] h-8 bg-slate-50 border-slate-200 dark:bg-neutral-800 dark:border-neutral-700 text-[10px] font-bold">
-                                <SelectValue placeholder="All" />
+                                <SelectValue placeholder={t('schedule.filters.all')} />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="all">All Positions</SelectItem>
+                                <SelectItem value="all">{t('schedule.filters.all')}</SelectItem>
                                 {allPositions.map(p => (
                                     <SelectItem key={p.id} value={p.name}>{p.name}</SelectItem>
                                 ))}
@@ -280,21 +282,21 @@ export default function StaffSchedulePage() {
                     <DialogTrigger asChild>
                         <Button className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 border-none h-11 sm:h-10 px-6 rounded-xl font-bold tracking-wide text-xs sm:text-sm w-full sm:w-auto">
                             <Plus className="mr-2 h-4 w-4" />
-                            Request Shift
+                            {t('staff.scheduleRequest.requestShift', 'Request Shift')}
                         </Button>
                     </DialogTrigger>
                     <DialogContent className="max-w-[400px] rounded-2xl border border-slate-200/60 dark:border-neutral-800/60 backdrop-blur-xl bg-white/90 dark:bg-neutral-900/90 shadow-2xl p-0 overflow-hidden">
                         <DialogHeader className="p-6 border-b border-slate-100 dark:border-neutral-800/50">
                             <DialogTitle className="text-xl font-black text-slate-900 dark:text-white tracking-tight">
-                                {editMode ? 'Edit Request' : 'Request Shift'}
+                                {editMode ? t('staff.scheduleRequest.editRequest', 'Edit Request') : t('staff.scheduleRequest.requestShift', 'Request Shift')}
                             </DialogTitle>
                         </DialogHeader>
                         <div className="p-6 space-y-4 max-h-[85vh] overflow-y-auto custom-scrollbar">
                             <div className="space-y-2">
-                                <Label htmlFor="requestPosition" className="text-[11px] font-bold text-slate-500 tracking-wide">Position</Label>
+                                <Label htmlFor="requestPosition" className="text-[11px] font-bold text-slate-500 tracking-wide">{t('schedule.fields.position')}</Label>
                                 <Select value={reqPositionId} onValueChange={setReqPositionId}>
                                     <SelectTrigger id="requestPosition" className="h-11 rounded-xl border-slate-200/60 dark:border-neutral-800/60 bg-white/50 dark:bg-neutral-900/50">
-                                        <SelectValue placeholder="Select Position" />
+                                        <SelectValue placeholder={t('schedule.dialog.selectPosition', 'Select Position')} />
                                     </SelectTrigger>
                                     <SelectContent className="rounded-xl">
                                         {allPositions.map(p => (
@@ -305,7 +307,7 @@ export default function StaffSchedulePage() {
                             </div>
 
                             <div className="space-y-2 pt-2">
-                                <div className="text-[11px] font-bold text-slate-500 tracking-wide">Select Shifts {editMode && '(Edit limits to single selection)'}</div>
+                                <div className="text-[11px] font-bold text-slate-500 tracking-wide">{t('staff.scheduleRequest.selectShifts', 'Select Shifts')} {editMode && '(' + t('staff.scheduleRequest.editLimitsOnce', 'Edit limits to single selection') + ')'}</div>
                                 {reqPositionId ? (
                                     <div className="space-y-4">
                                         {/* Desktop Selection View */}
@@ -425,17 +427,17 @@ export default function StaffSchedulePage() {
                                     </div>
                                 ) : (
                                     <div className="text-center p-8 border border-dashed border-slate-200 dark:border-neutral-800 rounded-xl text-slate-400 text-[11px] font-bold uppercase tracking-widest bg-slate-50/50 dark:bg-white/5">
-                                        Please select a position first
+                                        {t('schedule.dialog.selectPositionFirst', 'Please select a position first')}
                                     </div>
                                 )}
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="requestNote" className="text-[11px] font-bold text-slate-500 tracking-wide">Note (Optional)</Label>
+                                <Label htmlFor="requestNote" className="text-[11px] font-bold text-slate-500 tracking-wide">{t('schedule.fields.note')}</Label>
                                 <Input
                                     id="requestNote"
                                     value={reqNote}
                                     onChange={e => setReqNote(e.target.value)}
-                                    placeholder="Reason or special request..."
+                                    placeholder={t('schedule.fields.notePlaceholder')}
                                     className="h-11 rounded-xl border-slate-200/60 dark:border-neutral-800/60 bg-white/50 dark:bg-neutral-900/50"
                                 />
                             </div>
@@ -446,15 +448,15 @@ export default function StaffSchedulePage() {
                                             open={isDeleteDialogOpen}
                                             onOpenChange={setIsDeleteDialogOpen}
                                             onConfirm={handleDeleteRequest}
-                                            title="Delete Shift Request"
-                                            description="Are you sure you want to delete this shift request? This action cannot be undone."
+                                            title={t('schedule.dialog.deleteTitle', 'Delete Shift Request')}
+                                            description={t('schedule.dialog.deleteDesc', 'Are you sure? This cannot be undone.')}
                                         />
                                         <Button
                                             onClick={(e) => { e.preventDefault(); setIsDeleteDialogOpen(true); }}
                                             variant="ghost"
                                             className="flex-1 h-12 rounded-xl border border-red-200/50 text-red-500 hover:bg-red-50 font-bold text-xs tracking-wide w-full"
                                         >
-                                            Delete
+                                            {t('common.delete')}
                                         </Button>
                                     </>
                                 )}
@@ -463,7 +465,7 @@ export default function StaffSchedulePage() {
                                     disabled={selectedCells.length === 0}
                                     className="flex-[2] bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 h-12 rounded-xl font-bold text-xs tracking-wide"
                                 >
-                                    {editMode ? 'Update Request' : `Submit Request (${selectedCells.length})`}
+                                    {editMode ? t('staff.scheduleRequest.updateRequest', 'Update Request') : `${t('staff.scheduleRequest.submitRequest', 'Submit Request')} (${selectedCells.length})`}
                                 </Button>
                             </div>
                         </div>
@@ -518,7 +520,7 @@ export default function StaffSchedulePage() {
                                                 {item ? (
                                                     <div className={`rounded-lg p-2 flex flex-col items-center justify-center gap-1 group relative animate-in fade-in zoom-in duration-200 ${statusStyles}`}>
                                                         <span className="text-[9px] font-black uppercase tracking-widest text-center">
-                                                            {item.type === 'official' ? 'Assigned' : 'Pending'}
+                                                            {item.type === 'official' ? t('staff.scheduleRequest.assigned', 'Assigned') : t('staff.scheduleRequest.pending', 'Pending')}
                                                         </span>
                                                         <div className="flex items-center gap-1 text-[8px] font-bold opacity-70">
                                                             <Clock size={8} />
@@ -566,7 +568,7 @@ export default function StaffSchedulePage() {
                                         </span>
                                     </div>
                                     {!hasActivity && (
-                                        <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest px-2 py-1 bg-slate-50 dark:bg-neutral-800/50 rounded-lg">Off Day</span>
+                                        <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest px-2 py-1 bg-slate-50 dark:bg-neutral-800/50 rounded-lg">{t('staff.scheduleRequest.offDay', 'Off Day')}</span>
                                     )}
                                 </div>
 
@@ -606,14 +608,15 @@ export default function StaffSchedulePage() {
                                                             ? 'bg-white/10 text-white dark:bg-black/5 dark:text-black'
                                                             : 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'}
                                                     `}>
-                                                        {isOfficial ? 'Confirmed' : 'Pending Request'}
+                                                        {isOfficial ? t('staff.scheduleRequest.confirmed', 'Confirmed') : t('staff.scheduleRequest.pendingRequest', 'Pending Request')}
                                                     </span>
                                                     {item.note && (
                                                         <div className="flex items-center gap-1 text-[9px] font-bold text-amber-500">
                                                             <Info size={10} />
-                                                            Has Note
+                                                            {t('staff.scheduleRequest.hasNote', 'Has Note')}
                                                         </div>
                                                     )}
+
                                                 </div>
                                                 {/* Edit visual cue */}
                                                 <div className={`absolute left-0 top-0 bottom-0 w-1 rounded-l-xl ${isOfficial ? 'bg-emerald-500' : 'bg-blue-500'}`} />
@@ -628,7 +631,7 @@ export default function StaffSchedulePage() {
                                         className="h-10 border border-dashed border-slate-200 dark:border-neutral-800 rounded-xl text-[10px] font-bold uppercase text-slate-400 hover:bg-slate-50 dark:hover:bg-neutral-800/50"
                                     >
                                         <Plus className="h-3 w-3 mr-2" />
-                                        Add Shift Request
+                                        {t('staff.scheduleRequest.addShiftRequest', 'Add Shift Request')}
                                     </Button>
                                 </div>
                             </div>
@@ -640,11 +643,11 @@ export default function StaffSchedulePage() {
             <div className="px-2 space-y-3">
                 <div className="flex items-center gap-2 text-slate-400">
                     <Info size={14} />
-                    <p className="text-[10px] font-bold uppercase tracking-widest">Schedule Policy</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest">{t('staff.scheduleRequest.policy', 'Schedule Policy')}</p>
                 </div>
                 <div className="bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-neutral-800 rounded-xl p-4">
                     <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium capitalize">
-                        this table shows your confirmed shifts for the current week. red dots on assigned cards indicate active shift notes from management.
+                        {t('staff.scheduleRequest.policyDesc', 'This table shows your confirmed shifts for the current week. Dots on assigned cards indicate active shift notes from management.')}
                     </p>
                 </div>
             </div>

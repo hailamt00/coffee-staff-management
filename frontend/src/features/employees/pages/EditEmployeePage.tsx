@@ -13,25 +13,25 @@ import { Label } from '@/shared/components/ui/label'
 
 import { useEmployee } from '../hooks/useEmployee'
 import type { Gender } from '@/shared/types/api'
-
-/* ===== ENUMS ===== */
-const GENDERS: { value: Exclude<Gender, null>; label: string }[] = [
-  { value: 'Male', label: 'Male' },
-  { value: 'Female', label: 'Female' },
-  { value: 'Other', label: 'Other' },
-]
-
-/* ================= PAGE ================= */
+import { useTranslation } from 'react-i18next'
 
 export default function EditEmployeePage() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const {
     fetchEmployeeById,
     updateEmployee,
     loading,
   } = useEmployee()
+
+  /* ===== ENUMS ===== */
+  const GENDERS: { value: Exclude<Gender, null>; label: string }[] = [
+    { value: 'Male', label: t('employees.genders.male') },
+    { value: 'Female', label: t('employees.genders.female') },
+    { value: 'Other', label: t('employees.genders.other') },
+  ]
 
   /* ===== FORM STATE (UI-friendly) ===== */
   const [form, setForm] = useState({
@@ -91,12 +91,12 @@ export default function EditEmployeePage() {
     if (!id) return
 
     if (!form.name.trim()) {
-      alert('Employee Name is required')
+      alert(t('employees.form.validation.nameRequired'))
       return
     }
 
     if (!form.phone.trim()) {
-      alert('Phone number is required')
+      alert(t('employees.form.validation.phoneRequired'))
       return
     }
 
@@ -120,7 +120,7 @@ export default function EditEmployeePage() {
     <div className="space-y-6">
       <div className="flex items-center gap-2 px-2">
         <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="hover:bg-slate-100 dark:hover:bg-neutral-800 rounded-lg h-10 px-4 font-bold uppercase tracking-widest text-[10px]">
-          &larr; Back
+          &larr; {t('employees.back')}
         </Button>
       </div>
 
@@ -129,10 +129,10 @@ export default function EditEmployeePage() {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">
-                Edit Profile
+                {t('employees.edit')}
               </CardTitle>
               <p className="mt-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                Update Information
+                {t('employees.updateInfo')}
               </p>
             </div>
           </div>
@@ -140,9 +140,9 @@ export default function EditEmployeePage() {
 
         <CardContent className="space-y-8">
           {/* ===== BASIC INFO ===== */}
-          <Section title="Basic Information">
+          <Section title={t('employees.form.basicInfo')}>
             <Grid>
-              <Field id="editEmpName" label="Employee Name" required>
+              <Field id="editEmpName" label={t('employees.form.fullName')} required>
                 <Input
                   id="editEmpName"
                   value={form.name}
@@ -150,7 +150,7 @@ export default function EditEmployeePage() {
                 />
               </Field>
 
-              <Field id="editEmpPhone" label="Phone Number" required>
+              <Field id="editEmpPhone" label={t('employees.form.phone')} required>
                 <Input
                   id="editEmpPhone"
                   value={form.phone}
@@ -158,7 +158,7 @@ export default function EditEmployeePage() {
                 />
               </Field>
 
-              <Field id="editEmpCid" label="Citizen ID (CID)">
+              <Field id="editEmpCid" label={t('employees.form.idCard')}>
                 <Input
                   id="editEmpCid"
                   value={form.cid}
@@ -166,7 +166,7 @@ export default function EditEmployeePage() {
                 />
               </Field>
 
-              <Field id="editEmpGender" label="Gender">
+              <Field id="editEmpGender" label={t('employees.form.gender')}>
                 <select
                   id="editEmpGender"
                   value={form.gender}
@@ -179,7 +179,7 @@ export default function EditEmployeePage() {
                   focus:ring-black/30 dark:focus:ring-white/30
                 "
                 >
-                  <option value="">Select</option>
+                  <option value="">{t('employees.form.placeholder.select')}</option>
                   {GENDERS.map(g => (
                     <option key={g.value} value={g.value}>
                       {g.label}
@@ -191,9 +191,9 @@ export default function EditEmployeePage() {
           </Section>
 
           {/* ===== SALARY ===== */}
-          <Section title="Salary Information">
+          <Section title={t('employees.form.salaryInfo')}>
             <Grid>
-              <Field id="editEmpServiceSalary" label="Salary Service">
+              <Field id="editEmpServiceSalary" label={t('employees.form.serviceSalary')}>
                 <Input
                   id="editEmpServiceSalary"
                   type="number"
@@ -202,7 +202,7 @@ export default function EditEmployeePage() {
                 />
               </Field>
 
-              <Field id="editEmpBaristaSalary" label="Salary Bar">
+              <Field id="editEmpBaristaSalary" label={t('employees.form.baristaSalary')}>
                 <Input
                   id="editEmpBaristaSalary"
                   type="number"
@@ -214,9 +214,9 @@ export default function EditEmployeePage() {
           </Section>
 
           {/* ===== DATE ===== */}
-          <Section title="Date Information">
+          <Section title={t('employees.form.dateInfo')}>
             <Grid>
-              <Field id="editEmpDob" label="Date of Birth">
+              <Field id="editEmpDob" label={t('employees.form.dob')}>
                 <Input
                   id="editEmpDob"
                   type="date"
@@ -225,7 +225,7 @@ export default function EditEmployeePage() {
                 />
               </Field>
 
-              <Field id="editEmpHireDate" label="Hire Date">
+              <Field id="editEmpHireDate" label={t('employees.form.hireDate')}>
                 <Input
                   id="editEmpHireDate"
                   type="date"
@@ -242,10 +242,10 @@ export default function EditEmployeePage() {
               variant="outline"
               onClick={() => navigate(-1)}
             >
-              Cancel
+              {t('employees.form.cancel')}
             </Button>
             <Button onClick={handleSubmit} disabled={loading}>
-              {loading ? 'Saving...' : 'Update Employee'}
+              {loading ? t('employees.form.saving') : t('employees.form.update')}
             </Button>
           </div>
         </CardContent>

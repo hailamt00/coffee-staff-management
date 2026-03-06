@@ -1,4 +1,5 @@
 using CoffeeStaffManagement.Api.Extensions;
+using CoffeeStaffManagement.API.Hubs;
 using CoffeeStaffManagement.API.Middleware;
 using CoffeeStaffManagement.Application;
 using CoffeeStaffManagement.Application.Common.Interfaces;
@@ -16,6 +17,9 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter()));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// ===== SIGNALR =====
+builder.Services.AddSignalR();
 
 // ===== DEPENDENCY INJECTION =====
 builder.Services.AddApplication();
@@ -35,6 +39,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// ===== SIGNALR HUB =====
+app.MapHub<NotificationHub>("/hubs/notifications");
 
 using (var scope = app.Services.CreateScope())
 {

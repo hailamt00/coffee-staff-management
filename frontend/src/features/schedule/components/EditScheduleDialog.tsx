@@ -22,6 +22,7 @@ import type { Schedule, UpdateScheduleRequest } from '@/shared/types/api'
 import { usePosition } from '../../positions/hooks/usePosition'
 import { DeleteConfirmDialog } from '@/shared/components/ui/delete-confirm-dialog'
 import { formatDateInVietnam } from '@/shared/utils/datetime'
+import { useTranslation } from 'react-i18next'
 
 interface EditScheduleDialogProps {
     schedule: Schedule | null
@@ -39,6 +40,7 @@ export function EditScheduleDialog({
     onDelete
 }: EditScheduleDialogProps) {
     const { positions } = usePosition()
+    const { t } = useTranslation()
 
     const [selectedPositionId, setSelectedPositionId] = useState<string>('')
     const [shiftId, setShiftId] = useState<string>('')
@@ -118,21 +120,21 @@ export function EditScheduleDialog({
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Edit Schedule</DialogTitle>
+                    <DialogTitle>{t('schedule.dialog.editTitle', 'Edit Schedule')}</DialogTitle>
                     <DialogDescription>
-                        Modify shift assignment or update notes for this schedule entry.
+                        {t('schedule.dialog.editDesc', 'Modify shift assignment or update notes for this schedule entry.')}
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <span className="text-sm text-right font-bold text-slate-500">Employee</span>
+                        <span className="text-sm text-right font-bold text-slate-500">{t('schedule.fields.employee')}</span>
                         <div className="col-span-3 font-semibold text-lg">
                             {schedule.employeeName}
                         </div>
                     </div>
 
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <span className="text-sm text-right font-bold text-slate-500">Date</span>
+                        <span className="text-sm text-right font-bold text-slate-500">{t('schedule.fields.date')}</span>
                         <div className="col-span-3">
                             {formatDateInVietnam(schedule.workDate)}
                         </div>
@@ -140,13 +142,13 @@ export function EditScheduleDialog({
 
                     {/* Position Selection */}
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="editPosition" className="text-right font-bold text-slate-500">Position</Label>
+                        <Label htmlFor="editPosition" className="text-right font-bold text-slate-500">{t('schedule.fields.position')}</Label>
                         <Select value={selectedPositionId} onValueChange={(val) => {
                             setSelectedPositionId(val)
                             setShiftId('') // Reset shift when position changes
                         }}>
                             <SelectTrigger id="editPosition" className="col-span-3">
-                                <SelectValue placeholder="Select position" />
+                                <SelectValue placeholder={t('schedule.dialog.selectPosition', 'Select position')} />
                             </SelectTrigger>
                             <SelectContent>
                                 {positions.map((p) => (
@@ -160,10 +162,10 @@ export function EditScheduleDialog({
 
                     {/* Shift Selection */}
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="editShift" className="text-right font-bold text-slate-500">Shift</Label>
+                        <Label htmlFor="editShift" className="text-right font-bold text-slate-500">{t('schedule.fields.shifts')}</Label>
                         <Select value={shiftId} onValueChange={setShiftId} disabled={!selectedPositionId}>
                             <SelectTrigger id="editShift" className="col-span-3">
-                                <SelectValue placeholder={selectedPositionId ? "Select shift" : "Select position first"} />
+                                <SelectValue placeholder={selectedPositionId ? t('schedule.dialog.selectShift', 'Select shift') : t('schedule.dialog.selectPositionFirst', 'Select position first')} />
                             </SelectTrigger>
                             <SelectContent>
                                 {availableShifts.map((s) => (
@@ -176,13 +178,13 @@ export function EditScheduleDialog({
                     </div>
 
                     <div className="grid grid-cols-4 items-start gap-4">
-                        <Label htmlFor="note" className="text-right font-bold text-slate-500 mt-2">Note</Label>
+                        <Label htmlFor="note" className="text-right font-bold text-slate-500 mt-2">{t('schedule.fields.note')}</Label>
                         <Textarea
                             id="note"
                             value={note}
                             onChange={(e) => setNote(e.target.value)}
                             className="col-span-3 min-h-[80px]"
-                            placeholder="Add a note (optional)"
+                            placeholder={t('schedule.fields.notePlaceholder')}
                         />
                     </div>
                 </div>
@@ -198,11 +200,11 @@ export function EditScheduleDialog({
                     </Button>
                     <div className="flex gap-2">
                         <Button variant="outline" onClick={onClose} disabled={isLoading}>
-                            Cancel
+                            {t('common.cancel')}
                         </Button>
                         <Button onClick={handleSave} disabled={isLoading || !shiftId}>
                             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Save Changes
+                            {t('schedule.dialog.saveChanges', 'Save Changes')}
                         </Button>
                     </div>
                 </DialogFooter>
@@ -211,8 +213,8 @@ export function EditScheduleDialog({
             <DeleteConfirmDialog
                 open={showDeleteConfirm}
                 onOpenChange={setShowDeleteConfirm}
-                title="Delete Shift"
-                description="Are you sure you want to delete this shift? This action cannot be undone."
+                title={t('schedule.dialog.deleteTitle', 'Delete Shift')}
+                description={t('schedule.dialog.deleteDesc', 'Are you sure you want to delete this shift? This action cannot be undone.')}
                 onConfirm={handleDelete}
             />
         </Dialog >

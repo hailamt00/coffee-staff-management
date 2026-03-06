@@ -21,9 +21,15 @@ export default defineConfig({
     open: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:5136',      
+        target: 'http://localhost:5136',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '/api/v1'),
+        secure: false,
+      },
+      '/hubs': {
+        target: 'http://localhost:5136',
+        changeOrigin: true,
+        ws: true,           // enable WebSocket proxying for SignalR
         secure: false,
       },
     },

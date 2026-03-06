@@ -20,10 +20,7 @@ import { Breadcrumbs } from '@/shared/components/ui/breadcrumbs'
 
 import {
   Sun,
-  Search,
-  Command,
   Menu,
-  Bell,
   User,
   LogOut,
   Languages,
@@ -33,6 +30,10 @@ import {
 
 import { useTheme } from '@/shared/theme/ThemeContext'
 import clsx from 'clsx'
+import { SearchPalette } from './components/SearchPalette'
+import { NotificationPopover } from './components/NotificationPopover'
+import { useTranslation } from 'react-i18next'
+import { useEffect } from 'react'
 
 interface Props {
   onToggleSidebar: () => void
@@ -40,71 +41,54 @@ interface Props {
 
 export default function Header({ onToggleSidebar }: Props) {
   const dispatch = useDispatch()
+  const { i18n, t } = useTranslation()
   const language = useSelector((state: RootState) => state.ui.language)
+  const admin = useSelector((state: RootState) => state.auth.admin)
   const { theme, toggleTheme } = useTheme()
+
+  useEffect(() => {
+    i18n.changeLanguage(language)
+  }, [language, i18n])
+
+  const adminName = admin?.username || 'System Admin'
+  const adminEmail = 'admin@csm-elite.com' // Static for now as it's not in the type
+  const adminInitials = adminName.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase()
 
   return (
     <header
       className={clsx(
-        'sticky top-0 z-30 h-14',
+        'sticky top-0 z-30 h-16',
         'flex items-center justify-between',
-        'px-6',
-        'border-b border-slate-200 dark:border-neutral-800',
-        'bg-white dark:bg-black',
+        'px-8',
+        'border-b border-slate-200/60 dark:border-neutral-800/60',
+        'bg-white/70 dark:bg-black/70 backdrop-blur-xl',
         'text-slate-900 dark:text-white',
-        'transition-colors'
+        'transition-all duration-300'
       )}
     >
       {/* ===== LEFT ===== */}
       <div className="flex items-center gap-6">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           {/* Mobile menu */}
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="md:hidden h-10 w-10 text-slate-500 hover:text-slate-900 dark:hover:text-white"
             onClick={onToggleSidebar}
           >
-            <Menu size={18} />
+            <Menu size={20} />
           </Button>
 
-          {/* App title */}
-          <div className="flex flex-col leading-tight border-r border-slate-200 dark:border-neutral-800 pr-4 mr-1">
-            <span className="text-sm font-black tracking-tight">
-              CSM Elite
-            </span>
-            <span className="text-[11px] font-bold text-slate-500 hidden sm:block tracking-wide">
-              V.2.0 Pro
-            </span>
+          {/* Page Context (Breadcrumbs) */}
+          <div className="hidden lg:flex items-center h-8 px-4 bg-slate-50 dark:bg-white/[0.03] rounded-full border border-slate-200/50 dark:border-white/5 shadow-sm">
+            <Breadcrumbs />
           </div>
-        </div>
-
-        {/* Breadcrumbs */}
-        <div className="hidden lg:block">
-          <Breadcrumbs />
         </div>
       </div>
 
       {/* ===== CENTER SEARCH ===== */}
       <div className="hidden md:flex flex-1 max-w-md mx-8">
-        <div className="relative w-full group">
-          <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-            <Search className="h-3.5 w-3.5 text-slate-400 group-focus-within:text-slate-900 dark:group-focus-within:text-white transition-colors" />
-          </div>
-          <input
-            id="mainSearch"
-            name="search"
-            aria-label="Search commands or staff"
-            type="text"
-            className="w-full h-9 bg-slate-50 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 rounded-lg pl-9 pr-12 text-xs font-medium focus:ring-1 focus:ring-black dark:focus:ring-white transition-all shadow-sm"
-            placeholder="Search commands or staff..."
-          />
-          <div className="absolute inset-y-0 right-3 flex items-center gap-0.5 pointer-events-none">
-            <kbd className="h-5 px-1.5 rounded bg-white dark:bg-black border border-slate-200 dark:border-neutral-800 text-[9px] font-bold text-slate-400 flex items-center gap-0.5 shadow-sm">
-              <Command size={8} /> K
-            </kbd>
-          </div>
-        </div>
+        <SearchPalette />
       </div>
 
       {/* ===== RIGHT ===== */}
@@ -114,7 +98,7 @@ export default function Header({ onToggleSidebar }: Props) {
           variant="ghost"
           size="icon"
           onClick={toggleTheme}
-          className="transition hover:bg-slate-100 dark:hover:bg-neutral-800"
+          className="transition hover:bg-slate-100 dark:hover:bg-neutral-800 rounded-full"
         >
           {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
         </Button>
@@ -125,7 +109,7 @@ export default function Header({ onToggleSidebar }: Props) {
             <Button
               variant="ghost"
               size="icon"
-              className="hover:bg-slate-100 dark:hover:bg-neutral-800"
+              className="hover:bg-slate-100 dark:hover:bg-neutral-800 rounded-full"
             >
               <Languages size={18} />
             </Button>
@@ -133,77 +117,75 @@ export default function Header({ onToggleSidebar }: Props) {
 
           <DropdownMenuContent
             align="end"
-            className="w-28 bg-white dark:bg-neutral-900"
+            className="p-1 w-32 bg-white dark:bg-[#0C0C0C] backdrop-blur-xl border-slate-200 dark:border-white/5 shadow-2xl rounded-xl"
           >
-            <DropdownMenuItem onClick={() => dispatch(setLanguage('en'))}>
-              EN
-              {language === 'en' && (
-                <Check className="ml-auto h-4 w-4" />
-              )}
+            <DropdownMenuItem
+              onClick={() => dispatch(setLanguage('en'))}
+              className="flex items-center justify-between px-3 py-2 cursor-pointer rounded-lg text-xs font-bold uppercase tracking-widest"
+            >
+              English
+              {language === 'en' && <Check className="h-3.5 w-3.5" />}
             </DropdownMenuItem>
 
-            <DropdownMenuItem onClick={() => dispatch(setLanguage('vi'))}>
-              VI
-              {language === 'vi' && (
-                <Check className="ml-auto h-4 w-4" />
-              )}
+            <DropdownMenuItem
+              onClick={() => dispatch(setLanguage('vi'))}
+              className="flex items-center justify-between px-3 py-2 cursor-pointer rounded-lg text-xs font-bold uppercase tracking-widest"
+            >
+              Tiếng Việt
+              {language === 'vi' && <Check className="h-3.5 w-3.5" />}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
         {/* 🔔 Notifications */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="relative hover:bg-slate-100 dark:hover:bg-neutral-800"
-        >
-          <Bell size={18} />
-          <span className="absolute top-1.5 right-1.5 h-2 w-2 bg-black dark:bg-white rounded-full border-2 border-white dark:border-black animate-pulse" />
-        </Button>
+        <NotificationPopover />
 
         {/* 👤 Profile */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
               className="
-                ml-1 flex items-center gap-2 rounded-full p-1
-                hover:bg-slate-100 dark:hover:bg-neutral-800
-                transition
+                ml-1 flex items-center gap-2 rounded-full p-0.5
+                hover:opacity-80 transition-opacity
               "
             >
-              <Avatar className="h-8 w-8">
+              <Avatar className="h-8 w-8 ring-1 ring-slate-200 dark:ring-white/10 ring-offset-2 ring-offset-white dark:ring-offset-black">
                 <AvatarImage src="/avatar.png" />
-                <AvatarFallback>AD</AvatarFallback>
+                <AvatarFallback className="bg-slate-900 text-white dark:bg-white dark:text-black font-black text-[10px]">
+                  {adminInitials}
+                </AvatarFallback>
               </Avatar>
             </button>
           </DropdownMenuTrigger>
 
           <DropdownMenuContent
             align="end"
-            className="w-52 bg-white dark:bg-neutral-900"
+            className="w-60 bg-white dark:bg-[#0C0C0C] backdrop-blur-xl border-slate-200 dark:border-white/5 shadow-2xl rounded-2xl p-1"
           >
-            <div className="px-3 py-2">
-              <p className="text-sm font-semibold">Admin</p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                System Administrator
+            <div className="px-3 py-3">
+              <p className="text-[12px] font-black uppercase tracking-tight text-slate-900 dark:text-white truncate">
+                {adminName}
+              </p>
+              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 truncate tracking-wide">
+                {adminEmail}
               </p>
             </div>
 
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator className="bg-slate-200 dark:bg-white/5" />
 
-            <DropdownMenuItem>
-              <User className="mr-2 h-4 w-4" />
-              Profile
+            <DropdownMenuItem className="flex items-center gap-3 px-3 py-2 cursor-pointer rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+              <User className="h-4 w-4 opacity-70" />
+              {t('common.myProfile')}
             </DropdownMenuItem>
 
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator className="bg-slate-200 dark:bg-white/5" />
 
             <DropdownMenuItem
-              className="text-red-600 focus:text-red-600"
+              className="flex items-center gap-3 px-3 py-2 cursor-pointer rounded-xl text-xs font-bold uppercase tracking-widest text-red-500 hover:text-red-500 focus:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
               onClick={() => dispatch(logout())}
             >
-              <LogOut className="mr-2 h-4 w-4" />
-              Logout
+              <LogOut className="h-4 w-4" />
+              {t('common.signOut')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

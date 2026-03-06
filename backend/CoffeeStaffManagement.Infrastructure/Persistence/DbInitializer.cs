@@ -98,5 +98,24 @@ public static class DbInitializer
             );
             context.SaveChanges();
         }
+
+        ResetSequences(context);
+    }
+
+    private static void ResetSequences(AppDbContext context)
+    {
+        var tables = new[]
+        {
+            "admins", "employees", "positions", "shifts", "schedule_requests",
+            "schedules", "attendance", "reward_penalty_types", "rewards_penalties",
+            "payrolls", "payroll_details", "revenues", "transactions", "activities"
+        };
+
+        foreach (var table in tables)
+        {
+            context.Database.ExecuteSqlRaw(
+                $"SELECT setval(pg_get_serial_sequence('\"{table}\"', 'id'), coalesce(max(id), 1), max(id) IS NOT NULL) FROM \"{table}\";"
+            );
+        }
     }
 }

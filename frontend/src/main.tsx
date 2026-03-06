@@ -7,6 +7,7 @@ import { store } from './app/store'
 import { queryClient } from './app/queryClient'
 import { router } from './app/router'
 import { ThemeProvider } from '@/shared/theme/ThemeProvider'
+import './shared/i18n/config'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

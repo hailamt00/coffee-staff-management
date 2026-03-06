@@ -1,0 +1,589 @@
+{
+    "common": {
+        "dashboard": "Dashboard",
+        "search": "Search commands or staff...",
+        "notifications": "Notifications",
+        "clearAll": "Clear all",
+        "noNotifications": "No new notifications",
+        "allCaughtUp": "You're all caught up for now.",
+        "viewAllActivity": "View All Activity",
+        "myProfile": "My Profile",
+        "signOut": "Sign Out",
+        "justNow": "Just now",
+        "ago": "ago",
+        "all": "All",
+        "actions": "Actions",
+        "show": "Show",
+        "searchPlaceholder": "Type to filter data...",
+        "syncing": "Syncing...",
+        "loading": "Loading...",
+        "noResults": "Zero results found",
+        "adjustFilters": "Adjust your filters",
+        "noEntries": "No entries",
+        "paginationInfo": "Record {{start}} - {{end}} / TR {{total}}",
+        "home": "DASH",
+        "markAllRead": "Mark all read",
+        "unread": "unread",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "update": "Update",
+        "create": "Create",
+        "delete": "Delete",
+        "edit": "Edit",
+        "close": "Close",
+        "add": "Add",
+        "submit": "Submit",
+        "save": "Save"
+    },
+    "sidebar": {
+        "main": "Main",
+        "hR": "HR",
+        "time": "Time",
+        "financials": "Financials",
+        "systemLogs": "System Logs",
+        "dashboard": "Dashboard",
+        "employees": "Employees",
+        "positions": "Positions",
+        "schedules": "Schedules",
+        "attendance": "Attendance",
+        "payroll": "Payroll",
+        "payrollExport": "Payroll Export",
+        "revenue": "Revenue",
+        "adjustments": "Adjustments",
+        "activityLogs": "Activity Logs",
+        "administrator": "Administrator",
+        "systemRoot": "System Root"
+    },
+    "dashboard": {
+        "title": "Dashboard",
+        "noShifts": "No operational shifts configured",
+        "subtitle": "Operational Overview",
+        "liveStatus": "Live Status",
+        "active": "Active",
+        "barista": "Barista",
+        "service": "Service",
+        "pulseTitle": "Real-Time Operational Pulse",
+        "revenue": "Total Revenue",
+        "netProfit": "Net Profit",
+        "activeStaff": "Active Staff",
+        "attendance": "Attendance",
+        "totalReports": "Total Reports",
+        "revenueSubmissions": "Revenue Submissions",
+        "shiftCompliance": "Shift Compliance",
+        "liveShifts": "Live Shifts",
+        "currentOperations": "Current Operations",
+        "clockedIn": "Clocked In",
+        "netProfitPerformance": "Net Profit Performance",
+        "peakActivity": "Peak Activity",
+        "weeklyRevenue": "Weekly Revenue",
+        "recentActivity": "Recent Activity",
+        "noActivity": "No recent activity to show.",
+        "pulse": {
+            "revenueDelta": "Revenue Delta",
+            "compliance": "Compliance",
+            "efficiency": "Efficiency",
+            "staffLoad": "Staff Load",
+            "aboveTarget": "Above Target",
+            "topTier": "Top Tier",
+            "operational": "Operational",
+            "activeCount": "{{count}} Active"
+        }
+    },
+    "activity": {
+        "title": "Activity Log",
+        "subtitle": "Audit Trail & System Pulse",
+        "totalLogs": "Total Logs",
+        "recordedEvents": "Recorded events",
+        "table": {
+            "time": "Time",
+            "type": "Type",
+            "details": "Details",
+            "userSource": "User / Source"
+        },
+        "types": {
+            "system": "System",
+            "employee": "Employee",
+            "shift": "Shift",
+            "schedule": "Schedule",
+            "adjustment": "Adjustment",
+            "revenue": "Revenue",
+            "auth": "Auth"
+        },
+        "actions": {
+            "process": "Process",
+            "create": "Create",
+            "update": "Update",
+            "delete": "Delete",
+            "login": "Login",
+            "logout": "Logout",
+            "approve": "Approve",
+            "reject": "Reject"
+        },
+        "source": {
+            "system": "System Auto",
+            "admin": "Admin ID: {{id}}"
+        }
+    },
+    "staff": {
+        "menu": {
+            "greeting": "CSM Elite Staff",
+            "attendance": {
+                "title": "Attendance",
+                "desc": "Check-in or Check-out"
+            },
+            "schedule": {
+                "title": "My Schedule",
+                "desc": "View & request shifts"
+            },
+            "revenue": {
+                "title": "End Shift Report",
+                "desc": "Report shift revenue"
+            }
+        },
+        "attendance": {
+            "shopName": "Main Coffee Shop",
+            "policyNote": "Please check in within 15 minutes of your shift start time. Late arrivals will be automatically noted by the system.",
+            "substituteDesc": "Check in for a shift that you are covering for someone else. The system will automatically generate a schedule record for your attendance."
+        },
+        "scheduleRequest": {
+            "requestShift": "Request Shift",
+            "editRequest": "Edit Request",
+            "selectShifts": "Select Shifts",
+            "editLimitsOnce": "Edit limits to single selection",
+            "updateRequest": "Update Request",
+            "submitRequest": "Submit Request",
+            "addShiftRequest": "Add Shift Request",
+            "assigned": "Assigned",
+            "pending": "Pending",
+            "confirmed": "Confirmed",
+            "pendingRequest": "Pending Request",
+            "offDay": "Off Day",
+            "hasNote": "Has Note",
+            "policy": "Schedule Policy",
+            "policyDesc": "This table shows your confirmed shifts for the current week. Dots on assigned cards indicate active shift notes from management."
+        },
+        "revenue": {
+            "title": "End Shift Report",
+            "subtitle": "End Shift Revenue Report",
+            "preview": "Preview",
+            "previewDesc": "Check carefully before submitting",
+            "noSchedule": "Today's schedule not found. A schedule is required to submit revenue.",
+            "fields": {
+                "staff": "Staff",
+                "opening": "Opening",
+                "cash": "Cash (TM)",
+                "bank": "Bank (CK)",
+                "net": "Net Revenue",
+                "actual": "Actual",
+                "deviation": "Deviation",
+                "notes": "Notes",
+                "closingStaff": "Closing Staff",
+                "dateTime": "Date & Time"
+            },
+            "placeholders": {
+                "net": "Enter NET...",
+                "notes": "Optional notes...",
+                "amount": "Amount",
+                "reasonExpense": "Reason (supplies, ice...)",
+                "reasonIncome": "Reason (bonus, refund...)"
+            },
+            "actions": {
+                "edit": "Edit",
+                "confirmSubmit": "Confirm & Submit",
+                "previewButton": "Preview",
+                "add": "Add",
+                "backMenu": "Back to Menu",
+                "newReport": "New Report",
+                "backToReport": "Back to End Shift Report"
+            },
+            "sections": {
+                "expenses": "Expenses",
+                "incomes": "Incomes",
+                "totalExpenses": "Total Expenses",
+                "totalIncomes": "Total Incomes",
+                "noExpenses": "No expenses",
+                "noIncomes": "No incomes"
+            },
+            "results": {
+                "noData": "No result data",
+                "noDataPort": "Please complete the confirmation step on the End Shift Report page first.",
+                "success": "Shift results have been saved and synced to the Admin Revenue module."
+            }
+        }
+    },
+    "adjustments": {
+        "title": "Adjustments",
+        "subtitle": "Rewards & Penalties",
+        "tabs": {
+            "record": "Record Action",
+            "report": "Summary Report"
+        },
+        "kpi": {
+            "total": "Total Actions",
+            "totalDesc": "Processed this month",
+            "rewards": "Rewards",
+            "penalties": "Penalties",
+            "netValue": "Net Value",
+            "afterAdj": "VND (After adjustments)"
+        },
+        "table": {
+            "history": "Adjustment History",
+            "date": "Date",
+            "employee": "Employee",
+            "type": "Type",
+            "amount": "Amount (VND)",
+            "reason": "Reason / Note",
+            "actions": "Actions",
+            "warning": "Warning",
+            "editTitle": "Edit Adjustment",
+            "deleteTitle": "Delete Adjustment",
+            "deleteConfirm": "Are you sure you want to delete \"{{name}}\"?"
+        },
+        "form": {
+            "employeeName": "Employee Name",
+            "selectEmployee": "Select employee",
+            "reasonOptional": "Reason / Note (Optional)",
+            "specificReason": "Specific reason...",
+            "rewards": "Rewards",
+            "penalties": "Penalties",
+            "addReward": "Add Reward Type",
+            "addPenalty": "Add Penalty Type",
+            "rewardType": "Reward Type",
+            "penaltyType": "Penalty Type",
+            "rewardAction": "Reward",
+            "penalizeAction": "Penalize",
+            "warnAction": "Warn",
+            "noTypes": "No types configured yet.",
+            "editType": "Edit Type",
+            "addType": "Add Type",
+            "kind": "Kind",
+            "name": "Name",
+            "deleteConfig": "Delete Config",
+            "enterName": "Enter name...",
+            "enterNote": "Enter note...",
+            "alertSelect": "Please select an employee first",
+            "alertName": "Please enter a name for the adjustment type",
+            "alertAmount": "Invalid amount"
+        }
+    },
+    "auth": {
+        "welcome": "Welcome Back",
+        "adminPortal": "Administrator Portal",
+        "username": "Username",
+        "password": "Password",
+        "enterUsername": "Enter username",
+        "enterPassword": "Enter password",
+        "signIn": "Sign In",
+        "authenticating": "Authenticating...",
+        "restricted": "Restricted Access — Admin Only",
+        "validation": {
+            "required": "Username and Password are required!",
+            "invalid": "Invalid Username or Password!"
+        },
+        "staffPortal": "Staff Portal",
+        "employeeAccess": "Employee Access",
+        "staffInstruction": "Enter your registered phone number to access your staff portal",
+        "phoneNumber": "Phone Number",
+        "phonePlaceholder": "0xxx xxx xxx",
+        "verify": "Verify & Continue",
+        "verifying": "Verifying...",
+        "notStaff": "Not a staff member?",
+        "adminLogin": "Admin Login",
+        "errors": {
+            "phoneNotFound": "Phone number not found in our records.",
+            "generic": "An error occurred. Please try again."
+        }
+    },
+    "employees": {
+        "title": "Employees",
+        "subtitle": "Staff Directory",
+        "add": "Add Employee",
+        "edit": "Edit Profile",
+        "addProfile": "Add Profile",
+        "updateInfo": "Update Information",
+        "entryInfo": "Entry Information",
+        "back": "Back",
+        "stats": {
+            "total": "Total",
+            "active": "Active",
+            "avgService": "Avg Service",
+            "avgBarista": "Avg Barista",
+            "staffMembers": "Staff members",
+            "currentlyEmployed": "Currently employed",
+            "baseRate": "Base rate",
+            "specialistRate": "Specialist rate"
+        },
+        "table": {
+            "code": "Code",
+            "name": "Name",
+            "cid": "CID",
+            "dob": "DOB",
+            "phone": "Phone",
+            "service": "Service",
+            "barista": "Barista",
+            "hired": "Hired",
+            "actions": "Actions"
+        },
+        "form": {
+            "personalInfo": "Personal Information",
+            "basicInfo": "Basic Information",
+            "jobInfo": "Job Information",
+            "salaryInfo": "Salary Information",
+            "dateInfo": "Date Information",
+            "fullName": "Employee Name",
+            "phone": "Phone Number",
+            "idCard": "Citizen ID (CID)",
+            "dob": "Date of Birth",
+            "gender": "Gender",
+            "hireDate": "Hire Date",
+            "serviceSalary": "Salary Service",
+            "baristaSalary": "Salary Bar",
+            "save": "Save Employee",
+            "update": "Update Employee",
+            "cancel": "Cancel",
+            "saving": "Saving...",
+            "placeholder": {
+                "name": "Name",
+                "phone": "Phone",
+                "cid": "Optional",
+                "select": "Select",
+                "salary": "0"
+            },
+            "validation": {
+                "nameRequired": "Employee Name is required",
+                "phoneRequired": "Phone number is required"
+            }
+        },
+        "delete": {
+            "title": "Delete employee",
+            "description": "Are you sure you want to delete {{name}}? This action is irreversible and will remove all related records.",
+            "confirm": "Delete",
+            "cancel": "Cancel"
+        },
+        "genders": {
+            "male": "Male",
+            "female": "Female",
+            "other": "Other"
+        }
+    },
+    "payroll": {
+        "title": "Payroll",
+        "subtitle": "Salary Management",
+        "month": "Month",
+        "year": "Year",
+        "export": "Export Excel",
+        "databaseVerified": "Database Verified",
+        "manualEstimation": "Manual Estimation",
+        "table": {
+            "staff": "Staff",
+            "hours": "Total Hours",
+            "base": "Base Salary",
+            "reward": "Rewards",
+            "penalty": "Penalties",
+            "netTotal": "Net Total",
+            "total": "Total",
+            "actions": "Actions",
+            "timeline": "Timeline",
+            "position": "Position",
+            "times": "Times",
+            "earnings": "Earnings",
+            "workLogs": "Detailed Work Logs"
+        },
+        "stats": {
+            "base": "Base Salaries",
+            "employees": "{{count}} employees",
+            "rewards": "Total Rewards",
+            "incentives": "Incentives/Bonus",
+            "penalties": "Total Penalties",
+            "deductions": "Deductions/Fines",
+            "net": "Net Settlement",
+            "payout": "Total Payout"
+        },
+        "filters": {
+            "title": "Filters",
+            "start": "Start Date",
+            "end": "End Date",
+            "position": "Position",
+            "employees": "Select Employees",
+            "allStaff": "All staff",
+            "exceptions": "Exceptions Only"
+        },
+        "actions": {
+            "recalculate": "Recalculate",
+            "apply": "Apply Filters",
+            "generatePayslip": "Generate Payslip"
+        }
+    },
+    "revenue": {
+        "title": "Revenue Management",
+        "subtitle": "Financial Summary & Revenue Details",
+        "totalRevenue": "Total Revenue",
+        "totalExpenses": "Total Expenses",
+        "totalNet": "Total Net",
+        "totalActual": "Actual Cash",
+        "totalDiff": "Deviation",
+        "summary": {
+            "title": "Financial Summary",
+            "actual": "Actual Revenue (after adj)",
+            "expenses": "Total Expenses (Ice, Supplies...)",
+            "remaining": "Remaining Cash",
+            "categories": "Expense Categories",
+            "totalExpenses": "Total Cash Out",
+            "totalIncome": "Total Cash In"
+        },
+        "table": {
+            "breakdown": "Daily Revenue Breakdown",
+            "expenseLog": "Detailed Expense Log",
+            "date": "Date",
+            "opening": "Opening",
+            "tm_ck": "Cash / Bank",
+            "chi_thu": "In / Out",
+            "revenue": "Revenue",
+            "net": "NET",
+            "diff": "Diff",
+            "staff": "Staff",
+            "desc": "Description",
+            "amount": "Amount"
+        },
+        "actions": {
+            "view": "View",
+            "print": "Print Report",
+            "from": "From Date",
+            "to": "To Date"
+        }
+    },
+    "attendance": {
+        "title": "Attendance",
+        "subtitle": "Shift Tracking",
+        "today": "Today",
+        "stats": {
+            "total": "Total",
+            "shiftEntries": "Shift entries",
+            "present": "Present",
+            "late": "Late",
+            "absent": "Absent",
+            "delayedStart": "Delayed start",
+            "unexcused": "Unexcused"
+        },
+        "status": {
+            "present": "Present",
+            "late": "Late",
+            "absent": "Absent",
+            "forgot": "Forgot in/out"
+        },
+        "shifts": {
+            "morning": "Morning Shift",
+            "afternoon": "Afternoon Shift",
+            "evening": "Evening Shift"
+        },
+        "table": {
+            "employee": "Employee",
+            "checkIn": "In",
+            "checkOut": "Out",
+            "status": "Status",
+            "timeline": "Timeline",
+            "position": "Position",
+            "diff": "Diff",
+            "note": "Note",
+            "actions": "Actions"
+        },
+        "filters": {
+            "title": "Filters",
+            "start": "Start Date",
+            "end": "End Date",
+            "position": "Position",
+            "employees": "Employees",
+            "forgot": "Forgot in/out",
+            "apply": "Apply Filters"
+        },
+        "actions": {
+            "add": "Add Record",
+            "apply": "Apply"
+        },
+        "form": {
+            "editTitle": "Edit Attendance Record",
+            "addTitle": "Add New Attendance",
+            "selectEmployee": "Select Employee"
+        }
+    },
+    "schedule": {
+        "title": "Schedules",
+        "subtitle": "Staff Rostering",
+        "add": "Add to Schedule",
+        "tabs": {
+            "roster": "Roster",
+            "requests": "Requests"
+        },
+        "filters": {
+            "title": "Filters",
+            "position": "Position",
+            "all": "All Positions",
+            "label": "Filter_By:"
+        },
+        "dialog": {
+            "title": "Add to Schedule",
+            "description": "Select employee, position, and shifts for the roster.",
+            "confirm": "Confirm Schedule",
+            "editTitle": "Edit Schedule",
+            "editDesc": "Modify shift assignment or update notes for this schedule entry.",
+            "selectPosition": "Select position",
+            "selectShift": "Select shift",
+            "selectPositionFirst": "Select position first",
+            "saveChanges": "Save Changes",
+            "deleteTitle": "Delete Shift",
+            "deleteDesc": "Are you sure you want to delete this shift? This action cannot be undone."
+        },
+        "fields": {
+            "date": "Date",
+            "employee": "Employee",
+            "position": "Position",
+            "shifts": "Shifts",
+            "note": "Note (Optional)",
+            "notePlaceholder": "Add a note..."
+        },
+        "table": {
+            "name": "Shift Name",
+            "startTime": "Start",
+            "endTime": "End",
+            "notes": "Notes",
+            "info": "Shift Info",
+            "timeline": "Timeline",
+            "showHandled": "Show Handled",
+            "accept": "Accept",
+            "approve": "Approve",
+            "noRequests": "No requests",
+            "requestGroup": "Request Group"
+        }
+    },
+    "positions": {
+        "title": "Positions",
+        "subtitle": "Role Management",
+        "add": "Add Position",
+        "edit": "Edit Position",
+        "noShifts": "No operational shifts configured",
+        "deleteConfirm": "Delete the {{name}} role? This will impact all assigned staff and historical logs.",
+        "dialog": {
+            "configure": "Configure position and working shifts"
+        },
+        "stats": {
+            "title": "Positions",
+            "roles": "Job Roles",
+            "shifts": "Total Shifts",
+            "activeSlots": "Active Slots",
+            "status": "Status",
+            "setup": "Setup",
+            "config": "System Config"
+        },
+        "messages": {
+            "loading": "Loading position data..."
+        },
+        "table": {
+            "role": "Role / Position",
+            "slots": "Slots",
+            "state": "State",
+            "name": "Position Name",
+            "baseSalary": "Base Salary",
+            "staffCount": "Staff Count"
+        }
+    }
+}

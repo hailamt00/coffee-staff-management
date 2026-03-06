@@ -9,6 +9,7 @@ import { useSchedule } from '@/features/schedule/hooks/useSchedule'
 import { Loader2, Plus, Trash2, ChevronLeft } from 'lucide-react'
 import type { Revenue, Schedule, Transaction } from '@/shared/types/api'
 import { STAFF_REVENUE_RESULT_KEY, type StaffRevenueResultData } from '@/features/staff/types/revenueResult'
+import { useTranslation } from 'react-i18next'
 
 interface LineItem {
     amount: string
@@ -34,6 +35,7 @@ function transactionExists(
 }
 
 export default function StaffRevenuePage() {
+    const { t } = useTranslation()
     const navigate = useNavigate()
     const staffJson = localStorage.getItem('staffInfo')
     const staff = staffJson ? JSON.parse(staffJson) : null
@@ -68,7 +70,7 @@ export default function StaffRevenuePage() {
     const totalExpenses = expenses.reduce((s, e) => s + (Number(e.amount) || 0), 0)
     const totalIncomes = incomes.reduce((s, i) => s + (Number(i.amount) || 0), 0)
 
-    // Thực tế = TM + CK - Đầu kỳ + Khoản chi - Khoản thu
+    // Actual = Cash + Transfer - Opening + Expense - Income
     const doanhThuThucTe = Number(cash) + Number(bank) - Number(openingBalance) + totalExpenses - totalIncomes
 
     // Line item helpers
@@ -211,36 +213,36 @@ export default function StaffRevenuePage() {
                         onClick={() => setShowPreview(false)}
                         className="flex items-center gap-1.5 text-[11px] font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white tracking-wide transition-colors"
                     >
-                        <ChevronLeft className="h-4 w-4" /> Edit
+                        <ChevronLeft className="h-4 w-4" /> {t('staff.revenue.actions.edit')}
                     </button>
                 </div>
 
                 <div className="px-2">
-                    <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight leading-none">Preview</h1>
-                    <p className="mt-1 text-[11px] font-bold text-slate-500 tracking-wide">Check carefully before submitting</p>
+                    <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight leading-none">{t('staff.revenue.preview')}</h1>
+                    <p className="mt-1 text-[11px] font-bold text-slate-500 tracking-wide">{t('staff.revenue.previewDesc')}</p>
                 </div>
 
                 <Card className="border border-slate-200/60 dark:border-neutral-800/60 bg-white dark:bg-neutral-900 rounded-2xl overflow-hidden shadow-sm">
                     <CardContent className="p-0">
-                        <PreviewRow label="Staff" value={staff?.name} bold />
-                        <PreviewRow label="Opening" value={Number(openingBalance).toLocaleString()} alt />
-                        <PreviewRow label="Cash (TM)" value={Number(cash).toLocaleString()} />
-                        <PreviewRow label="Bank (CK)" value={Number(bank).toLocaleString()} alt />
-                        <PreviewRow label="Net Revenue" value={Number(netInput).toLocaleString()} bold />
-                        <PreviewRow label="Actual" value={doanhThuThucTe.toLocaleString()} alt />
+                        <PreviewRow label={t('staff.revenue.fields.staff')} value={staff?.name} bold />
+                        <PreviewRow label={t('staff.revenue.fields.opening')} value={Number(openingBalance).toLocaleString()} alt />
+                        <PreviewRow label={t('staff.revenue.fields.cash')} value={Number(cash).toLocaleString()} />
+                        <PreviewRow label={t('staff.revenue.fields.bank')} value={Number(bank).toLocaleString()} alt />
+                        <PreviewRow label={t('staff.revenue.fields.net')} value={Number(netInput).toLocaleString()} bold />
+                        <PreviewRow label={t('staff.revenue.fields.actual')} value={doanhThuThucTe.toLocaleString()} alt />
                         <PreviewRow
-                            label="Deviation"
+                            label={t('staff.revenue.fields.deviation')}
                             value={saiLech.toLocaleString()}
                             valueClassName={`text-sm tabular-nums font-black ${saiLech === 0 ? 'text-slate-500' : saiLech > 0 ? 'text-amber-600' : 'text-rose-600'}`}
                         />
-                        {note ? <PreviewRow label="Notes" value={note} alt /> : null}
+                        {note ? <PreviewRow label={t('staff.revenue.fields.notes')} value={note} alt /> : null}
                     </CardContent>
                 </Card>
 
                 {validExpenses.length > 0 && (
                     <Card className="border border-rose-100 dark:border-rose-900/30 bg-white dark:bg-neutral-900 rounded-2xl overflow-hidden shadow-sm">
                         <div className="px-4 py-2 bg-rose-50/60 dark:bg-rose-900/10 border-b border-rose-100 dark:border-rose-900/20">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-rose-600">Expenses ({validExpenses.length})</span>
+                            <span className="text-[10px] font-black uppercase tracking-widest text-rose-600">{t('staff.revenue.sections.expenses')} ({validExpenses.length})</span>
                         </div>
                         <CardContent className="p-0">
                             {validExpenses.map((e, i) => (
@@ -250,7 +252,7 @@ export default function StaffRevenuePage() {
                                 </div>
                             ))}
                             <div className="flex justify-between px-4 py-2 bg-rose-50/50 dark:bg-rose-900/10">
-                                <span className="text-[10px] font-black uppercase text-rose-500">Total Expenses</span>
+                                <span className="text-[10px] font-black uppercase text-rose-500">{t('staff.revenue.sections.totalExpenses')}</span>
                                 <span className="font-black text-sm tabular-nums text-rose-600">{totalExpenses.toLocaleString()}</span>
                             </div>
                         </CardContent>
@@ -260,7 +262,7 @@ export default function StaffRevenuePage() {
                 {validIncomes.length > 0 && (
                     <Card className="border border-emerald-100 dark:border-emerald-900/30 bg-white dark:bg-neutral-900 rounded-2xl overflow-hidden shadow-sm">
                         <div className="px-4 py-2 bg-emerald-50/60 dark:bg-emerald-900/10 border-b border-emerald-100 dark:border-emerald-900/20">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">Incomes ({validIncomes.length})</span>
+                            <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">{t('staff.revenue.sections.incomes')} ({validIncomes.length})</span>
                         </div>
                         <CardContent className="p-0">
                             {validIncomes.map((inc, idx) => (
@@ -270,7 +272,7 @@ export default function StaffRevenuePage() {
                                 </div>
                             ))}
                             <div className="flex justify-between px-4 py-2 bg-emerald-50/50 dark:bg-emerald-900/10">
-                                <span className="text-[10px] font-black uppercase text-emerald-500">Total Incomes</span>
+                                <span className="text-[10px] font-black uppercase text-emerald-500">{t('staff.revenue.sections.totalIncomes')}</span>
                                 <span className="font-black text-sm tabular-nums text-emerald-600">{totalIncomes.toLocaleString()}</span>
                             </div>
                         </CardContent>
@@ -283,14 +285,14 @@ export default function StaffRevenuePage() {
                         className="flex-1 h-14 rounded-2xl font-bold border-slate-200 dark:border-neutral-800"
                         onClick={() => setShowPreview(false)}
                     >
-                        <ChevronLeft className="h-4 w-4 mr-1" /> Edit
+                        <ChevronLeft className="h-4 w-4 mr-1" /> {t('staff.revenue.actions.edit')}
                     </Button>
                     <Button
                         className="flex-[2] h-14 bg-black hover:bg-slate-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200 text-sm font-bold tracking-wide shadow-lg rounded-2xl transition-all active:scale-[0.98]"
                         onClick={() => handleSubmit()}
                         disabled={isLoading}
                     >
-                        {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : '✓ Confirm & Submit'}
+                        {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : `✓ ${t('staff.revenue.actions.confirmSubmit')}`}
                     </Button>
                 </div>
             </div>
@@ -301,22 +303,22 @@ export default function StaffRevenuePage() {
         <div className="space-y-5 pb-10">
             <div className="flex items-center gap-2 px-2">
                 <Button variant="ghost" size="sm" onClick={() => navigate('/staff/menu')} className="hover:bg-slate-100 dark:hover:bg-neutral-800 rounded-lg h-10 px-4 font-bold text-[11px] tracking-wide">
-                    ← Back to Menu
+                    {`← ${t('staff.revenue.actions.backMenu')}`}
                 </Button>
             </div>
 
             <div className="px-2">
                 <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-none">
-                    End Shift Report
+                    {t('staff.revenue.title')}
                 </h1>
                 <p className="mt-1 text-[11px] font-bold text-slate-500 tracking-wide">
-                    End Shift Revenue Report
+                    {t('staff.revenue.subtitle')}
                 </p>
             </div>
 
             {noSchedule && (
                 <div className="mx-2 p-4 bg-amber-50 border border-amber-200 rounded-xl text-[12px] text-amber-800 font-medium">
-                    ⚠ Today's schedule not found. A schedule is required to submit revenue.
+                    ⚠ {t('staff.revenue.noSchedule')}
                 </div>
             )}
 
@@ -325,17 +327,17 @@ export default function StaffRevenuePage() {
                 <Card className="border border-slate-200/60 dark:border-neutral-800/60 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-sm rounded-2xl overflow-hidden">
                     <CardContent className="p-0">
                         {/* Opening Balance */}
-                        <Row label="Opening">
+                        <Row label={t('staff.revenue.fields.opening')}>
                             <MoneyInput id="opening" value={openingBalance} onChange={setOpeningBalance} />
                         </Row>
 
                         {/* Cash */}
-                        <Row label="Cash (TM)" alt>
+                        <Row label={t('staff.revenue.fields.cash')} alt>
                             <MoneyInput id="cash" value={cash} onChange={setCash} color="text-teal-600 dark:text-teal-400" />
                         </Row>
 
                         {/* Bank */}
-                        <Row label="Bank (CK)">
+                        <Row label={t('staff.revenue.fields.bank')}>
                             <MoneyInput id="bank" value={bank} onChange={setBank} color="text-blue-600 dark:text-blue-400" />
                         </Row>
                     </CardContent>
@@ -344,28 +346,28 @@ export default function StaffRevenuePage() {
                 {/* Expenses Card */}
                 <Card className="border border-rose-100 dark:border-rose-900/30 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-sm rounded-2xl overflow-hidden">
                     <div className="flex items-center justify-between px-4 py-3 border-b border-rose-50 dark:border-rose-900/20 bg-rose-50/50 dark:bg-rose-900/10">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-rose-600">Expenses</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-rose-600">{t('staff.revenue.sections.expenses')}</span>
                         <Button type="button" variant="ghost" size="sm" onClick={addExpense}
                             className="h-7 px-2 text-rose-600 hover:bg-rose-100 dark:hover:bg-rose-900/20 rounded-lg text-[11px] font-bold">
-                            <Plus className="h-3.5 w-3.5 mr-1" /> Add
+                            <Plus className="h-3.5 w-3.5 mr-1" /> {t('staff.revenue.actions.add')}
                         </Button>
                     </div>
                     <CardContent className="p-0">
                         {expenses.length === 0 && (
-                            <p className="text-center text-[11px] text-slate-400 py-4">No expenses</p>
+                            <p className="text-center text-[11px] text-slate-400 py-4">{t('staff.revenue.sections.noExpenses')}</p>
                         )}
                         {expenses.map((exp, idx) => (
                             <div key={idx} className="flex items-center gap-2 px-4 py-3 border-b border-slate-50 dark:border-neutral-800 last:border-0">
                                 <div className="flex flex-col gap-1.5 flex-1">
                                     <Input
                                         type="number"
-                                        placeholder="Amount"
+                                        placeholder={t('staff.revenue.placeholders.amount') || "Amount"}
                                         value={exp.amount}
                                         onChange={e => updateExpense(idx, 'amount', e.target.value)}
                                         className="h-9 border-slate-200 dark:border-neutral-700 font-bold text-rose-600 text-sm"
                                     />
                                     <Input
-                                        placeholder="Reason (supplies, ice...)"
+                                        placeholder={t('staff.revenue.placeholders.reasonExpense') || "Reason (supplies, ice...)"}
                                         value={exp.reason}
                                         onChange={e => updateExpense(idx, 'reason', e.target.value)}
                                         className="h-9 border-slate-200 dark:border-neutral-700 text-sm text-slate-600"
@@ -380,7 +382,7 @@ export default function StaffRevenuePage() {
                         ))}
                         {expenses.some(e => Number(e.amount) > 0) && (
                             <div className="flex justify-between items-center px-4 py-2 bg-rose-50/50 dark:bg-rose-900/10 border-t border-rose-100 dark:border-rose-900/20">
-                                <span className="text-[10px] font-black uppercase tracking-wider text-rose-500">Total Expenses</span>
+                                <span className="text-[10px] font-black uppercase tracking-wider text-rose-500">{t('staff.revenue.sections.totalExpenses')}</span>
                                 <span className="text-sm font-black tabular-nums text-rose-600">{totalExpenses.toLocaleString()}</span>
                             </div>
                         )}
@@ -390,28 +392,28 @@ export default function StaffRevenuePage() {
                 {/* Incomes Card */}
                 <Card className="border border-emerald-100 dark:border-emerald-900/30 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-sm rounded-2xl overflow-hidden">
                     <div className="flex items-center justify-between px-4 py-3 border-b border-emerald-50 dark:border-emerald-900/20 bg-emerald-50/50 dark:bg-emerald-900/10">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">Incomes</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">{t('staff.revenue.sections.incomes')}</span>
                         <Button type="button" variant="ghost" size="sm" onClick={addIncome}
                             className="h-7 px-2 text-emerald-600 hover:bg-emerald-100 dark:hover:bg-emerald-900/20 rounded-lg text-[11px] font-bold">
-                            <Plus className="h-3.5 w-3.5 mr-1" /> Add
+                            <Plus className="h-3.5 w-3.5 mr-1" /> {t('staff.revenue.actions.add')}
                         </Button>
                     </div>
                     <CardContent className="p-0">
                         {incomes.length === 0 && (
-                            <p className="text-center text-[11px] text-slate-400 py-4">No incomes</p>
+                            <p className="text-center text-[11px] text-slate-400 py-4">{t('staff.revenue.sections.noIncomes')}</p>
                         )}
                         {incomes.map((inc, idx) => (
                             <div key={idx} className="flex items-center gap-2 px-4 py-3 border-b border-slate-50 dark:border-neutral-800 last:border-0">
                                 <div className="flex flex-col gap-1.5 flex-1">
                                     <Input
                                         type="number"
-                                        placeholder="Amount"
+                                        placeholder={t('staff.revenue.placeholders.amount') || "Amount"}
                                         value={inc.amount}
                                         onChange={e => updateIncome(idx, 'amount', e.target.value)}
                                         className="h-9 border-slate-200 dark:border-neutral-700 font-bold text-emerald-600 text-sm"
                                     />
                                     <Input
-                                        placeholder="Reason (bonus, refund...)"
+                                        placeholder={t('staff.revenue.placeholders.reasonIncome') || "Reason (bonus, refund...)"}
                                         value={inc.reason}
                                         onChange={e => updateIncome(idx, 'reason', e.target.value)}
                                         className="h-9 border-slate-200 dark:border-neutral-700 text-sm text-slate-600"
@@ -426,7 +428,7 @@ export default function StaffRevenuePage() {
                         ))}
                         {incomes.some(i => Number(i.amount) > 0) && (
                             <div className="flex justify-between items-center px-4 py-2 bg-emerald-50/50 dark:bg-emerald-900/10 border-t border-emerald-100 dark:border-emerald-900/20">
-                                <span className="text-[10px] font-black uppercase tracking-wider text-emerald-500">Total Incomes</span>
+                                <span className="text-[10px] font-black uppercase tracking-wider text-emerald-500">{t('staff.revenue.sections.totalIncomes')}</span>
                                 <span className="text-sm font-black tabular-nums text-emerald-600">{totalIncomes.toLocaleString()}</span>
                             </div>
                         )}
@@ -439,32 +441,32 @@ export default function StaffRevenuePage() {
                         {/* NET (manual input) */}
                         <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-neutral-800 bg-slate-50 dark:bg-neutral-900/80">
                             <div className="flex flex-col gap-0.5 w-2/5 shrink-0">
-                                <Label className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest">Net Revenue</Label>
-                                <span className="text-[10px] text-slate-400 tabular-nums">Actual: {doanhThuThucTe.toLocaleString()}</span>
+                                <Label className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest">{t('staff.revenue.fields.net')}</Label>
+                                <span className="text-[10px] text-slate-400 tabular-nums">{t('staff.revenue.fields.actual')}: {doanhThuThucTe.toLocaleString()}</span>
                             </div>
                             <Input
                                 id="net"
                                 type="number"
                                 value={netInput}
                                 onChange={e => setNetInput(e.target.value)}
-                                placeholder="Enter NET..."
+                                placeholder={t('staff.revenue.placeholders.net') || "Enter NET..."}
                                 className="h-10 border-0 bg-transparent text-right font-black shadow-none focus-visible:ring-0 pr-0 text-base text-slate-900 dark:text-white"
                             />
                         </div>
 
                         {/* Note */}
-                        <Row label="Notes" alt>
+                        <Row label={t('staff.revenue.fields.notes')} alt>
                             <Input
                                 id="note"
                                 value={note}
                                 onChange={e => setNote(e.target.value)}
-                                placeholder="Optional notes..."
+                                placeholder={t('staff.revenue.placeholders.notes') || "Optional notes..."}
                                 className="h-10 border-0 bg-transparent text-right font-medium text-slate-700 dark:text-slate-300 shadow-none focus-visible:ring-0 pr-0 text-sm"
                             />
                         </Row>
 
                         {/* Nhân viên chốt ca */}
-                        <Row label="Closing Staff">
+                        <Row label={t('staff.revenue.fields.closingStaff')}>
                             <div className="text-right font-black text-slate-900 dark:text-white text-sm pr-0">
                                 {staff?.name || '—'}
                             </div>
@@ -480,7 +482,7 @@ export default function StaffRevenuePage() {
                     {isLoading ? (
                         <Loader2 className="h-5 w-5 animate-spin" />
                     ) : (
-                        'Preview →'
+                        `${t('staff.revenue.actions.previewButton')} →`
                     )}
                 </Button>
             </form>

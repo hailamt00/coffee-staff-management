@@ -18,6 +18,7 @@ import {
 } from "@/shared/components/ui/select"
 import { useEmployee } from "@/features/employees/hooks/useEmployee"
 import { usePosition } from "@/features/positions/hooks/usePosition"
+import { useTranslation } from 'react-i18next'
 
 const formatTimeMask = (val: string) => {
     const raw = val.replace(/[^0-9]/g, '')
@@ -42,6 +43,7 @@ export function AttendanceFormModal({
 }: AttendanceFormModalProps) {
     const { employees } = useEmployee()
     const { positions } = usePosition()
+    const { t } = useTranslation()
     const [loading, setLoading] = useState(false)
 
     // Form State
@@ -121,15 +123,15 @@ export function AttendanceFormModal({
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>{isEditMode ? "Edit Attendance" : "Add New Attendance"}</DialogTitle>
+                    <DialogTitle>{isEditMode ? t('attendance.form.editTitle') : t('attendance.form.addTitle')}</DialogTitle>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
 
                     <div className="space-y-2">
-                        <Label htmlFor="employeeForm">Employee</Label>
+                        <Label htmlFor="employeeForm">{t('employees.table.name')}</Label>
                         <Select value={employeeId} onValueChange={setEmployeeId}>
                             <SelectTrigger id="employeeForm">
-                                <SelectValue placeholder="Select Employee" />
+                                <SelectValue placeholder={t('attendance.form.selectEmployee')} />
                             </SelectTrigger>
                             <SelectContent>
                                 {employees.map(emp => (
@@ -140,7 +142,7 @@ export function AttendanceFormModal({
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="positionForm">Position</Label>
+                        <Label htmlFor="positionForm">{t('schedule.fields.position')}</Label>
                         <Select
                             value={positionId}
                             onValueChange={(val) => {
@@ -149,7 +151,7 @@ export function AttendanceFormModal({
                             }}
                         >
                             <SelectTrigger id="positionForm">
-                                <SelectValue placeholder="Select Position" />
+                                <SelectValue placeholder={t('schedule.dialog.selectPosition', 'Select Position')} />
                             </SelectTrigger>
                             <SelectContent>
                                 {positions.map(pos => (
@@ -160,10 +162,10 @@ export function AttendanceFormModal({
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="shiftForm">Shift (Default)</Label>
+                        <Label htmlFor="shiftForm">{t('schedule.fields.shifts')}</Label>
                         <Select value={shiftId} onValueChange={setShiftId} disabled={!positionId}>
                             <SelectTrigger id="shiftForm">
-                                <SelectValue placeholder="Select Shift" />
+                                <SelectValue placeholder={t('schedule.dialog.selectShift', 'Select Shift')} />
                             </SelectTrigger>
                             <SelectContent>
                                 {
@@ -172,14 +174,14 @@ export function AttendanceFormModal({
                                             <SelectItem key={shift.id} value={String(shift.id)}>
                                                 {shift.name} ({shift.startTime.slice(0, 5)} - {shift.endTime.slice(0, 5)})
                                             </SelectItem>
-                                        )) || <div className="p-2 text-sm text-gray-500">Position not selected</div>
+                                        )) || <div className="p-2 text-sm text-gray-500">{t('schedule.dialog.selectPositionFirst', 'Position not selected')}</div>
                                 }
                             </SelectContent>
                         </Select>
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="dateForm">Work Date</Label>
+                        <Label htmlFor="dateForm">{t('schedule.fields.date')}</Label>
                         <Input
                             id="dateForm"
                             type="date"
@@ -190,7 +192,7 @@ export function AttendanceFormModal({
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label htmlFor="checkInForm">Check-in Time (24h)</Label>
+                            <Label htmlFor="checkInForm">{t('attendance.table.checkIn')} (24h)</Label>
                             <Input
                                 id="checkInForm"
                                 type="text"
@@ -202,7 +204,7 @@ export function AttendanceFormModal({
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="checkOutForm">Check-out Time (24h)</Label>
+                            <Label htmlFor="checkOutForm">{t('attendance.table.checkOut')} (24h)</Label>
                             <Input
                                 id="checkOutForm"
                                 type="text"
@@ -216,10 +218,10 @@ export function AttendanceFormModal({
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="noteForm">Note</Label>
+                        <Label htmlFor="noteForm">{t('schedule.fields.note')}</Label>
                         <Input
                             id="noteForm"
-                            placeholder="Enter note..."
+                            placeholder={t('schedule.fields.notePlaceholder')}
                             value={note}
                             onChange={e => setNote(e.target.value)}
                         />
@@ -227,9 +229,9 @@ export function AttendanceFormModal({
 
                 </div>
                 <DialogFooter>
-                    <Button variant="outline" onClick={onClose} disabled={loading}>Cancel</Button>
+                    <Button variant="outline" onClick={onClose} disabled={loading}>{t('common.cancel')}</Button>
                     <Button onClick={handleSubmit} disabled={loading || !employeeId || !shiftId || !workDate}>
-                        {loading ? "Processing..." : "Save Changes"}
+                        {loading ? t('common.loading') : t('schedule.dialog.saveChanges', 'Save Changes')}
                     </Button>
                 </DialogFooter>
             </DialogContent>

@@ -12,6 +12,7 @@ import { Loader2, Plus } from 'lucide-react'
 import { EditScheduleDialog } from './EditScheduleDialog'
 import { Button } from '@/shared/components/ui/button'
 import type { Schedule, Shift, UpdateScheduleRequest } from '@/shared/types/api'
+import { useTranslation } from 'react-i18next'
 
 interface WeeklyScheduleTableProps {
     date: string
@@ -21,6 +22,7 @@ interface WeeklyScheduleTableProps {
 }
 
 export function WeeklyScheduleTable({ date, shifts, onCellClick, filterPosition }: WeeklyScheduleTableProps) {
+    const { t } = useTranslation()
     const { useWeeklySchedule, updateSchedule, deleteSchedule } = useSchedule()
 
     // Edit Dialog State
@@ -90,27 +92,27 @@ export function WeeklyScheduleTable({ date, shifts, onCellClick, filterPosition 
     // Helper to get color based on position name
     const getPositionColor = (positionName: string) => {
         const name = positionName.toLowerCase()
-        if (name.includes('bảo vệ') || name.includes('security')) return 'bg-slate-50 border-slate-200 text-slate-700'
-        if (name.includes('thu ngân') || name.includes('cashier')) return 'bg-emerald-50/60 border-emerald-200 text-emerald-800'
-        if (name.includes('pha chế') || name.includes('barista')) return 'bg-amber-50/60 border-amber-200 text-amber-800'
-        if (name.includes('phục vụ') || name.includes('server') || name.includes('waiter')) return 'bg-blue-50/60 border-blue-200 text-blue-800'
-        if (name.includes('quản lý') || name.includes('manager')) return 'bg-purple-50/60 border-purple-200 text-purple-800'
+        if (name.includes('security') || name.includes('bảo vệ')) return 'bg-slate-50 border-slate-200 text-slate-700'
+        if (name.includes('cashier') || name.includes('thu ngân')) return 'bg-emerald-50/60 border-emerald-200 text-emerald-800'
+        if (name.includes('barista') || name.includes('pha chế')) return 'bg-amber-50/60 border-amber-200 text-amber-800'
+        if (name.includes('server') || name.includes('waiter') || name.includes('phục vụ')) return 'bg-blue-50/60 border-blue-200 text-blue-800'
+        if (name.includes('manager') || name.includes('quản lý')) return 'bg-purple-50/60 border-purple-200 text-purple-800'
         return 'bg-indigo-50/60 border-indigo-200 text-indigo-800' // default
     }
 
-    // Helper to sort positions: Phục vụ > Pha chế > Others
+    // Helper to sort positions: Server > Barista > Others
     const sortPositions = (posA: string, posB: string) => {
         const a = posA.toLowerCase()
         const b = posB.toLowerCase()
 
-        const isServA = a.includes('phục vụ') || a.includes('server')
-        const isServB = b.includes('phục vụ') || b.includes('server')
+        const isServA = a.includes('server') || a.includes('waiter') || a.includes('phục vụ')
+        const isServB = b.includes('server') || b.includes('waiter') || b.includes('phục vụ')
 
         if (isServA && !isServB) return -1
         if (!isServA && isServB) return 1
 
-        const isBaristaA = a.includes('pha chế') || a.includes('barista')
-        const isBaristaB = b.includes('pha chế') || b.includes('barista')
+        const isBaristaA = a.includes('barista') || a.includes('pha chế')
+        const isBaristaB = b.includes('barista') || b.includes('pha chế')
 
         if (isBaristaA && !isBaristaB) return -1
         if (!isBaristaA && isBaristaB) return 1
@@ -151,8 +153,8 @@ export function WeeklyScheduleTable({ date, shifts, onCellClick, filterPosition 
                             <TableRow className="bg-slate-50/50 dark:bg-white/5 border-b border-slate-200 dark:border-neutral-800">
                                 <TableHead className="w-[180px] border-r border-slate-200 dark:border-neutral-800 py-6 px-4">
                                     <div className="flex flex-col gap-1">
-                                        <span className="text-[11px] font-bold tracking-wide text-slate-400">Shift Info</span>
-                                        <span className="text-sm font-bold text-slate-900 dark:text-white tracking-tight">Timeline</span>
+                                        <span className="text-[11px] font-bold tracking-wide text-slate-400">{t('schedule.table.info') || "Shift Info"}</span>
+                                        <span className="text-sm font-bold text-slate-900 dark:text-white tracking-tight">{t('schedule.table.timeline') || "Timeline"}</span>
                                     </div>
                                 </TableHead>
                                 {weekDates.map((d) => (
@@ -174,7 +176,11 @@ export function WeeklyScheduleTable({ date, shifts, onCellClick, filterPosition 
                                 <TableRow key={shift.id} className={`hover:bg-slate-50/50 dark:hover:bg-neutral-900/50 transition-colors ${index !== uniqueShifts.length - 1 ? 'border-b border-slate-200 dark:border-neutral-800' : ''}`}>
                                     <TableCell className="font-bold text-slate-800 dark:text-slate-200 align-middle border-r border-slate-200 dark:border-neutral-800 bg-slate-50/30 dark:bg-neutral-900/10 p-4 text-center">
                                         <div className="flex flex-col gap-1 items-center justify-center">
-                                            <span className="text-sm font-bold block">{shift.name}</span>
+                                            <span className="text-sm font-bold block">
+                                                {shift.name.toLowerCase().includes('sáng') || shift.name.toLowerCase().includes('sang') ? t('attendance.shifts.morning') :
+                                                    shift.name.toLowerCase().includes('chiều') || shift.name.toLowerCase().includes('chieu') ? t('attendance.shifts.afternoon') :
+                                                        shift.name.toLowerCase().includes('tối') || shift.name.toLowerCase().includes('toi') ? t('attendance.shifts.evening') : shift.name}
+                                            </span>
                                         </div>
                                     </TableCell>
 
@@ -233,7 +239,7 @@ export function WeeklyScheduleTable({ date, shifts, onCellClick, filterPosition 
                                                                                         </span>
                                                                                         {(schedule.checkIn || schedule.checkOut) && (
                                                                                             <span className="text-[9px] font-mono font-bold text-green-700 dark:text-green-400 bg-green-500/20 px-1 py-0.5 rounded w-max mt-1">
-                                                                                                Thực tế: {schedule.checkIn ? new Date(schedule.checkIn).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }) : '--:--'} - {schedule.checkOut ? new Date(schedule.checkOut).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }) : '--:--'}
+                                                                                                Actual: {schedule.checkIn ? new Date(schedule.checkIn).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }) : '--:--'} - {schedule.checkOut ? new Date(schedule.checkOut).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }) : '--:--'}
                                                                                             </span>
                                                                                         )}
                                                                                         {schedule.note && (
@@ -315,7 +321,9 @@ export function WeeklyScheduleTable({ date, shifts, onCellClick, filterPosition 
                                                     </div>
                                                     <div className="text-right flex flex-col items-end gap-1">
                                                         <span className="text-[10px] font-black bg-white/50 dark:bg-black/20 px-2 py-1 rounded-lg">
-                                                            {s.shiftName}
+                                                            {s.shiftName?.toLowerCase().includes('sáng') || s.shiftName?.toLowerCase().includes('sang') ? t('attendance.shifts.morning') :
+                                                                s.shiftName?.toLowerCase().includes('chiều') || s.shiftName?.toLowerCase().includes('chieu') ? t('attendance.shifts.afternoon') :
+                                                                    s.shiftName?.toLowerCase().includes('tối') || s.shiftName?.toLowerCase().includes('toi') ? t('attendance.shifts.evening') : s.shiftName}
                                                         </span>
                                                         <span className="text-[10px] font-mono font-bold opacity-70 tabular-nums">
                                                             {s.shiftStartTime?.slice(0, 5)} - {s.shiftEndTime?.slice(0, 5)}

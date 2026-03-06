@@ -14,8 +14,10 @@ import {
 } from '@/shared/components/ui/alert-dialog'
 import { Plus, Briefcase, Clock, Settings2 } from 'lucide-react'
 import { SummaryCard } from '@/shared/components/ui/summary-card'
+import { useTranslation } from 'react-i18next'
 
 export default function PositionPage() {
+  const { t } = useTranslation()
   const { positions, loading, createPosition, updatePosition, deletePosition } =
     usePosition()
 
@@ -48,10 +50,10 @@ export default function PositionPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
-              Positions
+              {t('positions.title')}
             </h1>
             <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest hidden sm:block">
-              Role & Shift Blueprint
+              {t('positions.subtitle')}
             </p>
           </div>
 
@@ -63,7 +65,7 @@ export default function PositionPage() {
             }}
           >
             <Plus className="sm:mr-2 h-4 w-4" />
-            <span className="hidden sm:inline">Add Position</span>
+            <span className="hidden sm:inline">{t('positions.add')}</span>
           </Button>
         </div>
       </div>
@@ -71,23 +73,23 @@ export default function PositionPage() {
       {/* STATS SECTION */}
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         <SummaryCard
-          title="Positions"
+          title={t('positions.stats.title')}
           value={stats.totalPositions}
-          description="Job roles"
+          description={t('positions.stats.roles')}
           icon={Briefcase}
           color="cyan"
         />
         <SummaryCard
-          title="Total Shifts"
+          title={t('positions.stats.shifts')}
           value={stats.totalShifts}
-          description="Active slots"
+          description={t('positions.stats.activeSlots')}
           icon={Clock}
           color="blue"
         />
         <SummaryCard
-          title="Status"
-          value={stats.totalPositions > 0 ? "Active" : "Setup"}
-          description="System config"
+          title={t('positions.stats.status')}
+          value={stats.totalPositions > 0 ? t('dashboard.active') : t('positions.stats.setup')}
+          description={t('positions.stats.config')}
           icon={Settings2}
           color="green"
           className="col-span-2 lg:col-span-1"
@@ -99,7 +101,7 @@ export default function PositionPage() {
           {loading ? (
             <div className="p-12 text-center">
               <div className="inline-block h-8 w-8 border-4 border-slate-200 border-t-black rounded-full animate-spin mb-4" />
-              <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Hydrating Positions...</p>
+              <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">{t('positions.messages.loading')}</p>
             </div>
           ) : (
             <PositionTable
@@ -125,14 +127,14 @@ export default function PositionPage() {
       <AlertDialog open={!!deleteTarget} onOpenChange={() => setDeleteTarget(null)}>
         <AlertDialogContent className="max-w-md w-[95vw] rounded-[2rem] border-none shadow-2xl p-6">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-2xl font-black tracking-tighter text-red-600">Delete configuration</AlertDialogTitle>
+            <AlertDialogTitle className="text-2xl font-black tracking-tighter text-red-600">{t('common.delete') || "Delete configuration"}</AlertDialogTitle>
             <AlertDialogDescription className="text-slate-500 font-medium py-4">
-              Delete the <b>{deleteTarget?.name}</b> role? This will impact all assigned staff and historical logs.
+              {t('positions.deleteConfirm', { name: deleteTarget?.name }) || `Delete the ${deleteTarget?.name} role? This will impact all assigned staff and historical logs.`}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex sm:flex-row gap-2">
             <Button variant="ghost" onClick={() => setDeleteTarget(null)} className="flex-1 h-12 rounded-xl font-bold">
-              Cancel
+              {t('common.cancel') || "Cancel"}
             </Button>
             <Button
               variant="destructive"
@@ -142,7 +144,7 @@ export default function PositionPage() {
                 setDeleteTarget(null)
               }}
             >
-              Confirm Delete
+              {t('common.confirm') || "Confirm Delete"}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

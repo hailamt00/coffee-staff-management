@@ -5,12 +5,16 @@ import { ScrollArea } from '@/shared/components/ui/scroll-area'
 import Header from './Header'
 import Sidebar from './Sidebar'
 import clsx from 'clsx'
+import { useNotificationHub } from '@/shared/hooks/useNotificationHub'
 
 const COLLAPSE_KEY = 'sidebar-collapsed'
 
 export default function AppLayout() {
   const location = useLocation()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  // Live SignalR connection — receives push notifications from backend
+  useNotificationHub()
 
   const [collapsed, setCollapsed] = useState(() => {
     return localStorage.getItem(COLLAPSE_KEY) === 'true'
@@ -26,9 +30,9 @@ export default function AppLayout() {
         {/* ================= Desktop Sidebar ================= */}
         <aside
           className={clsx(
-            'hidden md:flex flex-col shrink-0 overflow-hidden',
+            'hidden md:flex flex-col shrink-0 z-30 overflow-hidden',
             'transition-[width] duration-300 ease-in-out',
-            collapsed ? 'w-16' : 'w-60'
+            collapsed ? 'w-[64px]' : 'w-[240px]'
           )}
         >
           <Sidebar
@@ -66,25 +70,27 @@ export default function AppLayout() {
         </div>
 
         {/* ================= Main ================= */}
-        <div className="flex flex-1 flex-col overflow-hidden bg-white dark:bg-[#050505]">
+        <div className="flex flex-1 flex-col overflow-hidden bg-slate-50/30 dark:bg-[#080808]">
           {/* Header */}
-          <Header onToggleSidebar={() => setSidebarOpen(true)} />
+          <div className="h-16 shrink-0">
+            <Header onToggleSidebar={() => setSidebarOpen(true)} />
+          </div>
 
           {/* Content */}
           <ScrollArea className="flex-1">
-            <main className="px-4 py-4 md:px-6 md:py-6">
+            <main className="px-5 py-5 md:px-8 md:py-8 lg:px-10">
               <div className="mx-auto w-full max-w-7xl">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={location.pathname}
-                    initial={{ opacity: 0, y: 12, scale: 0.98 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -12, scale: 0.98 }}
+                    initial={{ opacity: 0, y: 16, filter: 'blur(4px)' }}
+                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                    exit={{ opacity: 0, y: -16, filter: 'blur(4px)' }}
                     transition={{
-                      duration: 0.4,
-                      ease: [0.22, 1, 0.36, 1] // Custom cubic-bezier for smooth easing
+                      duration: 0.5,
+                      ease: [0.16, 1, 0.3, 1]
                     }}
-                    className="min-h-full"
+                    className="min-h-full pb-10"
                   >
                     <Outlet />
                   </motion.div>

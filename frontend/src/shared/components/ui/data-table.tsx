@@ -33,6 +33,7 @@ import {
 } from '@/shared/components/ui/select'
 import { ArrowDown, ArrowUp, ArrowUpDown, Search, SlidersHorizontal } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useTranslation } from "react-i18next"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -61,6 +62,7 @@ export const DataTable = <TData, TValue>({
     hideToolbar = false,
     initialSorting = [],
 }: DataTableProps<TData, TValue>) => {
+    const { t } = useTranslation()
     const [sorting, setSorting] = useState<SortingState>(initialSorting)
     const [globalFilter, setGlobalFilter] = useState('')
     const [expanded, setExpanded] = useState<ExpandedState>({})
@@ -108,7 +110,7 @@ export const DataTable = <TData, TValue>({
                                 <SlidersHorizontal size={14} />
                             </div>
                             <div className="flex items-center gap-2">
-                                <Label htmlFor="pageSize" className="text-[10px] font-bold uppercase text-slate-500 tracking-wider cursor-pointer">Show</Label>
+                                <Label htmlFor="pageSize" className="text-[10px] font-bold uppercase text-slate-500 tracking-wider cursor-pointer">{t('common.show')}</Label>
                                 <Select
                                     value={`${table.getState().pagination.pageSize}`}
                                     onValueChange={(value) => {
@@ -134,7 +136,7 @@ export const DataTable = <TData, TValue>({
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-black dark:group-focus-within:text-white transition-colors" />
                                 <Input
                                     aria-label="Search data"
-                                    placeholder="Filter..."
+                                    placeholder={t('common.searchPlaceholder')}
                                     value={globalFilter ?? ''}
                                     onChange={(event) => setGlobalFilter(event.target.value)}
                                     className="h-10 w-28 bg-white dark:bg-black border-slate-200 dark:border-neutral-800 rounded-lg pl-9 pr-3 text-xs font-semibold focus:ring-1 focus:ring-black dark:focus:ring-white transition-all shadow-sm"
@@ -149,7 +151,7 @@ export const DataTable = <TData, TValue>({
                             <Input
                                 id="globalSearchTop"
                                 aria-label="Search data"
-                                placeholder="Type to filter data..."
+                                placeholder={t('common.searchPlaceholder')}
                                 value={globalFilter ?? ''}
                                 onChange={(event) => setGlobalFilter(event.target.value)}
                                 className="h-11 w-full border-none bg-white dark:bg-black rounded-xl pl-11 pr-5 text-[13px] font-semibold focus:ring-1 focus:ring-black dark:focus:ring-white shadow-inner transition-all"
@@ -214,7 +216,7 @@ export const DataTable = <TData, TValue>({
                                         <TableCell colSpan={columns.length} className="h-24 text-center">
                                             <div className="flex flex-col items-center gap-2">
                                                 <div className="h-10 w-10 border-4 border-slate-200 border-t-black dark:border-neutral-800 dark:border-t-white rounded-full animate-spin" />
-                                                <span className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] animate-pulse">Syncing...</span>
+                                                <span className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] animate-pulse">{t('common.syncing')}</span>
                                             </div>
                                         </TableCell>
                                     </TableRow>
@@ -252,8 +254,8 @@ export const DataTable = <TData, TValue>({
                                         <TableCell colSpan={columns.length} className="h-32 text-center">
                                             <div className="flex flex-col items-center gap-1">
                                                 <Search className="h-8 w-8 text-slate-200 mb-2" />
-                                                <p className="font-black text-slate-900 dark:text-white uppercase tracking-tighter">Zero results found</p>
-                                                <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">Adjust your filters</p>
+                                                <p className="font-black text-slate-900 dark:text-white uppercase tracking-tighter">{t('common.noResults')}</p>
+                                                <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">{t('common.adjustFilters')}</p>
                                             </div>
                                         </TableCell>
                                     </TableRow>
@@ -291,7 +293,7 @@ export const DataTable = <TData, TValue>({
                             <div className="p-12 text-center">
                                 <div className="flex flex-col items-center gap-3">
                                     <div className="h-10 w-10 border-4 border-slate-200 border-t-black dark:border-neutral-800 dark:border-t-white rounded-full animate-spin" />
-                                    <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Loading...</span>
+                                    <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">{t('common.loading')}</span>
                                 </div>
                             </div>
                         ) : table.getRowModel().rows?.length ? (
@@ -335,7 +337,7 @@ export const DataTable = <TData, TValue>({
                         ) : (
                             <div className="p-12 text-center">
                                 <Search className="h-8 w-8 text-slate-200 mx-auto mb-3" />
-                                <p className="text-xs font-black text-slate-900 dark:text-white uppercase">No results</p>
+                                <p className="text-xs font-black text-slate-900 dark:text-white uppercase">{t('common.noResults')}</p>
                             </div>
                         )}
                     </AnimatePresence>
@@ -350,7 +352,7 @@ export const DataTable = <TData, TValue>({
                         <Input
                             id="globalSearchBottom"
                             aria-label="Search data"
-                            placeholder="Type to filter data..."
+                            placeholder={t('common.searchPlaceholder')}
                             value={globalFilter ?? ''}
                             onChange={(event) => setGlobalFilter(event.target.value)}
                             className="h-11 w-full border border-slate-200 dark:border-neutral-800 bg-white dark:bg-black rounded-xl pl-11 pr-5 text-[13px] font-semibold focus:ring-1 focus:ring-black dark:focus:ring-white shadow-sm transition-all"
@@ -361,8 +363,8 @@ export const DataTable = <TData, TValue>({
                 <div className="flex items-center justify-between px-2">
                     <div className="text-[11px] font-black uppercase tracking-widest text-slate-400">
                         {totalRows > 0 ? (
-                            <>Record {startRow} - {endRow} / TR {totalRows}</>
-                        ) : 'No entries'}
+                            t('common.paginationInfo', { start: startRow, end: endRow, total: totalRows })
+                        ) : t('common.noEntries')}
                     </div>
 
                     <Pagination

@@ -7,8 +7,10 @@ import { loginSuccess } from '../slices/authSlice'
 import { Button } from '@/shared/components/ui/button'
 import { Input } from '@/shared/components/ui/input'
 import { Lock, User, ArrowRight, Coffee } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 export default function LoginPage() {
+  const { t } = useTranslation()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -21,7 +23,7 @@ export default function LoginPage() {
     setError('')
 
     if (!username.trim() || !password.trim()) {
-      setError('Username and Password are required!')
+      setError(t('auth.validation.required') || 'Username and Password are required!')
       return
     }
 
@@ -34,7 +36,7 @@ export default function LoginPage() {
       dispatch(loginSuccess(data))
       navigate('/dashboard')
     } catch {
-      setError('Invalid Username or Password!')
+      setError(t('auth.validation.invalid') || 'Invalid Username or Password!')
     } finally {
       setLoading(false)
     }
@@ -74,10 +76,10 @@ export default function LoginPage() {
               </motion.div>
 
               <h1 className="text-3xl font-black tracking-tighter text-slate-900 dark:text-white">
-                Welcome Back
+                {t('auth.welcome')}
               </h1>
               <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1">
-                Administrator Portal
+                {t('auth.adminPortal')}
               </p>
             </div>
 
@@ -86,14 +88,14 @@ export default function LoginPage() {
               {/* Username field */}
               <div className="space-y-2">
                 <label htmlFor="username" className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                  Username
+                  {t('auth.username')}
                 </label>
                 <div className="relative group">
                   <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-slate-900 dark:group-focus-within:text-white transition-colors" />
                   <Input
                     id="username"
                     name="username"
-                    placeholder="Enter username"
+                    placeholder={t('auth.enterUsername') || "Enter username"}
                     className="h-12 pl-12 bg-slate-50 dark:bg-neutral-900 border-slate-200 dark:border-neutral-800 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 rounded-xl focus:ring-2 focus:ring-slate-900 dark:focus:ring-white transition-all"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
@@ -104,7 +106,7 @@ export default function LoginPage() {
               {/* Password field */}
               <div className="space-y-2">
                 <label htmlFor="password" className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                  Password
+                  {t('auth.password')}
                 </label>
                 <div className="relative group">
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-slate-900 dark:group-focus-within:text-white transition-colors" />
@@ -112,7 +114,7 @@ export default function LoginPage() {
                     id="password"
                     name="password"
                     type="password"
-                    placeholder="Enter password"
+                    placeholder={t('auth.enterPassword') || "Enter password"}
                     className="h-12 pl-12 bg-slate-50 dark:bg-neutral-900 border-slate-200 dark:border-neutral-800 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 rounded-xl focus:ring-2 focus:ring-slate-900 dark:focus:ring-white transition-all"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -145,11 +147,11 @@ export default function LoginPage() {
                 {loading ? (
                   <span className="flex items-center gap-2">
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white dark:border-black/30 dark:border-t-black rounded-full animate-spin" />
-                    Authenticating...
+                    {t('auth.authenticating')}
                   </span>
                 ) : (
                   <span className="flex items-center gap-2">
-                    Sign In
+                    {t('auth.signIn')}
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </span>
                 )}
@@ -158,7 +160,7 @@ export default function LoginPage() {
               {/* Footer */}
               <div className="pt-4 text-center">
                 <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
-                  Restricted Access — Admin Only
+                  {t('auth.restricted')}
                 </p>
               </div>
             </div>

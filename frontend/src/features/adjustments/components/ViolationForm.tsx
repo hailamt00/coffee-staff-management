@@ -18,10 +18,12 @@ import { useEmployee } from '@/features/employees/hooks/useEmployee'
 import { useAdjustment } from '../hooks/useAdjustment'
 import { formatMoney } from '@/shared/utils/format'
 import type { RewardPenaltyType } from '@/shared/types/api'
+import { useTranslation } from 'react-i18next'
 
 type AdjustmentKind = 'Reward' | 'Penalty'
 
 export default function ViolationForm() {
+  const { t } = useTranslation()
   const [employeeId, setEmployeeId] = useState<string>('')
   const [reason, setReason] = useState<string>('')
   const [activeTab, setActiveTab] = useState<'reward' | 'penalty'>('penalty')
@@ -76,7 +78,7 @@ export default function ViolationForm() {
 
   const handleAction = async (typeId: number, amount: number, isWarning: boolean) => {
     if (!employeeId) {
-      alert('Please select an employee first')
+      alert(t('adjustments.form.alertSelect'))
       return
     }
 
@@ -85,7 +87,7 @@ export default function ViolationForm() {
         employeeId: Number(employeeId),
         typeId,
         amount: isWarning ? 0 : amount,
-        reason: reason.trim() || (isWarning ? 'Warning' : undefined),
+        reason: reason.trim() || (isWarning ? t('adjustments.table.warning') : undefined),
       })
       setReason('')
     } catch (error) {
@@ -98,12 +100,12 @@ export default function ViolationForm() {
     const parsedAmount = Number(typeAmount)
 
     if (!normalizedName) {
-      alert('Please enter a name for the adjustment type')
+      alert(t('adjustments.form.alertName'))
       return
     }
 
     if (!Number.isFinite(parsedAmount) || parsedAmount < 0) {
-      alert('Invalid amount')
+      alert(t('adjustments.form.alertAmount'))
       return
     }
 
@@ -149,14 +151,14 @@ export default function ViolationForm() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="employeeSelect" className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-              Employee Name
+              {t('adjustments.form.employeeName')}
             </Label>
             <Select value={employeeId} onValueChange={setEmployeeId}>
               <SelectTrigger
                 id="employeeSelect"
                 className="w-full h-10 bg-white dark:bg-neutral-900 border-slate-200 dark:border-neutral-800"
               >
-                <SelectValue placeholder="Select employee" />
+                <SelectValue placeholder={t('adjustments.form.selectEmployee') || "Select employee"} />
               </SelectTrigger>
               <SelectContent>
                 {employees.map((staff) => (
@@ -170,11 +172,11 @@ export default function ViolationForm() {
 
           <div className="space-y-2">
             <Label htmlFor="reasonInput" className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-              Reason / Note (Optional)
+              {t('adjustments.form.reasonOptional')}
             </Label>
             <Input
               id="reasonInput"
-              placeholder="Specific reason..."
+              placeholder={t('adjustments.form.specificReason') || "Specific reason..."}
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               className="h-10 border-slate-200 dark:border-neutral-800"
@@ -188,13 +190,13 @@ export default function ViolationForm() {
               value="reward"
               className="px-6 font-semibold data-[state=active]:bg-emerald-500 data-[state=active]:text-white"
             >
-              Rewards
+              {t('adjustments.form.rewards')}
             </TabsTrigger>
             <TabsTrigger
               value="penalty"
               className="px-6 font-semibold data-[state=active]:bg-red-500 data-[state=active]:text-white"
             >
-              Penalties
+              {t('adjustments.form.penalties')}
             </TabsTrigger>
           </TabsList>
 
@@ -207,7 +209,7 @@ export default function ViolationForm() {
                 disabled={loading || savingType}
               >
                 <Plus size={14} className="mr-1" />
-                Add Reward Type
+                {t('adjustments.form.addReward')}
               </Button>
             </div>
 
@@ -217,9 +219,9 @@ export default function ViolationForm() {
                   <table className="w-full text-left">
                     <thead className="bg-slate-50/50 dark:bg-black/20 text-slate-500 uppercase text-[10px] font-bold tracking-wider">
                       <tr>
-                        <th className="px-6 py-4 font-medium border-b border-slate-100 dark:border-neutral-800">Reward Type</th>
-                        <th className="px-6 py-4 font-medium border-b border-slate-100 dark:border-neutral-800">Amount (VND)</th>
-                        <th className="px-6 py-4 text-right font-medium border-b border-slate-100 dark:border-neutral-800">Actions</th>
+                        <th className="px-6 py-4 font-medium border-b border-slate-100 dark:border-neutral-800">{t('adjustments.form.rewardType')}</th>
+                        <th className="px-6 py-4 font-medium border-b border-slate-100 dark:border-neutral-800">{t('adjustments.table.amount')}</th>
+                        <th className="px-6 py-4 text-right font-medium border-b border-slate-100 dark:border-neutral-800">{t('adjustments.table.actions')}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 dark:divide-neutral-800">
@@ -235,7 +237,7 @@ export default function ViolationForm() {
                                 className="bg-emerald-500 hover:bg-emerald-600 text-white border-none"
                                 onClick={() => handleAction(type.id, type.amount, false)}
                               >
-                                Reward
+                                {t('adjustments.form.rewardAction')}
                               </Button>
                               <Button
                                 size="icon"
@@ -262,7 +264,7 @@ export default function ViolationForm() {
                       {rewardTypes.length === 0 && (
                         <tr>
                           <td colSpan={3} className="px-6 py-8 text-center text-slate-400 italic">
-                            No reward types configured yet.
+                            {t('adjustments.form.noTypes')}
                           </td>
                         </tr>
                       )}
@@ -282,7 +284,7 @@ export default function ViolationForm() {
                 disabled={loading || savingType}
               >
                 <Plus size={14} className="mr-1" />
-                Add Penalty Type
+                {t('adjustments.form.addPenalty')}
               </Button>
             </div>
 
@@ -292,9 +294,9 @@ export default function ViolationForm() {
                   <table className="w-full text-left">
                     <thead className="bg-slate-50/50 dark:bg-black/20 text-slate-500 uppercase text-[10px] font-bold tracking-wider">
                       <tr>
-                        <th className="px-6 py-4 font-medium border-b border-slate-100 dark:border-neutral-800">Penalty Type</th>
-                        <th className="px-6 py-4 font-medium border-b border-slate-100 dark:border-neutral-800">Amount (VND)</th>
-                        <th className="px-6 py-4 text-right font-medium border-b border-slate-100 dark:border-neutral-800">Actions</th>
+                        <th className="px-6 py-4 font-medium border-b border-slate-100 dark:border-neutral-800">{t('adjustments.form.penaltyType')}</th>
+                        <th className="px-6 py-4 font-medium border-b border-slate-100 dark:border-neutral-800">{t('adjustments.table.amount')}</th>
+                        <th className="px-6 py-4 text-right font-medium border-b border-slate-100 dark:border-neutral-800">{t('adjustments.table.actions')}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 dark:divide-neutral-800">
@@ -311,7 +313,7 @@ export default function ViolationForm() {
                                 className="bg-yellow-50 text-yellow-600 border-yellow-200 hover:bg-yellow-100 dark:bg-yellow-900/20 dark:border-yellow-900/50 dark:text-yellow-500 dark:hover:bg-yellow-900/40"
                                 onClick={() => handleAction(type.id, 0, true)}
                               >
-                                Warn
+                                {t('adjustments.form.warnAction')}
                               </Button>
                               <Button
                                 size="sm"
@@ -319,7 +321,7 @@ export default function ViolationForm() {
                                 className="bg-red-500 hover:bg-red-600 text-white border-none"
                                 onClick={() => handleAction(type.id, type.amount, false)}
                               >
-                                Penalize
+                                {t('adjustments.form.penalizeAction')}
                               </Button>
                               <Button
                                 size="icon"
@@ -346,7 +348,7 @@ export default function ViolationForm() {
                       {penaltyTypes.length === 0 && (
                         <tr>
                           <td colSpan={3} className="px-6 py-8 text-center text-slate-400 italic">
-                            No penalty types configured yet.
+                            {t('adjustments.form.noTypes')}
                           </td>
                         </tr>
                       )}
@@ -362,12 +364,12 @@ export default function ViolationForm() {
       <Dialog open={typeDialogOpen} onOpenChange={(open) => !open && resetTypeDialog()}>
         <DialogContent className="sm:max-w-[420px] rounded-[2rem] p-6 border-none shadow-2xl">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-black tracking-tighter text-slate-900 dark:text-white">{editingType ? 'Edit Type' : 'Add Type'}</DialogTitle>
+            <DialogTitle className="text-2xl font-black tracking-tighter text-slate-900 dark:text-white">{editingType ? t('adjustments.form.editType') : t('adjustments.form.addType')}</DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4 py-2">
             <div className="space-y-2">
-              <Label htmlFor="typeKind" className="text-sm font-bold text-slate-500 uppercase tracking-widest">Kind</Label>
+              <Label htmlFor="typeKind" className="text-sm font-bold text-slate-500 uppercase tracking-widest">{t('adjustments.form.kind')}</Label>
               <Select value={typeKind} onValueChange={(value) => setTypeKind(value as AdjustmentKind)}>
                 <SelectTrigger id="typeKind">
                   <SelectValue />
@@ -380,12 +382,12 @@ export default function ViolationForm() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="typeName" className="text-sm font-bold text-slate-500 uppercase tracking-widest">Name</Label>
-              <Input id="typeName" value={typeName} onChange={(e) => setTypeName(e.target.value)} placeholder="Enter name..." className="h-12 border-slate-200 dark:border-neutral-800 rounded-xl" />
+              <Label htmlFor="typeName" className="text-sm font-bold text-slate-500 uppercase tracking-widest">{t('adjustments.form.name')}</Label>
+              <Input id="typeName" value={typeName} onChange={(e) => setTypeName(e.target.value)} placeholder={t('adjustments.form.enterName') || "Enter name..."} className="h-12 border-slate-200 dark:border-neutral-800 rounded-xl" />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="typeAmount" className="text-sm font-bold text-slate-500 uppercase tracking-widest">Amount (VND)</Label>
+              <Label htmlFor="typeAmount" className="text-sm font-bold text-slate-500 uppercase tracking-widest">{t('adjustments.table.amount')}</Label>
               <Input
                 id="typeAmount"
                 type="number"
@@ -399,10 +401,10 @@ export default function ViolationForm() {
 
           <DialogFooter className="flex sm:flex-row gap-2 pt-4">
             <Button variant="ghost" onClick={resetTypeDialog} disabled={savingType} className="flex-1 h-12 rounded-xl font-bold bg-slate-100 hover:bg-slate-200 dark:bg-neutral-800 dark:hover:bg-neutral-700">
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button onClick={handleSaveType} disabled={savingType} className="flex-1 h-12 rounded-xl font-black uppercase tracking-widest text-[10px] bg-black hover:bg-slate-800 text-white">
-              Save
+              {t('common.save')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -411,8 +413,8 @@ export default function ViolationForm() {
       <DeleteConfirmDialog
         open={!!deletingType}
         onOpenChange={(open) => !open && setDeletingType(null)}
-        title="Delete Config"
-        description={deletingType ? `Are you sure you want to delete "${deletingType.name}"?` : undefined}
+        title={t('adjustments.form.deleteConfig')}
+        description={deletingType ? t('adjustments.table.deleteConfirm', { name: deletingType.name }) : undefined}
         onConfirm={handleDeleteType}
       />
     </>

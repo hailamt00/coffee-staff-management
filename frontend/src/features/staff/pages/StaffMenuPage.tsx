@@ -7,8 +7,10 @@ import {
     ChevronRight,
     Clock
 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 export default function StaffMenuPage() {
+    const { t } = useTranslation()
     const navigate = useNavigate()
     const staffJson = localStorage.getItem('staffInfo')
     const staff = staffJson ? JSON.parse(staffJson) : null
@@ -20,22 +22,22 @@ export default function StaffMenuPage() {
 
     const menuItems = [
         {
-            title: 'Attendance',
-            description: 'Check-in or Check-out',
+            title: t('staff.menu.attendance.title'),
+            description: t('staff.menu.attendance.desc'),
             icon: UserCheck,
             path: '/staff/attendance',
             color: 'bg-black'
         },
         {
-            title: 'My Schedule',
-            description: 'View & request shifts',
+            title: t('staff.menu.schedule.title'),
+            description: t('staff.menu.schedule.desc'),
             icon: Calendar,
             path: '/staff/schedule',
             color: 'bg-slate-700'
         },
         {
-            title: 'End Shift Report',
-            description: 'Report shift revenue',
+            title: t('staff.menu.revenue.title'),
+            description: t('staff.menu.revenue.desc'),
             icon: DollarSign,
             path: '/staff/revenue',
             color: 'bg-slate-500'
@@ -46,11 +48,11 @@ export default function StaffMenuPage() {
         <div className="space-y-6">
             <div className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md p-8 rounded-2xl border border-slate-200/60 dark:border-neutral-800/60 shadow-sm overflow-hidden relative group transition-all hover:shadow-md">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 dark:bg-white/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110" />
-                <p className="text-[11px] font-bold text-slate-500 tracking-wide relative z-10 mb-1">CSM Elite Staff</p>
+                <p className="text-[11px] font-bold text-slate-500 tracking-wide relative z-10 mb-1">{t('staff.menu.greeting')}</p>
                 <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight relative z-10 leading-none">{staff.name}</h2>
                 <div className="mt-4 flex items-center gap-2 text-[11px] font-bold text-slate-600 dark:text-slate-300 tracking-wide relative z-10 bg-slate-50 dark:bg-neutral-800 w-fit px-3 py-1 rounded-full border border-slate-100 dark:border-neutral-700">
                     <Clock size={12} className="text-slate-500" />
-                    {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
+                    {new Date().toLocaleDateString(t('common.locale') === 'vi' ? 'vi-VN' : 'en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
                 </div>
             </div>
 

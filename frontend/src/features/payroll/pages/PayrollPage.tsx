@@ -19,6 +19,7 @@ import {
 import { FileUp, Calculator, Users, TrendingUp, TrendingDown, DollarSign, Filter } from 'lucide-react'
 import { SummaryCard } from '@/shared/components/ui/summary-card'
 import { formatDate, formatMoney } from '@/shared/utils/format'
+import { useTranslation } from 'react-i18next'
 import { DataTable } from '@/shared/components/ui/data-table'
 import type { ColumnDef } from '@tanstack/react-table'
 
@@ -38,6 +39,7 @@ const formatTimeStr = (t: string) => {
 }
 
 export default function PayrollPage() {
+  const { t } = useTranslation()
   const [startDate, setStartDate] = useState(() => {
     const today = new Date()
     const firstDay = new Date(today.getFullYear(), today.getMonth(), 1)
@@ -120,8 +122,8 @@ export default function PayrollPage() {
     return baseRecords.filter(record => {
       const employeeMatch = queryEmployeeIds.length === 0 || queryEmployeeIds.includes(String(record.employeeId))
       const positionMatch = queryPositionFilter === 'all' ||
-        (queryPositionFilter === 'phache' && (record.positionName?.toLowerCase().includes('pha chế') || record.positionName?.toLowerCase().includes('barista'))) ||
-        (queryPositionFilter === 'phucvu' && (record.positionName?.toLowerCase().includes('phục vụ') || record.positionName?.toLowerCase().includes('server')))
+        (queryPositionFilter === 'barista' && (record.positionName?.toLowerCase().includes('pha chế') || record.positionName?.toLowerCase().includes('barista'))) ||
+        (queryPositionFilter === 'server' && (record.positionName?.toLowerCase().includes('phục vụ') || record.positionName?.toLowerCase().includes('server')))
 
       const missingMatch = !queryMissingFilter || (!record.checkIn || !record.checkOut || record.status === 'Vắng' || record.status === 'Absent')
 
@@ -192,8 +194,8 @@ export default function PayrollPage() {
   const summaryColumns = useMemo<ColumnDef<any>[]>(() => [
     {
       accessorKey: "employeeName",
-      header: "Staff",
-      footer: () => <div className="text-left py-2">TOTAL</div>,
+      header: t('payroll.table.staff'),
+      footer: () => <div className="text-left py-2">{t('payroll.table.total')}</div>,
       meta: { hideSortIcon: true },
       cell: ({ row }) => (
         <div className="flex flex-col py-1">
@@ -204,28 +206,28 @@ export default function PayrollPage() {
     },
     {
       accessorKey: "baseSalary",
-      header: "Base",
+      header: t('payroll.table.base'),
       footer: () => <div className="text-right py-2">{formatMoney(globalStats.base)}</div>,
       meta: { align: 'right', hideSortIcon: true },
       cell: ({ row }) => <div className="text-right font-medium text-slate-600 tabular-nums">{formatMoney(row.original.baseSalary)}</div>
     },
     {
       accessorKey: "rewards",
-      header: "Reward",
+      header: t('payroll.table.reward'),
       footer: () => <div className="text-right py-2 text-emerald-600">{formatMoney(globalStats.rewards)}</div>,
       meta: { align: 'right', hideSortIcon: true },
       cell: ({ row }) => <div className="text-right font-black text-emerald-600 tabular-nums">{row.original.rewards > 0 ? `+${formatMoney(row.original.rewards)}` : '0'}</div>
     },
     {
       accessorKey: "penalties",
-      header: "Penalty",
+      header: t('payroll.table.penalty'),
       footer: () => <div className="text-right py-2 text-rose-500">{formatMoney(globalStats.penalties)}</div>,
       meta: { align: 'right', hideSortIcon: true },
       cell: ({ row }) => <div className="text-right font-black text-rose-500 tabular-nums">{row.original.penalties > 0 ? `-${formatMoney(row.original.penalties)}` : '0'}</div>
     },
     {
       accessorKey: "total",
-      header: "Net Total",
+      header: t('payroll.table.netTotal'),
       footer: () => <div className="text-right py-2 border-t-2 border-indigo-500/20">{formatMoney(globalStats.total)}</div>,
       meta: { align: 'right', hideSortIcon: true },
       cell: ({ row }) => (
@@ -234,7 +236,7 @@ export default function PayrollPage() {
         </div>
       )
     }
-  ], [globalStats])
+  ], [globalStats, t])
 
   const detailColumns = useMemo<ColumnDef<any>[]>(() => [
     {
@@ -252,7 +254,7 @@ export default function PayrollPage() {
     },
     {
       accessorKey: "workDate",
-      header: "Timeline",
+      header: t('payroll.table.timeline'),
       meta: { align: 'center', hideSortIcon: true },
       cell: ({ row }) => (
         <div className="flex flex-col gap-0.5 items-center">
@@ -267,20 +269,20 @@ export default function PayrollPage() {
     },
     {
       accessorKey: "employeeName",
-      header: "Staff",
+      header: t('payroll.table.staff'),
       meta: { hideSortIcon: true },
       cell: ({ row }) => <div className="font-bold text-slate-900">{toTitleCase(row.original.employeeName)}</div>
     },
     {
       accessorKey: "positionName",
-      header: "Position",
+      header: t('payroll.table.position'),
       meta: { hideSortIcon: true },
       cell: ({ row }) => <div className="text-[11px] text-slate-500 font-medium">{row.original.positionName}</div>
     },
     {
       accessorKey: "checkIn",
       id: "checkIn", // Ensure ID matches sorting field
-      header: "Times",
+      header: t('payroll.table.times'),
       meta: { align: 'center', hideSortIcon: true },
       cell: ({ row }) => {
         const checkIn = row.original.checkIn;
@@ -294,7 +296,7 @@ export default function PayrollPage() {
     },
     {
       accessorKey: "hours",
-      header: "Hrs",
+      header: t('payroll.table.hours'),
       meta: { align: 'center', hideSortIcon: true },
       cell: ({ row }) => (
         <div className="text-center font-black tabular-nums text-slate-900">
@@ -304,11 +306,11 @@ export default function PayrollPage() {
     },
     {
       accessorKey: "amount",
-      header: "Earnings",
+      header: t('payroll.table.earnings'),
       meta: { align: 'right', hideSortIcon: true },
       cell: ({ row }) => <div className="text-right font-bold text-emerald-600 tabular-nums">{formatMoney(row.original.amount || 0)}</div>
     }
-  ], [])
+  ], [t])
 
   return (
     <motion.div
@@ -322,12 +324,12 @@ export default function PayrollPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
-              Payroll
+              {t('payroll.title')}
             </h1>
             <div className="mt-1 flex items-center gap-2">
               <div className={`h-1.5 w-1.5 rounded-full ${rawPayrolls.length > 0 ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
               <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none">
-                {rawPayrolls.length > 0 ? 'Database Records Verified' : 'Manual Estimation (from Attendance)'}
+                {rawPayrolls.length > 0 ? t('payroll.databaseVerified') : t('payroll.manualEstimation')}
               </p>
             </div>
           </div>
@@ -338,7 +340,7 @@ export default function PayrollPage() {
             className="h-10 border-none bg-black text-[10px] font-bold uppercase tracking-widest text-white hover:bg-slate-800 w-10 sm:w-auto sm:px-6 rounded-xl dark:bg-white dark:text-black dark:hover:bg-neutral-200 shadow-sm"
           >
             <Calculator className="h-4 w-4 sm:mr-2" />
-            <span className="hidden sm:inline">Recalculate</span>
+            <span className="hidden sm:inline">{t('payroll.actions.recalculate')}</span>
           </Button>
         </div>
 
@@ -346,56 +348,56 @@ export default function PayrollPage() {
         <div className="flex flex-col gap-3 bg-slate-50 dark:bg-neutral-900 border border-slate-100 dark:border-neutral-800 p-4 rounded-[1.5rem]">
           <div className="flex items-center gap-2 mb-1">
             <Filter className="h-3.5 w-3.5 text-slate-400" />
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Filters</span>
+            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">{t('payroll.filters.title')}</span>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            <div className="space-y-1">
-              <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">Start Date</Label>
-              <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="h-10 rounded-xl bg-white border-none text-xs text-center shadow-sm" />
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 items-end">
+            <div className="space-y-1.5">
+              <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">{t('payroll.filters.start')}</Label>
+              <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="h-10 rounded-xl bg-white dark:bg-black border-none text-xs text-center shadow-sm" />
             </div>
-            <div className="space-y-1">
-              <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">End Date</Label>
-              <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="h-10 rounded-xl bg-white border-none text-xs text-center shadow-sm" />
+            <div className="space-y-1.5">
+              <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">{t('payroll.filters.end')}</Label>
+              <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="h-10 rounded-xl bg-white dark:bg-black border-none text-xs text-center shadow-sm" />
             </div>
-            <div className="space-y-1">
-              <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">Position</Label>
+            <div className="space-y-1.5">
+              <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">{t('payroll.filters.position')}</Label>
               <Select value={positionFilter} onValueChange={setPositionFilter}>
-                <SelectTrigger className="h-10 rounded-xl bg-white border-none text-xs shadow-sm">
+                <SelectTrigger className="h-10 rounded-xl bg-white dark:bg-black border-none text-xs shadow-sm">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
-                  <SelectItem value="phache">Barista</SelectItem>
-                  <SelectItem value="phucvu">Server</SelectItem>
+                  <SelectItem value="all">{t('common.all') || "All"}</SelectItem>
+                  <SelectItem value="barista">{t('dashboard.barista')}</SelectItem>
+                  <SelectItem value="server">{t('dashboard.service')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            <div className="col-span-2 sm:col-span-1 space-y-1">
-              <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">Employees</Label>
+            <div className="col-span-2 sm:col-span-1 space-y-1.5">
+              <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">{t('payroll.filters.employees')}</Label>
               <MultiSelect
                 options={employees.map(e => ({ label: e.name, value: String(e.id) }))}
                 selectedValues={selectedEmployeeIds}
                 onChange={setSelectedEmployeeIds}
-                placeholder="All staff"
+                placeholder={t('payroll.filters.allStaff') || "All staff"}
               />
             </div>
-            <div className="flex items-center gap-3 h-10 px-4 bg-white dark:bg-neutral-900 rounded-xl shadow-sm">
+            <div className="flex items-center gap-3 h-10 px-4 bg-white dark:bg-black border border-transparent dark:border-neutral-800 rounded-xl shadow-sm">
               <input
                 type="checkbox"
                 id="missingPayroll"
-                className="w-4 h-4 accent-black rounded-md cursor-pointer"
+                className="w-4 h-4 accent-black dark:accent-white rounded-md cursor-pointer"
                 checked={missingFilter}
                 onChange={(e) => setMissingFilter(e.target.checked)}
               />
-              <Label htmlFor="missingPayroll" className="text-[10px] font-black uppercase tracking-widest text-slate-500 cursor-pointer select-none">
-                Exceptions
+              <Label htmlFor="missingPayroll" className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 cursor-pointer select-none">
+                {t('payroll.filters.exceptions')}
               </Label>
             </div>
             <Button
-              className="h-10 bg-black text-white hover:bg-slate-800 rounded-xl font-black uppercase tracking-widest text-[10px] shadow-sm"
+              className="h-10 bg-black text-white dark:bg-white dark:text-black hover:bg-slate-800 dark:hover:bg-neutral-200 rounded-xl font-black uppercase tracking-widest text-[10px] shadow-sm"
               onClick={handleFilter}
             >
-              Apply
+              {t('payroll.actions.apply')}
             </Button>
           </div>
         </div>
@@ -404,30 +406,30 @@ export default function PayrollPage() {
       {/* STATS SECTION */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <SummaryCard
-          title="Base Payroll"
+          title={t('payroll.stats.base')}
           value={formatMoney(globalStats.base)}
-          description={`${globalStats.count} employees`}
+          description={t('payroll.stats.employees', { count: globalStats.count })}
           icon={Users}
           color="cyan"
         />
         <SummaryCard
-          title="Total Rewards"
+          title={t('payroll.stats.rewards')}
           value={formatMoney(globalStats.rewards)}
-          description="Incentives"
+          description={t('payroll.stats.incentives')}
           icon={TrendingUp}
           color="green"
         />
         <SummaryCard
-          title="Total Penalties"
+          title={t('payroll.stats.penalties')}
           value={formatMoney(globalStats.penalties)}
-          description="Deductions"
+          description={t('payroll.stats.deductions')}
           icon={TrendingDown}
           color="red"
         />
         <SummaryCard
-          title="Net Settlement"
+          title={t('payroll.stats.net')}
           value={formatMoney(globalStats.total)}
-          description="Total payout"
+          description={t('payroll.stats.payout')}
           icon={DollarSign}
           color="cyan"
         />
@@ -452,7 +454,7 @@ export default function PayrollPage() {
       <div className="px-1">
         <div className="mb-4 flex items-end justify-between">
           <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-1">
-            Detailed Work Logs
+            {t('payroll.table.workLogs')}
           </h2>
           <Button
             variant="outline"
@@ -469,7 +471,7 @@ export default function PayrollPage() {
             }}
             className="h-9 rounded-xl border-none bg-[#28a745] text-white hover:bg-[#218838] text-[10px] font-bold uppercase tracking-widest px-4 transition-all shadow-sm"
           >
-            <FileUp className="h-4 w-4 mr-2" /> Generate Payslip
+            <FileUp className="h-4 w-4 mr-2" /> {t('payroll.actions.generatePayslip')}
           </Button>
         </div>
         <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-slate-100 dark:border-neutral-800 shadow-sm overflow-hidden">

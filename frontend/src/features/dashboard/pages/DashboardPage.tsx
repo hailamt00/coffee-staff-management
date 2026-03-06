@@ -26,6 +26,7 @@ import {
 } from 'recharts'
 import { useDashboard } from '../hooks/useDashboard'
 import { formatMoney } from '@/shared/utils/format'
+import { useTranslation } from 'react-i18next'
 
 const attendanceData = [
   { name: '06AM', count: 4 },
@@ -40,6 +41,7 @@ const attendanceData = [
 
 export default function DashboardPage() {
   const { stats, loading } = useDashboard()
+  const { t } = useTranslation()
 
   if (loading) {
     return (
@@ -59,10 +61,10 @@ export default function DashboardPage() {
       <div className="flex items-end justify-between px-2">
         <div>
           <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
-            Dashboard
+            {t('dashboard.title')}
           </h1>
           <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-            Operational Overview
+            {t('dashboard.subtitle')}
           </p>
         </div>
         <div className="hidden sm:flex h-10 items-center gap-3 rounded-xl bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 px-4 shadow-sm">
@@ -70,7 +72,7 @@ export default function DashboardPage() {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
           </div>
-          <span className="text-[10px] font-black text-slate-900 dark:text-slate-100 uppercase tracking-widest">Live Status</span>
+          <span className="text-[10px] font-black text-slate-900 dark:text-slate-100 uppercase tracking-widest">{t('dashboard.liveStatus')}</span>
         </div>
       </div>
 
@@ -78,33 +80,33 @@ export default function DashboardPage() {
       <section>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-6 lg:gap-8">
           <SummaryCard
-            title="Total Reports"
+            title={t('dashboard.totalReports')}
             value={(stats?.totalReports || 0).toLocaleString()}
-            description="Revenue Submissions"
+            description={t('dashboard.revenueSubmissions')}
             icon={Users}
             color="cyan"
-            trend="+4.2% Growth"
+          // trend="+4.2% Growth"
           />
           <SummaryCard
-            title="Attendance"
+            title={t('dashboard.attendance')}
             value={`${(stats?.attendanceRate || 0).toFixed(1)}%`}
-            description="Shift Compliance"
+            description={t('dashboard.shiftCompliance')}
             icon={UserCheck}
             color="green"
-            trend="Peak Perf"
+          // trend="Peak Perf"
           />
           <SummaryCard
-            title="Live Shifts"
+            title={t('dashboard.liveShifts')}
             value={(stats?.liveShifts || 0).toLocaleString()}
-            description="Current Operations"
+            description={t('dashboard.currentOperations')}
             icon={Clock}
             color="orange"
-            trend="Stable"
+          // trend="Stable"
           />
           <SummaryCard
-            title="Active Staff"
+            title={t('dashboard.activeStaff')}
             value={(stats?.activeStaff || 0).toLocaleString()}
-            description="Clocked In"
+            description={t('dashboard.clockedIn')}
             icon={Shield}
             color="blue"
           />
@@ -118,7 +120,7 @@ export default function DashboardPage() {
           <CardHeader className="flex flex-row items-center justify-between px-8 pt-8 pb-4">
             <div>
               <CardTitle className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">
-                Net Profit Performance
+                {t('dashboard.netProfitPerformance')}
               </CardTitle>
               <h2 className="text-3xl font-black tracking-tighter text-slate-900 dark:text-white">{formatMoney(stats?.netProfit || 0)}</h2>
             </div>
@@ -175,7 +177,7 @@ export default function DashboardPage() {
           <Card className="border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm overflow-hidden">
             <CardHeader className="px-6 pt-6 pb-2">
               <CardTitle className="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
-                <BarChart3 size={12} className="text-slate-400" /> Peak Activity
+                <BarChart3 size={12} className="text-slate-400" /> {t('dashboard.peakActivity')}
               </CardTitle>
             </CardHeader>
             <CardContent className="h-[180px] w-full px-6 pb-6">
@@ -216,17 +218,17 @@ export default function DashboardPage() {
               </ResponsiveContainer>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className="text-xl font-black tracking-tighter text-slate-900 dark:text-white">{stats?.activeStaff || 0}</span>
-                <span className="text-[8px] font-black uppercase text-slate-400 tracking-widest">Active</span>
+                <span className="text-[8px] font-black uppercase text-slate-400 tracking-widest">{t('dashboard.active')}</span>
               </div>
             </div>
             <div className="mt-4 flex gap-4">
               <div className="flex items-center gap-1.5">
                 <div className="h-2 w-2 rounded-full bg-black" />
-                <span className="text-[9px] font-black uppercase tracking-tighter text-slate-500">Barista</span>
+                <span className="text-[9px] font-black uppercase tracking-tighter text-slate-500">{t('dashboard.barista')}</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="h-2 w-2 rounded-full bg-slate-700" />
-                <span className="text-[9px] font-black uppercase tracking-tighter text-slate-500">Service</span>
+                <span className="text-[9px] font-black uppercase tracking-tighter text-slate-500">{t('dashboard.service')}</span>
               </div>
             </div>
           </Card>
@@ -236,7 +238,7 @@ export default function DashboardPage() {
       {/* Pulse Logs Table Placeholder / Recent Pulse */}
       <Card className="border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm overflow-hidden">
         <div className="p-2 border-b border-slate-200 dark:border-neutral-800 bg-slate-50 dark:bg-black/20 flex items-center justify-between px-6">
-          <span className="text-[9px] font-black text-slate-900 dark:text-white uppercase tracking-widest">Real-Time Operational Pulse</span>
+          <span className="text-[9px] font-black text-slate-900 dark:text-white uppercase tracking-widest">{t('dashboard.pulseTitle')}</span>
           <div className="flex gap-1.5">
             <div className="h-1 w-8 rounded-full bg-slate-200 dark:bg-white/20" />
             <div className="h-1 w-2 rounded-full bg-slate-300 dark:bg-white/40" />
@@ -245,10 +247,10 @@ export default function DashboardPage() {
         <CardContent className="p-0">
           <div className="grid grid-cols-1 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x border-slate-200 dark:border-neutral-800">
             {[
-              { label: "Revenue Delta", val: "+12.4%", sub: "Above Target", trend: "up" },
-              { label: "Compliance", val: "99.2%", sub: "Top Tier", trend: "up" },
-              { label: "Efficiency", val: "Elite", sub: "Operational", trend: "neutral" },
-              { label: "Staff Load", val: "Optimal", sub: "8 Active", trend: "neutral" },
+              { label: t('dashboard.pulse.revenueDelta'), val: "+12.4%", sub: t('dashboard.pulse.aboveTarget'), trend: "up" },
+              { label: t('dashboard.pulse.compliance'), val: "99.2%", sub: t('dashboard.pulse.topTier'), trend: "up" },
+              { label: t('dashboard.pulse.efficiency'), val: "Elite", sub: t('dashboard.pulse.operational'), trend: "neutral" },
+              { label: t('dashboard.pulse.staffLoad'), val: "Optimal", sub: t('dashboard.pulse.activeCount', { count: stats?.activeStaff || 8 }), trend: "neutral" },
             ].map((item, i) => (
               <div key={i} className="p-6 transition-colors hover:bg-slate-50 dark:hover:bg-neutral-950 group cursor-pointer">
                 <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">{item.label}</p>

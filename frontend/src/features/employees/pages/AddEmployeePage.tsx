@@ -6,18 +6,21 @@ import { Label } from '@/shared/components/ui/label'
 import { useEmployee } from '../hooks/useEmployee'
 import { useNavigate } from 'react-router-dom'
 import type { Gender } from '@/shared/types/api'
+import { useTranslation } from 'react-i18next'
 
 /* ===== ENUMS ===== */
-const GENDERS: { value: Gender; label: string }[] = [
-  { value: 'Male', label: 'Male' },
-  { value: 'Female', label: 'Female' },
-  { value: 'Other', label: 'Other' },
-]
-
 export default function AddEmployeePage() {
   const { createEmployee } = useEmployee()
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const [loading, setLoading] = useState(false)
+
+  /* ===== ENUMS ===== */
+  const GENDERS: { value: Gender; label: string }[] = [
+    { value: 'Male', label: t('employees.genders.male') },
+    { value: 'Female', label: t('employees.genders.female') },
+    { value: 'Other', label: t('employees.genders.other') },
+  ]
 
   const [form, setForm] = useState({
     name: '',
@@ -38,12 +41,12 @@ export default function AddEmployeePage() {
 
   const handleSubmit = async () => {
     if (!form.name.trim()) {
-      alert('Employee Name is required')
+      alert(t('employees.form.validation.nameRequired'))
       return
     }
 
     if (!form.phone.trim()) {
-      alert('Phone number is required')
+      alert(t('employees.form.validation.phoneRequired'))
       return
     }
 
@@ -70,7 +73,7 @@ export default function AddEmployeePage() {
     <div className="space-y-6">
       <div className="flex items-center gap-2 px-2">
         <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="hover:bg-slate-100 dark:hover:bg-neutral-800 rounded-lg h-10 px-4 font-bold uppercase tracking-widest text-[10px]">
-          &larr; Back
+          &larr; {t('employees.back')}
         </Button>
       </div>
 
@@ -79,10 +82,10 @@ export default function AddEmployeePage() {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">
-                Add Profile
+                {t('employees.addProfile')}
               </CardTitle>
               <p className="mt-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                Entry Information
+                {t('employees.entryInfo')}
               </p>
             </div>
           </div>
@@ -90,65 +93,65 @@ export default function AddEmployeePage() {
 
         <CardContent className="space-y-8">
           {/* ===== BASIC INFO ===== */}
-          <Section title="Basic Information">
+          <Section title={t('employees.form.basicInfo')}>
             <Grid>
-              <Field id="empName" label="Employee Name" required>
+              <Field id="empName" label={t('employees.form.fullName')} required>
                 <Input
                   id="empName"
-                  placeholder="Name"
+                  placeholder={t('employees.form.placeholder.name')}
                   value={form.name}
                   onChange={handleChange('name')}
                 />
               </Field>
 
-              <Field id="empPhone" label="Phone Number" required>
+              <Field id="empPhone" label={t('employees.form.phone')} required>
                 <Input
                   id="empPhone"
-                  placeholder="Phone"
+                  placeholder={t('employees.form.placeholder.phone')}
                   value={form.phone}
                   onChange={handleChange('phone')}
                 />
               </Field>
 
-              <Field id="empCid" label="Citizen ID (CID)">
+              <Field id="empCid" label={t('employees.form.idCard')}>
                 <Input
                   id="empCid"
-                  placeholder="Optional"
+                  placeholder={t('employees.form.placeholder.cid')}
                   value={form.cid}
                   onChange={handleChange('cid')}
                 />
               </Field>
 
-              <Field id="empGender" label="Gender">
+              <Field id="empGender" label={t('employees.form.gender')}>
                 <Select
                   id="empGender"
                   value={form.gender}
                   onChange={handleChange('gender')}
                   options={GENDERS}
-                  placeholder="Select"
+                  placeholder={t('employees.form.placeholder.select')}
                 />
               </Field>
             </Grid>
           </Section>
 
           {/* ===== SALARY ===== */}
-          <Section title="Salary Information">
+          <Section title={t('employees.form.salaryInfo')}>
             <Grid>
-              <Field id="empServiceSalary" label="Salary Service">
+              <Field id="empServiceSalary" label={t('employees.form.serviceSalary')}>
                 <Input
                   id="empServiceSalary"
                   type="number"
-                  placeholder="0"
+                  placeholder={t('employees.form.placeholder.salary')}
                   value={form.serviceSalary}
                   onChange={handleChange('serviceSalary')}
                 />
               </Field>
 
-              <Field id="empBaristaSalary" label="Salary Bar">
+              <Field id="empBaristaSalary" label={t('employees.form.baristaSalary')}>
                 <Input
                   id="empBaristaSalary"
                   type="number"
-                  placeholder="0"
+                  placeholder={t('employees.form.placeholder.salary')}
                   value={form.baristaSalary}
                   onChange={handleChange('baristaSalary')}
                 />
@@ -157,13 +160,13 @@ export default function AddEmployeePage() {
           </Section>
 
           {/* ===== DATE ===== */}
-          <Section title="Date Information">
+          <Section title={t('employees.form.dateInfo')}>
             <Grid>
-              <Field id="empDob" label="Date of Birth">
+              <Field id="empDob" label={t('employees.form.dob')}>
                 <Input id="empDob" type="date" value={form.dob} onChange={handleChange('dob')} />
               </Field>
 
-              <Field id="empHireDate" label="Hire Date">
+              <Field id="empHireDate" label={t('employees.form.hireDate')}>
                 <Input
                   id="empHireDate"
                   type="date"
@@ -177,10 +180,10 @@ export default function AddEmployeePage() {
           {/* ===== ACTIONS ===== */}
           <div className="flex justify-end gap-3 border-t pt-6">
             <Button variant="outline" onClick={() => navigate(-1)}>
-              Cancel
+              {t('employees.form.cancel')}
             </Button>
             <Button onClick={handleSubmit} disabled={loading}>
-              {loading ? 'Saving...' : 'Save Employee'}
+              {loading ? t('employees.form.saving') : t('employees.form.save')}
             </Button>
           </div>
         </CardContent>

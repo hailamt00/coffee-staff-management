@@ -17,6 +17,7 @@ import type {
   Position,
 } from '@/shared/types/api'
 import { DialogDescription } from '@radix-ui/react-dialog'
+import { useTranslation } from 'react-i18next'
 
 const DEFAULT_SHIFTS: SaveShiftRequest[] = [
   { name: 'Shift 1', startTime: '06:00', endTime: '14:00', isEnabled: true },
@@ -39,6 +40,7 @@ export function PositionDialog({
 }) {
   const [name, setName] = useState('')
   const [shifts, setShifts] = useState<SaveShiftRequest[]>(DEFAULT_SHIFTS)
+  const { t } = useTranslation()
 
   useEffect(() => {
     if (!open) return
@@ -83,19 +85,19 @@ export function PositionDialog({
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>
-            {position ? 'Edit Position' : 'Add Position'}
+            {position ? t('positions.edit') : t('positions.add')}
           </DialogTitle>
           <DialogDescription>
-            Configure position, hourly rate and working shifts
+            {t('positions.dialog.configure', 'Configure position and working shifts')}
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="posName">Position Name</Label>
+            <Label htmlFor="posName">{t('positions.table.name')}</Label>
             <Input
               id="posName"
-              placeholder="Position name"
+              placeholder={t('positions.table.name')}
               value={name}
               onChange={e => setName(e.target.value)}
             />
@@ -106,10 +108,10 @@ export function PositionDialog({
 
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button onClick={submit}>
-            {position ? 'Update' : 'Create'}
+            {position ? t('common.update') : t('common.create')}
           </Button>
         </DialogFooter>
       </DialogContent>

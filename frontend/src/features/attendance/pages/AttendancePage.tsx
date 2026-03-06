@@ -36,17 +36,19 @@ import { DataTable } from '@/shared/components/ui/data-table'
 import type { ColumnDef } from '@tanstack/react-table'
 import { AttendanceFormModal } from '../components/AttendanceFormModal'
 import { formatDateInVietnam } from '@/shared/utils/datetime'
+import { useTranslation } from 'react-i18next'
 
 /* ================= HELPERS ================= */
 
 function StatusBadge({ status }: { status: string }) {
+  const { t } = useTranslation()
   switch (status) {
     case 'present':
-      return <Badge className="bg-black text-white dark:bg-white dark:text-black border-black dark:border-white h-5 text-[9px] font-black uppercase tracking-widest px-2">Present</Badge>
+      return <Badge className="bg-black text-white dark:bg-white dark:text-black border-black dark:border-white h-5 text-[9px] font-black uppercase tracking-widest px-2">{t('attendance.status.present')}</Badge>
     case 'late':
-      return <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 h-5 text-[9px] font-black uppercase tracking-widest px-2">Late</Badge>
+      return <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 h-5 text-[9px] font-black uppercase tracking-widest px-2">{t('attendance.status.late')}</Badge>
     case 'absent':
-      return <Badge className="bg-red-500/10 text-red-600 border-red-500/20 h-5 text-[9px] font-black uppercase tracking-widest px-2">Absent</Badge>
+      return <Badge className="bg-red-500/10 text-red-600 border-red-500/20 h-5 text-[9px] font-black uppercase tracking-widest px-2">{t('attendance.status.absent')}</Badge>
     default:
       return <Badge variant="outline" className="h-5 text-[9px] font-black uppercase tracking-widest px-2">{status}</Badge>
   }
@@ -55,6 +57,7 @@ function StatusBadge({ status }: { status: string }) {
 /* ================= PAGE ================= */
 
 export default function AttendancePage() {
+  const { t } = useTranslation()
   const [startDate, setStartDate] = useState(() => {
     const today = new Date()
     const firstDay = new Date(today.getFullYear(), today.getMonth(), 1)
@@ -104,8 +107,8 @@ export default function AttendancePage() {
 
       // Logic for position
       const positionMatch = queryPositionFilter === 'all' ||
-        (queryPositionFilter === 'phache' && (record.positionName?.toLowerCase().includes('pha chế') || record.positionName?.toLowerCase().includes('barista') || record.positionName?.toLowerCase().includes('pha che'))) ||
-        (queryPositionFilter === 'phucvu' && (record.positionName?.toLowerCase().includes('phục vụ') || record.positionName?.toLowerCase().includes('server') || record.positionName?.toLowerCase().includes('phuc vu')))
+        (queryPositionFilter === 'barista' && (record.positionName?.toLowerCase().includes('pha chế') || record.positionName?.toLowerCase().includes('barista') || record.positionName?.toLowerCase().includes('pha che'))) ||
+        (queryPositionFilter === 'server' && (record.positionName?.toLowerCase().includes('phục vụ') || record.positionName?.toLowerCase().includes('server') || record.positionName?.toLowerCase().includes('phuc vu')))
 
       // Logic for missing check-in/out
       const missingMatch = !queryMissingFilter || (!record.checkIn || !record.checkOut)
@@ -144,7 +147,7 @@ export default function AttendancePage() {
     },
     {
       accessorKey: "workDate",
-      header: "Timeline",
+      header: t('attendance.table.timeline'),
       meta: { align: 'center', hideSortIcon: true },
       cell: ({ row }) => (
         <div className="flex flex-col gap-0.5 items-center">
@@ -154,9 +157,9 @@ export default function AttendancePage() {
           <span className="text-[10px] text-slate-400 font-black tracking-tighter">
             {(() => {
               const name = row.original.shiftName?.toLowerCase() || "";
-              if (name.includes('sáng') || name.includes('sang')) return "Morning Shift";
-              if (name.includes('chiều') || name.includes('chieu')) return "Afternoon Shift";
-              if (name.includes('tối') || name.includes('toi')) return "Evening Shift";
+              if (name.includes('sáng') || name.includes('sang')) return t('attendance.shifts.morning') || "Morning Shift";
+              if (name.includes('chiều') || name.includes('chieu')) return t('attendance.shifts.afternoon') || "Afternoon Shift";
+              if (name.includes('tối') || name.includes('toi')) return t('attendance.shifts.evening') || "Evening Shift";
               return row.original.shiftName || "Unknown";
             })()}
           </span>
@@ -166,7 +169,7 @@ export default function AttendancePage() {
     {
       id: "employee",
       accessorKey: "employeeName",
-      header: "Staff",
+      header: t('attendance.table.employee'),
       meta: { align: 'center', hideSortIcon: true },
       cell: ({ row }) => (
         <span className="font-bold text-slate-900">{row.original.employeeName || "Unknown"}</span>
@@ -175,15 +178,15 @@ export default function AttendancePage() {
     {
       id: "position",
       accessorKey: "positionName",
-      header: "Position",
+      header: t('attendance.table.position'),
       meta: { align: 'center', hideSortIcon: true },
       cell: ({ row }) => {
         const pos = row.original.positionName?.toLowerCase() || "";
         if (pos.includes('pha chế') || pos.includes('barista') || pos.includes('pha che')) {
-          return <span className="text-[11px] text-slate-500 font-medium">Barista</span>
+          return <span className="text-[11px] text-slate-500 font-medium">{t('dashboard.barista')}</span>
         }
         if (pos.includes('phục vụ') || pos.includes('server') || pos.includes('phuc vu')) {
-          return <span className="text-[11px] text-slate-500 font-medium">Server</span>
+          return <span className="text-[11px] text-slate-500 font-medium">{t('dashboard.service')}</span>
         }
         return <span className="text-[11px] text-slate-500 font-medium">{row.original.positionName || "—"}</span>
       }
@@ -191,7 +194,7 @@ export default function AttendancePage() {
     {
       id: "checkIn",
       accessorKey: "checkIn",
-      header: "In",
+      header: t('attendance.table.checkIn'),
       meta: { align: 'center', hideSortIcon: true },
       cell: ({ row }) => {
         const checkIn = row.original.checkIn;
@@ -202,7 +205,7 @@ export default function AttendancePage() {
     {
       id: "checkOut",
       accessorKey: "checkOut",
-      header: "Out",
+      header: t('attendance.table.checkOut'),
       meta: { align: 'center', hideSortIcon: true },
       cell: ({ row }) => {
         const checkOut = row.original.checkOut;
@@ -213,7 +216,7 @@ export default function AttendancePage() {
     {
       id: "diff",
       accessorKey: "totalHours",
-      header: "Diff",
+      header: t('attendance.table.diff'),
       meta: { align: 'center', hideSortIcon: true },
       cell: ({ row }) => (
         <div className="font-black tabular-nums text-slate-900">
@@ -224,14 +227,14 @@ export default function AttendancePage() {
     {
       id: "status",
       accessorKey: "status",
-      header: "Status",
+      header: t('attendance.table.status'),
       meta: { align: 'center', hideSortIcon: true },
       cell: ({ row }) => <StatusBadge status={row.original.status} />
     },
     {
       id: "note",
       accessorKey: "note",
-      header: "Note",
+      header: t('attendance.table.note'),
       meta: { align: 'center', hideSortIcon: true },
       cell: ({ row }) => (
         <span className="text-[10px] text-slate-400 font-medium italic truncate max-w-[150px] inline-block" title={row.original.note}>
@@ -241,7 +244,7 @@ export default function AttendancePage() {
     },
     {
       id: "actions",
-      header: "Actions",
+      header: t('attendance.table.actions'),
       meta: { align: 'center' },
       cell: ({ row }) => (
         <div className="flex gap-1 justify-center">
@@ -285,10 +288,10 @@ export default function AttendancePage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
-              Attendance
+              {t('attendance.title')}
             </h1>
             <p className="mt-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest hidden sm:block">
-              Daily Audit Logs
+              {t('attendance.subtitle')}
             </p>
           </div>
 
@@ -303,46 +306,46 @@ export default function AttendancePage() {
                 </SheetTrigger>
                 <SheetContent side="bottom" className="h-[80vh] rounded-t-[2.5rem] border-none shadow-2xl p-0 overflow-hidden">
                   <SheetHeader className="p-6 border-b border-slate-100 dark:border-neutral-800">
-                    <SheetTitle className="text-left font-black tracking-tighter text-2xl">Filters</SheetTitle>
+                    <SheetTitle className="text-left font-black tracking-tighter text-2xl">{t('attendance.filters.title')}</SheetTitle>
                   </SheetHeader>
                   <div className="p-6 space-y-6 overflow-y-auto max-h-[calc(80vh-100px)]">
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Start Date</Label>
+                        <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t('attendance.filters.start')}</Label>
                         <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="h-12 rounded-xl" />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">End Date</Label>
+                        <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t('attendance.filters.end')}</Label>
                         <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="h-12 rounded-xl" />
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Position</Label>
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t('attendance.filters.position')}</Label>
                       <Select value={positionFilter} onValueChange={setPositionFilter}>
                         <SelectTrigger className="h-12 rounded-xl">
-                          <SelectValue placeholder="All" />
+                          <SelectValue placeholder={t('common.all') || "All"} />
                         </SelectTrigger>
                         <SelectContent className="rounded-xl">
-                          <SelectItem value="all">All Positions</SelectItem>
-                          <SelectItem value="phache">Pha chế</SelectItem>
-                          <SelectItem value="phucvu">Phục vụ</SelectItem>
+                          <SelectItem value="all">{t('common.all') || "All"}</SelectItem>
+                          <SelectItem value="barista">{t('dashboard.barista')}</SelectItem>
+                          <SelectItem value="server">{t('dashboard.service')}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
 
                     <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Employees</Label>
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">{t('attendance.filters.employees')}</Label>
                       <MultiSelect
                         options={employeeOptions}
                         selectedValues={selectedEmployeeIds}
                         onChange={setSelectedEmployeeIds}
-                        placeholder="Select employees..."
+                        placeholder={t('attendance.filters.employees') || "Select employees..."}
                       />
                     </div>
 
                     <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-neutral-800 rounded-2xl">
-                      <Label htmlFor="missingInOutMob" className="text-xs font-bold">Forgot check-in/out</Label>
+                      <Label htmlFor="missingInOutMob" className="text-xs font-bold">{t('attendance.filters.forgot')}</Label>
                       <input
                         type="checkbox"
                         id="missingInOutMob"
@@ -362,7 +365,7 @@ export default function AttendancePage() {
                         setQueryMissingFilter(missingFilter)
                       }}
                     >
-                      Apply Filters
+                      {t('attendance.filters.apply')}
                     </Button>
                   </div>
                 </SheetContent>
@@ -377,37 +380,37 @@ export default function AttendancePage() {
               className="h-10 w-10 rounded-xl border-none bg-black text-[10px] font-bold uppercase tracking-widest text-white hover:bg-slate-800 sm:w-auto sm:px-6 dark:bg-white dark:text-black dark:hover:bg-neutral-200"
             >
               <Plus className="h-4 w-4 sm:mr-2" />
-              <span className="hidden sm:inline">Add Record</span>
+              <span className="hidden sm:inline">{t('attendance.actions.add')}</span>
             </Button>
           </div>
         </div>
 
         {/* Desktop Filter Bar */}
         <div className="flex flex-col gap-3 bg-slate-50 dark:bg-neutral-900 border border-slate-100 dark:border-neutral-800 p-4 rounded-[1.5rem]">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            <div className="space-y-1">
-              <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">Start</Label>
-              <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="h-10 rounded-xl bg-white border-none text-xs text-center" />
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 items-end">
+            <div className="space-y-1.5">
+              <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">{t('attendance.filters.start').split(' ')[0]}</Label>
+              <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="h-10 rounded-xl bg-white dark:bg-black border-none text-xs text-center shadow-sm" />
             </div>
-            <div className="space-y-1">
-              <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">End</Label>
-              <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="h-10 rounded-xl bg-white border-none text-xs text-center" />
+            <div className="space-y-1.5">
+              <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">{t('attendance.filters.end').split(' ')[0]}</Label>
+              <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="h-10 rounded-xl bg-white dark:bg-black border-none text-xs text-center shadow-sm" />
             </div>
-            <div className="space-y-1">
-              <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">Position</Label>
+            <div className="space-y-1.5">
+              <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">{t('attendance.filters.position')}</Label>
               <Select value={positionFilter} onValueChange={setPositionFilter}>
-                <SelectTrigger className="h-10 rounded-xl bg-white border-none text-xs">
+                <SelectTrigger className="h-10 rounded-xl bg-white dark:bg-black border-none text-xs shadow-sm">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
-                  <SelectItem value="phache">Pha chế</SelectItem>
-                  <SelectItem value="phucvu">Phục vụ</SelectItem>
+                  <SelectItem value="all">{t('common.all') || "All"}</SelectItem>
+                  <SelectItem value="barista">{t('dashboard.barista')}</SelectItem>
+                  <SelectItem value="server">{t('dashboard.service')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            <div className="col-span-2 sm:col-span-1 space-y-1">
-              <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">Employees</Label>
+            <div className="col-span-2 sm:col-span-1 space-y-1.5">
+              <Label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-2">{t('attendance.filters.employees')}</Label>
               <MultiSelect
                 options={employeeOptions}
                 selectedValues={selectedEmployeeIds}
@@ -415,20 +418,20 @@ export default function AttendancePage() {
                 placeholder="All staff"
               />
             </div>
-            <div className="flex items-center gap-3 h-10 px-4 bg-white dark:bg-neutral-900 rounded-xl shadow-sm">
+            <div className="flex items-center gap-3 h-10 px-4 bg-white dark:bg-black border border-transparent dark:border-neutral-800 rounded-xl shadow-sm">
               <input
                 type="checkbox"
                 id="missingFilterDesk"
-                className="w-4 h-4 accent-black rounded-md cursor-pointer"
+                className="w-4 h-4 accent-black dark:accent-white rounded-md cursor-pointer"
                 checked={missingFilter}
                 onChange={(e) => setMissingFilter(e.target.checked)}
               />
-              <Label htmlFor="missingFilterDesk" className="text-[10px] font-black uppercase tracking-widest text-slate-500 cursor-pointer select-none">
-                Forgot check-in/out
+              <Label htmlFor="missingFilterDesk" className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 cursor-pointer select-none">
+                {t('attendance.filters.forgot')}
               </Label>
             </div>
             <Button
-              className="h-10 bg-black text-white hover:bg-slate-800 rounded-xl font-black uppercase tracking-widest text-[10px]"
+              className="h-10 bg-black text-white dark:bg-white dark:text-black hover:bg-slate-800 dark:hover:bg-neutral-200 rounded-xl font-black uppercase tracking-widest text-[10px] shadow-sm"
               onClick={() => {
                 setQueryStartDate(startDate)
                 setQueryEndDate(endDate)
@@ -437,7 +440,7 @@ export default function AttendancePage() {
                 setQueryMissingFilter(missingFilter)
               }}
             >
-              Apply
+              {t('attendance.actions.apply')}
             </Button>
           </div>
         </div>
@@ -446,30 +449,30 @@ export default function AttendancePage() {
       {/* STATS SECTION */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <SummaryCard
-          title="Total"
+          title={t('attendance.stats.total') || "Total"}
           value={stats.total}
-          description="Shift entries"
+          description={t('attendance.stats.shiftEntries') || "Shift entries"}
           icon={Users}
           color="cyan"
         />
         <SummaryCard
-          title="Present"
+          title={t('attendance.stats.present') || "Present"}
           value={stats.present}
           description={`${stats.presentRate}% rate`}
           icon={CheckCircle}
           color="green"
         />
         <SummaryCard
-          title="Late"
+          title={t('attendance.stats.late') || "Late"}
           value={stats.late}
-          description="Delayed start"
+          description={t('attendance.stats.delayedStart') || "Delayed start"}
           icon={AlertCircle}
           color="orange"
         />
         <SummaryCard
-          title="Absent"
+          title={t('attendance.stats.absent') || "Absent"}
           value={stats.absent}
-          description="Unexcused"
+          description={t('attendance.stats.unexcused') || "Unexcused"}
           icon={XCircle}
           color="red"
         />

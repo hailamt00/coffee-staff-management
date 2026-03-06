@@ -11,8 +11,10 @@ import { Clock, MapPin, CheckCircle, Loader2, Plus } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/shared/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { Label } from '@/shared/components/ui/label'
+import { useTranslation } from 'react-i18next'
 
 export default function StaffAttendancePage() {
+    const { t } = useTranslation()
     const navigate = useNavigate()
     const staffJson = localStorage.getItem('staffInfo')
     const staff = staffJson ? JSON.parse(staffJson) : null
@@ -88,17 +90,17 @@ export default function StaffAttendancePage() {
         <div className="space-y-6">
             <div className="flex items-center gap-2 px-2">
                 <Button variant="ghost" size="sm" onClick={() => navigate('/staff/menu')} className="hover:bg-slate-100 dark:hover:bg-neutral-800 rounded-lg h-10 px-4 font-bold text-[11px] tracking-wide">
-                    &larr; Back
+                    &larr; {t('employees.back')}
                 </Button>
             </div>
 
             <div className="px-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-none">
-                        Attendance
+                        {t('attendance.title')}
                     </h1>
                     <p className="mt-1 text-[10px] sm:text-[11px] font-bold text-slate-500 tracking-wide">
-                        Shift Check In/Out
+                        {t('attendance.subtitle')}
                     </p>
                 </div>
                 <Button
@@ -106,7 +108,7 @@ export default function StaffAttendancePage() {
                     className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 font-bold tracking-wide text-xs rounded-xl h-10 sm:h-9 w-full sm:w-auto"
                 >
                     <Plus className="h-4 w-4 mr-1" />
-                    Substitute Check-In
+                    {t('attendance.actions.add')}
                 </Button>
             </div>
 
@@ -120,7 +122,7 @@ export default function StaffAttendancePage() {
                 {!isLoading && mySchedules.length === 0 && (
                     <Card className="bg-slate-50 border-dashed border-2">
                         <CardContent className="p-8 text-center text-slate-500">
-                            No shifts scheduled for you today, {staff?.name}.
+                            {t('staff.revenue.noSchedule')}
                         </CardContent>
                     </Card>
                 )}
@@ -142,14 +144,14 @@ export default function StaffAttendancePage() {
                                         </div>
                                     </div>
                                     <Badge variant="outline" className={`text-[10px] font-bold tracking-wide rounded-lg h-6 ${isCheckedOut ? 'bg-green-100 text-green-700 border-green-200' : isCheckedIn ? 'bg-blue-100 text-blue-700 border-blue-200' : 'bg-white/50 dark:bg-black/50 border-slate-200 dark:border-neutral-800'}`}>
-                                        {isCheckedOut ? 'Completed' : isCheckedIn ? 'In Progress' : 'Scheduled'}
+                                        {isCheckedOut ? t('attendance.status.present') : isCheckedIn ? t('dashboard.active') : t('attendance.status.present')}
                                     </Badge>
                                 </div>
                             </CardHeader>
                             <CardContent className="space-y-6 pt-5 pb-6">
                                 <div className="flex items-center justify-center gap-2 text-xs font-bold text-slate-500 uppercase tracking-widest bg-slate-50 dark:bg-neutral-800/50 py-2 rounded-xl border border-slate-100 dark:border-neutral-800">
                                     <MapPin className="h-3.5 w-3.5" />
-                                    Main Coffee Shop
+                                    {t('staff.attendance.shopName', 'Main Coffee Shop')}
                                 </div>
 
                                 {!isCheckedOut && (
@@ -161,7 +163,7 @@ export default function StaffAttendancePage() {
                                                 disabled={isLoading}
                                             >
                                                 {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Plus className="h-4 w-4 mr-2" />}
-                                                Check In
+                                                {t('attendance.table.checkIn')}
                                             </Button>
                                         ) : (
                                             <Button
@@ -170,7 +172,7 @@ export default function StaffAttendancePage() {
                                                 disabled={isLoading}
                                             >
                                                 {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <CheckCircle className="h-4 w-4 mr-2 text-green-600 dark:text-green-400" />}
-                                                Check Out
+                                                {t('attendance.table.checkOut')}
                                             </Button>
                                         )}
                                     </div>
@@ -182,9 +184,9 @@ export default function StaffAttendancePage() {
             </div>
 
             <div className="p-4 bg-amber-50 border border-amber-100 rounded-xl">
-                <h4 className="text-[11px] font-bold text-amber-800 tracking-wide mb-1">Notice</h4>
+                <h4 className="text-[11px] font-bold text-amber-800 tracking-wide mb-1">{t('adjustments.table.warning')}</h4>
                 <p className="text-[11px] text-amber-700 leading-relaxed">
-                    Please check in within 15 minutes of your shift start time. Late arrivals will be automatically noted by the system.
+                    {t('staff.attendance.policyNote', 'Please check in within 15 minutes of your shift start time. Late arrivals will be automatically noted by the system.')}
                 </p>
             </div>
 
@@ -193,23 +195,22 @@ export default function StaffAttendancePage() {
                     <DialogHeader className="p-6 border-b border-slate-100 dark:border-neutral-800/50 bg-slate-50/50 dark:bg-neutral-900/50">
                         <DialogTitle className="text-xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
                             <Plus className="h-5 w-5 text-slate-500" />
-                            Substitute Check-In
+                            {t('attendance.actions.add')}
                         </DialogTitle>
                         <DialogDescription className="text-[11px] font-medium text-slate-500 mt-2 leading-relaxed">
-                            Check in for a shift that you are covering for someone else.
-                            The system will automatically generate a schedule record for your attendance.
+                            {t('staff.attendance.substituteDesc', 'Check in for a shift that you are covering for someone else. The system will automatically generate a schedule record for your attendance.')}
                         </DialogDescription>
                     </DialogHeader>
 
                     <div className="p-6 space-y-5">
                         <div className="space-y-2.5">
-                            <Label htmlFor="substituePosition" className="text-[11px] font-bold text-slate-500 tracking-wide uppercase">Position</Label>
+                            <Label htmlFor="substituePosition" className="text-[11px] font-bold text-slate-500 tracking-wide uppercase">{t('attendance.table.position')}</Label>
                             <Select value={subPositionId} onValueChange={(val) => {
                                 setSubPositionId(val)
                                 setSubShiftId('')
                             }}>
                                 <SelectTrigger id="substituePosition" className="h-12 rounded-xl border-slate-200/60 dark:border-neutral-800/60 bg-white/50 dark:bg-neutral-900/50 transition-colors hover:bg-white dark:hover:bg-neutral-900 focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-0">
-                                    <SelectValue placeholder="Select position" />
+                                    <SelectValue placeholder={t('attendance.table.position')} />
                                 </SelectTrigger>
                                 <SelectContent className="rounded-xl border-slate-200/60 dark:border-neutral-800/60 shadow-xl">
                                     {positions.map((p) => (
@@ -222,10 +223,10 @@ export default function StaffAttendancePage() {
                         </div>
 
                         <div className="space-y-2.5">
-                            <Label htmlFor="substituteShift" className="text-[11px] font-bold text-slate-500 tracking-wide uppercase">Shift</Label>
+                            <Label htmlFor="substituteShift" className="text-[11px] font-bold text-slate-500 tracking-wide uppercase">{t('attendance.shifts.morning').split(' ')[1]}</Label>
                             <Select value={subShiftId} onValueChange={setSubShiftId} disabled={!subPositionId}>
                                 <SelectTrigger id="substituteShift" className="h-12 rounded-xl border-slate-200/60 dark:border-neutral-800/60 bg-white/50 dark:bg-neutral-900/50 transition-colors hover:bg-white dark:hover:bg-neutral-900 focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-0 disabled:opacity-50">
-                                    <SelectValue placeholder={subPositionId ? "Select shift" : "Select position first"} />
+                                    <SelectValue placeholder={subPositionId ? t('attendance.shifts.morning').split(' ')[1] : t('attendance.table.position')} />
                                 </SelectTrigger>
                                 <SelectContent className="rounded-xl border-slate-200/60 dark:border-neutral-800/60 shadow-xl">
                                     {availableSubShifts.map((s) => (
@@ -239,7 +240,7 @@ export default function StaffAttendancePage() {
 
                         <div className="flex gap-2 pt-2">
                             <Button variant="ghost" onClick={() => setIsSubstituteOpen(false)} className="h-12 rounded-xl font-bold flex-1 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-neutral-800">
-                                Cancel
+                                {t('common.cancel')}
                             </Button>
                             <Button
                                 onClick={handleSubstituteCheckIn}
@@ -247,7 +248,7 @@ export default function StaffAttendancePage() {
                                 className="bg-black hover:bg-slate-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 font-bold tracking-wide h-12 flex-[2] rounded-xl shadow-lg shadow-black/10 dark:shadow-white/10 transition-all active:scale-[0.98]"
                             >
                                 {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <CheckCircle className="h-4 w-4 mr-2" />}
-                                Confirm
+                                {t('common.confirm')}
                             </Button>
                         </div>
                     </div>

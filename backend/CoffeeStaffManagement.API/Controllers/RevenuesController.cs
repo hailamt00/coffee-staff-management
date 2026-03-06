@@ -1,8 +1,10 @@
+using CoffeeStaffManagement.API.Hubs;
 using CoffeeStaffManagement.Application.Revenues.Commands;
 using CoffeeStaffManagement.Application.Revenues.DTOs;
 using CoffeeStaffManagement.Application.Revenues.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace CoffeeStaffManagement.API.Controllers;
 
@@ -11,21 +13,32 @@ namespace CoffeeStaffManagement.API.Controllers;
 public class RevenuesController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IHubContext<NotificationHub> _hub;
 
-    public RevenuesController(IMediator mediator)
+    public RevenuesController(IMediator mediator, IHubContext<NotificationHub> hub)
     {
         _mediator = mediator;
+        _hub = hub;
     }
 
     [HttpPost]
     public async Task<ActionResult<RevenueDto>> Create(CreateRevenueRequest request)
     {
         var result = await _mediator.Send(new CreateRevenueCommand(request));
+
+        await _hub.Clients.Group("admins").SendAsync("ReceiveNotification", new StaffNotificationDto(
+            Type: "success",
+            Title: "Báo cáo doanh thu",
+            Message: $"Đã nộp báo cáo doanh thu cho ca #{request.ScheduleId}.",
+            Timestamp: DateTime.Now
+        ));
+
         return Ok(result);
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<RevenueDto>>> GetByMonth([FromQuery] int? month, [FromQuery] int? year, [FromQuery] DateTime? from, [FromQuery] DateTime? to)
+    public async Task<ActionResult<List<RevenueDto>>> GetByMonth(
+        [FromQuery] int? month, [FromQuery] int? year, [FromQuery] DateTime? from, [FromQuery] DateTime? to)
     {
         if (from.HasValue && to.HasValue)
         {
